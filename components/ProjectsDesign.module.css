@@ -1,0 +1,41 @@
+.showreelOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.showreelCloseBtn {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  background: none;
+  border: none;
+  color: var(--brand-gold, #FFD700);
+  cursor: pointer;
+  z-index: 1010;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.showreelCloseBtn:hover,
+.showreelCloseBtn:focus {
+  background: rgba(255, 215, 0, 0.15);
+  outline: none;
+}
+
+.showreelIframe {
+  border: 0;
+  border-radius: 16px;
+  background: #000;
+  max-width: 100%;
+  max-height: 80vh;
+  min-height: 320px;
+}

@@ -1,0 +1,7 @@
+# Redirect rules for Netlify
+
+# Handle client-side routing for Next.js
+/*    /index.html   200
+
+# Optional: redirect trailing slashes
+/*/ /:splat 301

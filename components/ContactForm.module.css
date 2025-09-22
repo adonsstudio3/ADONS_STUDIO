@@ -1,0 +1,210 @@
+/* Simple modular styles for the contact form. Adjust colors to match site theme. */
+.contactFormContainer {
+  /* Add extra top padding so the form clears the fixed navbar and doesn't overlap it */
+  padding: 3.5rem 1rem 8rem 1rem;
+  background: transparent;
+  color: #eee;
+  /* Use system sans stack for the contact form to avoid Satoshi */
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+.inner {
+  /* Narrower content column to reduce overall form footprint */
+  max-width: 760px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+.intro {
+  text-align: left;
+}
+.formTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  /* ensure headings use the container font stack */
+  font-family: inherit;
+}
+/* Gold color variant for titles that should use brand yellow */
+.formTitleGold {
+  color: #FFD700;
+}
+/* Subtitle under the form title */
+.formSubtitle {
+  margin: 0 0 1rem 0;
+  color: #bfc3c8;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: inherit;
+}
+.lead {
+  color: #bfc3c8;
+  margin: 0 0 1rem 0;
+}
+.contactForm {
+  background: rgba(20,20,20,0.6);
+  /* tighter padding to reduce visual size */
+  padding: 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms cubic-bezier(.2,.9,.2,1), background-color 220ms;
+  will-change: transform, box-shadow;
+}
+
+.contactForm:hover,
+.contactForm:focus-within {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 42px rgba(0,0,0,0.7);
+  background: rgba(24,24,24,0.72);
+}
+.row {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+.inputGroup {
+  flex: 1 1 45%;
+  min-width: 180px;
+}
+
+/* When an inputGroup is set to 100% width inline, force it to occupy full width */
+.inputGroup[style*="width: '100%'"] {
+  flex-basis: 100%;
+  flex: 1 1 100%;
+}
+.label {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: #aeb3b8;
+  margin-bottom: 0.35rem;
+  font-family: inherit;
+}
+.input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  background: #0f0f10;
+  color: #eee;
+  border: 1px solid #222;
+  border-radius: 6px;
+  outline: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  font-family: inherit;
+}
+.phoneRow {
+  display: flex;
+  gap: 0.45rem;
+  align-items: stretch; /* make children match heights */
+}
+.countrySelect {
+  background: #0f0f10;
+  color: #eee;
+  border: 1px solid #222;
+  border-radius: 6px;
+  padding: 0.5rem 0.6rem;
+  min-width: 80px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-family: inherit;
+}
+
+.countrySelect:focus { outline: none; box-shadow: 0 0 0 3px rgba(230,184,0,0.12); }
+
+/* Make the phoneRow look like one input: remove the right border of the trigger and left border of the input */
+.phoneRow .countrySelect,
+.phoneRow .countryTrigger { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; }
+.phoneRow .input { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.phoneRow .countryTrigger { padding: 0 0.75rem; display: inline-flex; align-items: center; gap: 0.5rem; min-width: 92px; }
+.phoneSeparator {
+  width: 1px;
+  background: rgba(255,255,255,0.04);
+  align-self: stretch; /* fill available height to match inputs */
+  margin: 0;
+}
+
+/* CountryDropdown styles */
+.countrySelectWrap { display: inline-flex; position: relative; }
+.countryTrigger { display: inline-flex; align-items: center; gap: 8px; padding: 0.45rem 0.5rem; background: #0f0f10; color: #eee; border: 1px solid #222; border-radius: 6px; cursor: pointer; font-family: inherit; }
+.countryTrigger .flag { font-size: 14px; }
+.countryTrigger .flag,
+.countryTrigger .flag > svg,
+.countryTrigger .flag img {
+  width: 20px; /* fixed width to match control height */
+  height: 16px; /* fixed height */
+  display: inline-block;
+  line-height: 1;
+}
+.countryTrigger .dial { font-size: 0.9rem; }
+.dropdownWrap { position: relative; }
+.dropdown { position: absolute; left: 0; top: calc(100% + 8px); background: #0b0b0b; border: 1px solid #222; border-radius: 8px; width: 300px; max-height: 280px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 60; }
+.dropdown { position: absolute; left: 0; top: calc(100% + 8px); background: #0b0b0b; border: 1px solid #222; border-radius: 8px; width: 480px; max-width: calc(100vw - 24px); max-height: 360px; box-sizing: border-box; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 60; }
+.dropdownSearch { width: 100%; padding: 0.5rem; border: none; background: #0b0b0b; color: #ddd; border-bottom: 1px solid #1a1a1a; outline: none; box-sizing: border-box; }
+.dropdownList { max-height: 320px; overflow: auto; overflow-x: hidden; box-sizing: border-box; }
+.dropdownItem { display: flex; align-items: center; gap: 8px; padding: 0.45rem 0.6rem; width: 100%; background: transparent; border: none; color: #ddd; text-align: left; cursor: pointer; box-sizing: border-box; }
+.dropdownItem:hover { background: rgba(255,255,255,0.02); }
+.dropdownItem .flag { width: 24px; display: inline-block }
+.dropdownItem .flag,
+.dropdownItem .flag > svg,
+.dropdownItem .flag img {
+  width: 24px;
+  height: 16px;
+  display: inline-block;
+}
+.dropdownItem .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+
+.textarea {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  background: #0f0f10;
+  color: #eee;
+  border: 1px solid #222;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+}
+.btn {
+  display: inline-block;
+  background: #e6b800;
+  color: #111;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(230,184,0,0.12);
+  filter: saturate(1.02);
+}
+.error {
+  color: #ff7a7a;
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+}
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
+  .intro {
+    grid-column: 1 / -1;
+  }
+  /* ensure first row keeps two columns on medium+ screens */
+  .row:first-of-type .inputGroup {
+    flex: 1 1 48%;
+  }
+  /* more top space on larger screens so fixed header doesn't overlap content */
+  .contactFormContainer { padding-top: 5rem; }
+  /* Give the container more bottom spacing on larger screens so footer isn't too close */
+  .contactFormContainer { padding-bottom: 8rem; }
+  /* Specific extra offset when this component is used on the dedicated contact page */
+  .contactPageOffset { padding-top: 5.5rem; padding-bottom: 8rem; }
+}

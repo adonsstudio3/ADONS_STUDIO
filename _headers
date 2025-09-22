@@ -1,0 +1,19 @@
+# Cache optimized images for 1 year
+/Images/optimized/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Default caching for other assets
+/Images/*
+  Cache-Control: public, max-age=86400
+
+# Cache static assets
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# No cache for HTML files
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# API routes should not be cached
+/api/*
+  Cache-Control: no-cache

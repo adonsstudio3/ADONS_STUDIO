@@ -1,0 +1,935 @@
+/* Unified hero title and subtitle styles for all pages */
+.heroTitle {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+.heroSubtitle, .heroDescription {
+  font-size: 1.25rem;
+  font-weight: 400;
+  text-align: center;
+  color: #FFD700;
+  margin-bottom: 1.2rem;
+}
+/* Gold text utility */
+.text-gold {
+  color: #FFD700;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Saira Regular — self-hosted in /public/fonts
+  - Font files: Saira-Regular.woff2, Saira-Regular.ttf
+  - Integrated via @font-face below for font-family: 'Saira Regular'
+  - Usage: Add @font-face as shown, and reference 'Saira Regular' in your CSS font-family stacks.
+
+  Playfair Display is also self-hosted for headings (see below).
+*/
+
+
+/*
+  Font usage and loading sources:
+  - Satoshi: Primary UI font, loaded via Fontshare CDN per ITF EULA. Do NOT self-host or convert locally unless you have explicit written permission from Indian Type Foundry. The Fontshare stylesheet link is added in `pages/_document.js` — update there to change Satoshi loading.
+  - Playfair Display: Local fallback font, self-hosted in /public/fonts, used for headings and typographic accents.
+  - Saira Regular: Local fallback font, self-hosted in /public/fonts, used for branding and UI elements when Satoshi is unavailable.
+  Maintain EULA compliance: Satoshi must not be self-hosted or redistributed without ITF consent. Playfair and Saira are open-licensed and may be self-hosted as shown below.
+*/
+
+
+/* Playfair Display: we have a semi-bold TTF provided for headings (600). */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/PlayfairDisplay-SemiBold.woff2') format('woff2'),
+       url('/fonts/PlayfairDisplay-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Saira Regular: modern, clean font for branding and UI elements */
+@font-face {
+  font-family: 'Saira Regular';
+  src: url('/fonts/Saira-Regular.woff2') format('woff2'),
+       url('/fonts/Saira-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Apply globally */
+html, body {
+  height: 100%;
+  /* Host the static nebula background on the document so it remains fixed while content scrolls */
+  background-color: #000; /* fallback color while image loads */
+  /* Prefer AVIF, then WebP, then JPEG for the nebula background when supported */
+  background-image: -webkit-image-set(
+    url('/Images/optimized/nebula/nebula-1600.avif') type('image/avif') 1x,
+    url('/Images/optimized/nebula/nebula-2400.avif') type('image/avif') 2x,
+    url('/Images/optimized/nebula/nebula-1600.webp') type('image/webp') 1x,
+  url('/Images/background/nebula.jpg') type('image/jpeg') 1x
+  );
+  background-image: image-set(
+    url('/Images/optimized/nebula/nebula-1600.avif') type('image/avif') 1x,
+    url('/Images/optimized/nebula/nebula-2400.avif') type('image/avif') 2x,
+    url('/Images/optimized/nebula/nebula-1600.webp') type('image/webp') 1x,
+  url('/Images/background/nebula.jpg') type('image/jpeg') 1x
+  );
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed; /* keep background static while content scrolls */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Satoshi', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  /* Increase base font-size slightly so the whole site reads larger (approx 18px) */
+  font-size: 112.5%;
+}
+
+/* On small viewports, avoid background-attachment: fixed which can cause jank on mobile browsers */
+@media (max-width: 767px) {
+  html, body {
+    background-attachment: scroll !important;
+    background-position: center top !important;
+  }
+}
+
+/* Fixed background element (composited) - used to provide a pinned background effect
+   while avoiding `background-attachment: fixed` browser issues on mobile. We still
+   use the document-level background as a fallback. */
+#site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  will-change: transform;
+  transform: translateZ(0);
+  /* Use CSS variable for the image so we can swap in mobile via media queries */
+  background-image: var(--site-nebula, url('/Images/background/nebula.jpg'));
+  pointer-events: none;
+}
+
+/* Desktop: use large nebula; mobile media query will override. */
+:root {
+  --site-nebula: url('/Images/optimized/nebula/nebula-1600.avif');
+  --brand-gold: #FFD700;
+}
+
+@media (max-width: 767px) {
+  /* Use lower-res nebula for mobile to reduce bandwidth */
+  :root { --site-nebula: url('/Images/optimized/nebula/nebula-640.avif'); }
+}
+/* Use a lower-resolution nebula background on mobile to reduce bandwidth */
+@media (max-width: 767px) {
+  html, body {
+    background-image: -webkit-image-set(
+      url('/Images/optimized/nebula/nebula-640.avif') type('image/avif') 1x,
+      url('/Images/optimized/nebula/nebula-960.avif') type('image/avif') 2x,
+      url('/Images/optimized/nebula/nebula-640.webp') type('image/webp') 1x
+    );
+    background-image: image-set(
+      url('/Images/optimized/nebula/nebula-640.avif') type('image/avif') 1x,
+      url('/Images/optimized/nebula/nebula-960.avif') type('image/avif') 2x,
+      url('/Images/optimized/nebula/nebula-640.webp') type('image/webp') 1x
+    );
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+  }
+}
+
+/*
+  Strong site-wide background rule to ensure the nebula image is shown once,
+  remains fixed while content scrolls, and covers the entire viewport.
+  Use high-specificity + !important to override any compiled or component styles.
+*/
+:root, html, body {
+  background-image: url('/Images/background/nebula.jpg') !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-color: #000 !important;
+}
+
+/* Ensure Next root doesn't paint its own background on top */
+html > body > #__next, #__next {
+  background: transparent !important;
+}
+
+/* Keep page sections transparent by default so the nebula shows through */
+section, .section, .page, main, header, footer {
+  background: transparent !important;
+}
+
+/* Ensure the Next root is transparent so the document background shows through only once */
+#__next {
+  height: 100%;
+  background: transparent;
+}
+
+/* Prevent accidental horizontal overflow caused by 100vw/w-screen full-bleed elements */
+/* This keeps the content full-width while avoiding scrollbars when vertical scrollbar is present */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Ensure fixed header doesn't overlap the browser scroll bar.
+   Use inset (left/right) positioning instead of width:100% and request
+   a stable scrollbar gutter where supported. This avoids visual overlap
+   in browsers that treat 100vw as excluding the scrollbar width. */
+header {
+  width: auto !important; /* avoid forcing 100%/100vw */
+  left: 0 !important;
+  right: 0 !important;
+  box-sizing: border-box !important;
+  /* Reserve space on the right for scrollbars or a conservative fallback so
+     the navbar content never reaches the extreme edge where some overlay
+     scrollbars may be painted and appear blurred. */
+  padding-right: calc(env(safe-area-inset-right, 0px) + max(var(--scrollbar-width, 0px), 14px)) !important;
+  /* Note: `scrollbar-gutter` removed for broader compatibility; we rely on the JS
+     measured `--scrollbar-width` plus a conservative 14px fallback instead. */
+}
+
+/* Ensure the nebula background (set on html/body/#__next) is visible on every page.
+   Neutralize page-level dark backgrounds that would otherwise block it.
+   Keep card and component-level backgrounds (like .service-card) so content remains readable. */
+section, .section, #about, #services, #team, #contact, .about, .services, .team {
+  background: transparent !important;
+}
+
+/* Remove the hero-bg wrapper's solid dark fallback so the nebula shows through.
+   If you prefer to keep subtle radial accents on top of the nebula, we can instead reduce opacity. */
+.hero-bg {
+  background: none !important;
+}
+
+
+/* Custom global styles (kept small - use Tailwind for layout) */
+/* body text color and transparent background to allow html/#__next bg to show */
+body {
+  background-color: transparent; /* inherited from html/#__next */
+  color: #f5f5f5;
+  /* Use Satoshi medium by default for body text */
+  font-weight: 500;
+}
+
+/* Headings use Playfair Display (request semibold where available) */
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-weight: 600; /* will use semibold if PlayfairDisplay-SemiBold is provided */
+}
+
+/* Minimal loading screen styles */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  /* explicit solid black background for the loading overlay */
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+.loading-content { text-align: center; color: #fff; }
+/* New loading screen visuals */
+.loading-screen { background: #000; }
+.loading-content { text-align: center; color: #fff; }
+.loading-title { font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; display: inline-flex; gap: 0.08em; }
+.loading-title .logo-letter { position: relative; display: inline-block; color: transparent; text-shadow: none; }
+/* Fill effect using background-clip */
+.loading-title .logo-letter {
+  /* exact brand yellow fill requested (static, no animation) */
+  background: linear-gradient(90deg, #FFD700 0%, #FFD700 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  /* Force Saira Regular for loading logo text */
+  font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.loading-bar { width: 260px; height: 6px; background: rgba(255,255,255,0.06); border-radius: 6px; margin-top: 18px; overflow: hidden; }
+.loading-progress { height: 100%; width: 100%; background: linear-gradient(90deg,#FFD700,#FFD700); border-radius: 6px; transform-origin: left; transform: scaleX(0); animation: progress 1.8s linear forwards; }
+@keyframes progress {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+/* NOTE: Saira Regular font is now loaded from /public/fonts with proper @font-face rules.
+  This provides a modern, clean typeface for branding and UI elements. */
+
+/* Simple hero background wrapper to host Three.js canvas */
+.hero-bg-canvas { position: absolute; inset: 0; z-index: 0; }
+.hero-content-wrapper { position: relative; z-index: 10; }
+
+/* portfolio/showreel styles removed — no longer used */
+
+/* Tailwind custom colors fallback (map some semantic names) */
+:root {
+  --color-cream-50: #fcfcf9;
+}
+
+/* Ensure some defaults when Tailwind classes reference them */
+.bg-cream-50 { background-color: #111; }
+.text-slate-900 { color: #f5f5f5; }
+
+/* Brand utilities */
+.text-brand { color: #FFD700 }
+.bg-brand { background-color: #FFD700 }
+.bg-brand-600 { background-color: #FFCF33 }
+
+/* Dark-themed custom scrollbar for the site (WebKit + Firefox) */
+/* Keeps the scrollbar subtle but visible on the dark nebula background */
+/* WebKit/Blink scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb {
+  background: #1f1f1f;
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #2b2b2b; }
+
+/* Firefox scrollbar styling */
+html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
+
+/* Expose a CSS variable that components can use if they want to offset for the scrollbar. */
+:root { --scrollbar-width: 0px; }
+
+/* Button utility for dark theme */
+.btn { display: inline-flex; align-items:center; justify-content:center; padding:0.5rem 1rem; border-radius:0.5rem; cursor:pointer; }
+.btn:hover { opacity:0.95 }
+.btn[disabled] { opacity:0.5; cursor:not-allowed }
+.btn--primary { background: #FFD700; color: #000; font-weight:600 }
+.btn--ghost { background: transparent; color: #FFD700; border: 1px solid rgba(255,255,255,0.06) }
+
+/* ===== FLOATING NAVBAR STYLES ===== */
+.floating-navbar {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: fit-content;
+  min-width: min(200px, calc(100vw - 1px));
+  max-width: min(500px, calc(100vw - 1px));
+  margin: 0 auto;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-radius: 32px;
+  border: none;
+  box-shadow: none;
+  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              backdrop-filter 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Saira Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Ensure it doesn't overflow viewport */
+  box-sizing: border-box;
+}
+
+/* Translucent state when scrolled past hero */
+.floating-navbar.scrolled {
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+              0 4px 6px -2px rgba(0, 0, 0, 0.05), 
+              0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+  position: relative;
+  gap: 32px;
+}
+
+.navbar-brand .brand-link {
+  font-family: 'Saira Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 35px;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  padding: 6px 4px;
+  margin-right: 32px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar-brand .brand-link::before {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: #F5C842;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-brand .brand-link::after {
+  display: none;
+}
+
+.navbar-brand .brand-link:hover::before,
+.navbar-brand .brand-link:focus::before {
+  transform: scaleX(1);
+}
+
+.navbar-brand .brand-link:hover,
+.navbar-brand .brand-link:focus {
+  color: #F5C842;
+  outline: none;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navbar-item {
+  font-family: 'Saira Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-radius: 6px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.navbar-item::before {
+  display: none;
+}
+
+.navbar-item::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 6px;
+  right: 6px;
+  height: 2px;
+  background: #F5C842;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-item:hover::after,
+.navbar-item:focus::after {
+  transform: scaleX(1);
+}
+
+.navbar-item:hover,
+.navbar-item:focus {
+  color: #F5C842;
+  outline: none;
+}
+
+.navbar-item:active {
+  transform: translateY(1px);
+}
+
+.navbar-item.active {
+  color: #F5C842;
+}
+
+.navbar-item.active::after {
+  transform: scaleX(1);
+}
+
+/* Mobile Toggle */
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 8px;
+  gap: 4px;
+  border-radius: 6px;
+  transition: background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.navbar-toggle:hover {
+  background: rgba(245, 196, 66, 0.2);
+}
+
+.navbar-toggle span {
+  width: 24px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Mobile Responsive */
+@media (min-width: 1200px) {
+  .floating-navbar {
+    min-width: 600px;
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .floating-navbar {
+    min-width: min(500px, calc(100vw - 40px));
+    max-width: min(700px, calc(100vw - 40px));
+  }
+}
+
+@media (max-width: 768px) {
+  .floating-navbar {
+    top: 12px;
+    min-width: auto;
+    width: calc(100% - 32px);
+    max-width: none;
+  }
+  
+  .navbar-container {
+    padding: 10px 2px;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .navbar-toggle {
+    right: 2px;
+  }
+  
+  .navbar-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-radius: 0 0 10px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: column;
+    gap: 0;
+    padding: 20px;
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .navbar-menu.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .navbar-item {
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .navbar-item:hover {
+    color: #19142B;
+    transform: translateY(0);
+  }
+  
+  .navbar-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-navbar {
+    top: 8px;
+    width: calc(100% - 16px);
+  }
+  
+  .navbar-container {
+    padding: 6px 2px;
+    justify-content: center;
+    gap: 12px;
+  }
+  
+  .navbar-toggle {
+    right: 2px;
+  }
+  
+  .navbar-brand .brand-link {
+    font-size: 1.8rem;
+  }
+  
+  .navbar-item {
+    font-size: 1rem;
+  }
+}
+
+/* Focus styles for accessibility */
+.navbar-item:focus-visible {
+  outline: 2px solid #F5C842;
+  outline-offset: 2px;
+}
+
+.navbar-brand .brand-link:focus-visible {
+  outline: 2px solid #F5C842;
+  outline-offset: 2px;
+}
+
+/* Enhanced entrance animation */
+.floating-navbar {
+  animation: navbarEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes navbarEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== END FLOATING NAVBAR STYLES ===== */
+
+/* Logo button styles */
+.logo-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline; /* align text baselines for ADONS / STUDIO */
+  gap: 0.6rem; /* add more space between ADONS and STUDIO */
+}
+.logo-button:focus {
+  /* remove the large visual ring for mouse-click focus */
+  outline: none;
+  box-shadow: none;
+}
+.logo-button:focus-visible {
+  /* Provide a subtle, accessible indicator only for keyboard focus users */
+  outline: 2px solid rgba(255,215,0,0.22);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+/* Logo typography: make both parts visually identical */
+.logo-main,
+.logo-sub {
+  color: #fff;
+  transition: color 160ms ease;
+  /* Use Saira Regular for the brand logotype */
+  font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.8rem; /* a little smaller */
+  font-weight: 400; /* Saira Regular weight */
+  line-height: 1;
+  letter-spacing: 0.01em; /* unified tracking */
+}
+/* ADONS turns yellow on hover/focus; STUDIO stays white */
+.logo-button:hover .logo-main,
+.logo-button:focus .logo-main {
+  color: #ffd700;
+}
+.logo-button:hover .logo-sub,
+.logo-button:focus .logo-sub {
+  color: #fff;
+}
+.logo-button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 3px;
+  width: 0;
+  background: #ffd700;
+  transition: width 220ms ease;
+  border-radius: 2px;
+}
+.logo-button:hover::after,
+.logo-button:focus::after {
+  width: 100%;
+}
+.logo-button:active {
+  transform: none;
+}
+
+/* Navigation link hover/focus animation: yellow text + animated underline */
+.nav-link {
+  position: relative;
+  color: #fff;
+  text-decoration: none;
+  padding-bottom: 4px;
+  transition: color 160ms ease, transform 160ms ease;
+  /* Use Saira Regular for navbar items */
+  font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400; /* Regular weight */
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 3px;
+  width: 0;
+  background: #ffd700;
+  transition: width 220ms ease;
+  border-radius: 2px;
+}
+.nav-link:hover,
+.nav-link:focus {
+  color: #ffd700;
+  outline: none;
+}
+.nav-link:hover::after,
+.nav-link:focus::after {
+  width: 100%;
+}
+.nav-link:active { transform: none }
+
+/* Persist active state when the section or page is active */
+.nav-link.active {
+  color: #ffd700;
+}
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Responsiveness helpers kept minimal; rest with Tailwind classes */
+
+/* Full-page hero video styles */
+.hero-full-video {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  /* ensure the media always covers and won't produce sub-pixel gaps */
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  z-index: 0;
+  /* use the site background as video fallback */
+  background: #333333;
+  transform: translateZ(0);
+}
+
+/* Ensure the hero section clips any overflowing sub-pixel artifacts */
+section#hero, .hero {
+  overflow: hidden;
+}
+.video-overlay {
+  position: relative;
+  z-index: 10;
+}
+.video-thumb-list { margin-top: 4px; }
+.video-dot-list { margin-top: 8px; }
+.carousel-indicators { margin-top: 0px !important; transform: translateY(-12px); }
+.video-dot { width: 10px; height: 10px; border-radius: 9999px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; }
+.video-dot.active { width: 14px; height: 14px; background: #ffd700; border-color: #ffd700; }
+.video-dot:focus { outline: none; }
+.video-dot:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 3px; }
+.thumb-placeholder { display: none }
+
+/* When a video is playing, dim the page behind the controls slightly */
+.hero-full-video.playing ~ .video-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  z-index: 5;
+}
+
+/* Mute toggle icon */
+.mute-toggle {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: #ffffff; /* default white icon */
+  cursor: pointer;
+  z-index: 30;
+  transition: color 160ms ease, transform 120ms ease;
+}
+
+/* Site-wide sticky footer pattern: keep footer at bottom on short pages */
+.site-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.site-content {
+  flex: 1 0 auto; /* grow to fill available space */
+}
+.site-root footer {
+  flex-shrink: 0; /* ensure footer keeps its height at the end */
+}
+.mute-toggle:hover { transform: scale(1.06); color: #ffd700; }
+.mute-toggle:focus { outline: none; }
+.mute-toggle:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 3px; border-radius: 6px; color: #ffd700; }
+.mute-toggle svg { width: 24px; height: 24px; }
+
+/* Larger left/right overlay arrow buttons in hero */
+.carousel-control-prev, .carousel-control-next {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent; /* remove circular backdrop */
+  border-radius: 0;
+  color: #ffffff; /* default white icons */
+  border: none;
+  box-shadow: none;
+  transition: transform 140ms ease, opacity 140ms ease, color 160ms ease;
+}
+.carousel-control-prev:hover, .carousel-control-next:hover { transform: translateY(-50%) translateY(-2px) scale(1.04); color: #ffd700; }
+.carousel-control-prev:focus-visible, .carousel-control-next:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 4px; color: #ffd700; }
+.carousel-control-prev svg, .carousel-control-next svg { width: 28px; height: 28px; }
+
+/* Lined indicators for hero carousel */
+.indicator-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  background: transparent;
+  border-radius: 6px;
+  border: none;
+  color: rgba(255,255,255,0.7); /* svg uses currentColor */
+  cursor: pointer;
+  transition: color 180ms ease, transform 140ms ease, background-color 160ms ease;
+}
+.indicator-line:hover { transform: translateY(-2px); }
+.indicator-line.active { color: #ffd700; background: rgba(255,215,0,0.06); }
+.indicator-line:focus { outline: none; }
+.indicator-line:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 4px; }
+
+
+/* Prevent text cursor over title/description in hero caption; keep pointer for interactive elements */
+.carousel-caption, .carousel-caption * {
+  cursor: default;
+}
+.carousel-caption a, .carousel-caption button, .carousel-caption .btn, .carousel-caption input {
+  cursor: pointer;
+}
+
+/* Prevent text selection while swiping/dragging the hero caption */
+.carousel-caption, .carousel-caption * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.carousel-caption input, .carousel-caption textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Typewriter cursor and description fade-in for hero caption */
+.typewriter { display: inline-block; white-space: nowrap; }
+.typewriter::after {
+  /* caret removed per request (hide pseudo-element) */
+  display: none;
+}
+@keyframes blink { 0%, 50% { opacity: 1 } 51%, 100% { opacity: 0 } }
+
+.hero-desc-fade { opacity: 0; transform: translateY(4px); transition: opacity 300ms ease, transform 300ms ease; }
+.hero-desc-fade.show { opacity: 0.85; transform: translateY(0) }
+
+/* Make the hero title and description larger for stronger emphasis */
+.carousel-caption h5.typewriter {
+  font-size: 2.8rem; /* larger desktop hero title */
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+.carousel-caption p.hero-desc-fade {
+  font-size: 1.25rem; /* larger desktop subtitle */
+  opacity: 0.95;
+  margin-top: 0.6rem;
+}
+
+/* Nudge hero caption upward slightly for tighter visual grouping */
+.carousel-caption {
+  transform: translateY(-1.9rem);
+}
+
+@media (max-width: 1024px) {
+  .carousel-caption h5.typewriter { font-size: 2.3rem }
+  .carousel-caption p.hero-desc-fade { font-size: 1.15rem }
+}
+
+@media (max-width: 640px) {
+  .carousel-caption h5.typewriter { font-size: 1.8rem }
+  .carousel-caption p.hero-desc-fade { font-size: 1.05rem }
+  .carousel-caption { transform: translateY(-1.4rem); }
+}
+
+
+/* Allow vertical page scrolling but keep horizontal swipe gestures for the hero area */
+#hero { -ms-touch-action: pan-y; touch-action: pan-y; }
+
+/* Strongly prevent text selection while interacting with the hero/video area */
+#hero, #hero * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+/* Re-enable selection for form controls and explicit interactive elements */
+#hero a, #hero button, #hero input, #hero textarea, #hero select {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+@media (max-width: 640px) {
+  .indicator-line { width: 20px; height: 20px }
+  /* scale logo down on small screens */
+  .logo-main { font-size: 1.4rem }
+  .logo-sub { font-size: 0.85rem }
+  .video-dot-list { margin-top: 8px; }
+  .carousel-indicators { margin-top: 0px !important; transform: translateY(-8px); }
+}

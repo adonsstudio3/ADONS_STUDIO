@@ -1,0 +1,356 @@
+/* Footer styles */
+.footer {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  color: #ffffff;
+  margin-top: auto;
+  /* Ensure footer sits above low-level overlays and accepts pointer events */
+  position: relative;
+  z-index: 50;
+}
+
+.footerMain {
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(230, 184, 0, 0.8) !important;
+  background: rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  max-width: 1280px;
+}
+
+.footerContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Company Column */
+.footerColumnCompany {
+  max-width: 350px;
+}
+
+.footerBrand {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* Nudge brand down slightly for visual alignment with Quick Links */
+  margin-top: 0.35rem;
+}
+
+.footerLogo {
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.footerLogoImg {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  display: block;
+}
+
+.footerBrandName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e6b800;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.02em;
+}
+
+.footerBrandTagline {
+  font-size: 0.875rem;
+  color: #e6b800;
+  opacity: 0.9;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+/* Column Titles */
+.footerColumnTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e6b800;
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.footerColumnTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #ffd700;
+  border-radius: 2px;
+}
+
+/* Navigation Links */
+.footerNavList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footerNavList li {
+  margin-bottom: 0.75rem;
+}
+
+.footerNavLink {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  padding-left: 1rem;
+  display: inline-block;
+}
+
+.footerNavLink::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #e6b800;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footerNavLink:hover {
+  color: #e6b800;
+  padding-left: 1.25rem;
+}
+
+.footerNavLink:hover::before {
+  transform: translateX(4px);
+}
+
+/* Contact Info */
+.footerContact {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footerContactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.footerContactIcon {
+  color: #e6b800;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.125rem;
+  min-width: 20px;
+  flex-shrink: 0;
+}
+
+.footerContactLink {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footerContactLink:hover {
+  color: #e6b800;
+}
+
+/* Social Media */
+.footerSocial {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.footerSocialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(230, 184, 0, 0.1);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid rgba(230, 184, 0, 0.3);
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  pointer-events: auto; /* ensure clickable even if parent has altered events */
+  z-index: 10;
+}
+
+.footerSocialLink:hover {
+  background: #e6b800;
+  color: #0a0a0a;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 12px rgba(230, 184, 0, 0.4);
+}
+
+.footerSocialLink:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Footer Bottom */
+.footerBottom {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1.25rem 0;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.footerBottomContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footerCopyright {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  color: #9ea3a8;
+}
+
+.footerCopyright p {
+  margin: 0;
+}
+
+.footerLegal {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.footerLegalLink {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.8;
+}
+
+.footerLegalLink:hover {
+  color: #e6b800;
+  opacity: 1;
+}
+
+.footerLegalSeparator {
+  opacity: 0.5;
+  color: #9ea3a8;
+  margin: 0 0.5rem;
+  font-weight: 400;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  
+  .footerColumnCompany {
+    max-width: none;
+  }
+  
+  .footerNavLink {
+    padding-left: 0;
+    justify-content: center;
+  }
+  
+  .footerNavLink::before {
+    display: none;
+  }
+  
+  .footerContactItem {
+    justify-content: center;
+    text-align: left;
+  }
+  
+  .footerSocial {
+    justify-content: center;
+  }
+  
+  .footerBottomContent {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerMain {
+    padding: 1.5rem 0;
+  }
+  
+  .footerContent {
+    gap: 1.25rem;
+  }
+  
+  .footerBrandName {
+    font-size: 1.25rem;
+  }
+  
+  .footerLogoImg {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .footerSocial {
+    gap: 0.75rem;
+  }
+  
+  .footerSocialLink {
+    width: 40px;
+    height: 40px;
+    font-size: 0.875rem;
+  }
+  
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Loading animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footerColumn {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.footerColumn:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.footerColumn:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.footerColumn:nth-child(4) {
+  animation-delay: 0.3s;
+}

@@ -1,0 +1,10 @@
+.heroSection {
+  position: relative;
+  height: 100vh;
+  min-height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(120deg, #0a0a0a 60%, #FFD700 100%);
+}

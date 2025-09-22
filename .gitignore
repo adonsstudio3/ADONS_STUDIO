@@ -1,0 +1,45 @@
+# Node
+node_modules/
+.npm/
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# Next.js
+.next/
+out/
+
+# Env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Misc
+coverage/
+dist/
+
+# Fonts (exclude to avoid licensing issues)
+public/fonts/
+!public/fonts/Saira-Regular.*
+!public/fonts/PlayfairDisplay-*
+
+# IDE
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
