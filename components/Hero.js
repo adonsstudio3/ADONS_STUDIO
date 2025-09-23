@@ -137,21 +137,31 @@ export default function Hero(){
       // move to next clip immediately when current finishes
       setCurrent(i => (i + 1) % playlist.length)
       // ensure we try to play the next one
-      setTimeout(()=>{
-        try { v.play().catch(()=>{}) } catch(e){}
+      const endTimeout = setTimeout(()=>{
+        try { 
+          const video = videoRef.current
+          if (video) video.play().catch(()=>{}) 
+        } catch(e){}
       }, 50)
+      
+      // Store timeout for cleanup
+      return () => clearTimeout(endTimeout)
     }
 
-  v.addEventListener('waiting', onWaiting)
-  v.addEventListener('stalled', onStalled)
-  v.addEventListener('error', onError)
-  v.addEventListener('ended', onEnded)
+    if (v) {
+      v.addEventListener('waiting', onWaiting)
+      v.addEventListener('stalled', onStalled)
+      v.addEventListener('error', onError)
+      v.addEventListener('ended', onEnded)
+    }
 
     return () => {
-  v.removeEventListener('waiting', onWaiting)
-  v.removeEventListener('stalled', onStalled)
-  v.removeEventListener('error', onError)
-  v.removeEventListener('ended', onEnded)
+      if (v) {
+        v.removeEventListener('waiting', onWaiting)
+        v.removeEventListener('stalled', onStalled)
+        v.removeEventListener('error', onError)
+        v.removeEventListener('ended', onEnded)
+      }
     }
   }, [current])
 

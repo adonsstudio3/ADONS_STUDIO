@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 
 export default function ScrollbarGutter() {
   useEffect(() => {
+    let resizeTimeout
+    
     function updateScrollbarGutterFallback() {
       // Measure browser scrollbar width (difference between innerWidth and clientWidth)
       const sbWidth = window.innerWidth - document.documentElement.clientWidth
@@ -30,18 +32,19 @@ export default function ScrollbarGutter() {
     }
 
     // Update on load and resize; debounce to avoid thrash
-    let t
     function onResize() {
-      clearTimeout(t)
-      t = setTimeout(updateScrollbarGutterFallback, 120)
+      if (resizeTimeout) clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(updateScrollbarGutterFallback, 120)
     }
 
     updateScrollbarGutterFallback()
     window.addEventListener('resize', onResize)
     window.addEventListener('orientationchange', onResize)
+    
     return () => {
       window.removeEventListener('resize', onResize)
       window.removeEventListener('orientationchange', onResize)
+      if (resizeTimeout) clearTimeout(resizeTimeout)
     }
   }, [])
 

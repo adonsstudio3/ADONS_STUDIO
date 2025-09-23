@@ -30,6 +30,9 @@ export default function Layout({ children }){
     // If pathname changed, scroll to top immediately
     if (router.pathname !== previousPathname) {
       console.log('Layout: Pathname changed from', previousPathname, 'to', router.pathname, '- scrolling to top')
+      
+      let timeouts = []
+      
       // Try multiple methods to ensure scroll reset
       window.scrollTo(0, 0)
       window.scroll({ top: 0, left: 0, behavior: 'instant' })
@@ -37,19 +40,24 @@ export default function Layout({ children }){
       document.body.scrollTop = 0
       
       // Also try with setTimeout to override any other scroll behavior
-      setTimeout(() => {
+      timeouts.push(setTimeout(() => {
         window.scrollTo(0, 0)
         document.documentElement.scrollTop = 0
         document.body.scrollTop = 0
-      }, 0)
+      }, 0))
       
-      setTimeout(() => {
+      timeouts.push(setTimeout(() => {
         window.scrollTo(0, 0)
         document.documentElement.scrollTop = 0
         document.body.scrollTop = 0
-      }, 100)
+      }, 100))
       
       setPreviousPathname(router.pathname)
+      
+      // Cleanup function to clear timeouts if component unmounts
+      return () => {
+        timeouts.forEach(timeout => clearTimeout(timeout))
+      }
     }
   }, [router?.pathname, previousPathname])
 
@@ -57,9 +65,11 @@ export default function Layout({ children }){
   useEffect(() => {
     if (!router || !router.events) return
     
+    let routeTimeout
+    
     const handleRouteChange = (url) => {
       console.log('Router event: navigating to', url)
-      setTimeout(() => {
+      routeTimeout = setTimeout(() => {
         window.scrollTo(0, 0)
         document.documentElement.scrollTop = 0
         document.body.scrollTop = 0
@@ -67,16 +77,18 @@ export default function Layout({ children }){
     }
     
     router.events.on('routeChangeComplete', handleRouteChange)
-    return () => router.events.off('routeChangeComplete', handleRouteChange)
+    
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+      if (routeTimeout) clearTimeout(routeTimeout)
+    }
   }, [router])
 
   useEffect(()=>{
     if (typeof window === 'undefined') return
-    try {
-      var el = document.getElementById('initial-loading-screen')
-      if (el) el.style.display = 'none'
-    } catch(e){}
-
+    
+    // Don't remove the initial loading screen here - let the preloader handle it
+    
     // Detect whether this mount is a true full-page navigation (not a client-side route change)
     let navType = 'navigate'
     try {
@@ -93,21 +105,27 @@ export default function Layout({ children }){
   const isFullPageLoad = navType === 'navigate' || navType === 'reload'
 
   // debug logging to trace loading state and navigation type during development
-  try { console.debug('[Layout] pathname=', router && router.pathname, 'navType=', navType, 'isFullPageLoad=', isFullPageLoad) } catch(e){}
+  try { 
+    console.debug('[Layout] pathname=', router && router.pathname, 'navType=', navType, 'isFullPageLoad=', isFullPageLoad, 'loading=', loading) 
+  } catch(e){}
 
     // Only show the loading overlay when the current route is the homepage ('/')
-    // and this is a true full-page navigation. Do not show on other pages or
-    // during client-side route transitions.
+    // For now, show preloader on every homepage visit to ensure it works
     if (!router || router.pathname !== '/') {
       setLoading(false)
+      // Hide initial loading screen for non-home pages
+      try {
+        var el = document.getElementById('initial-loading-screen')
+        if (el) el.style.display = 'none'
+        document.body.classList.add('content-ready')
+      } catch(e){}
       return
-    }    if (!isFullPageLoad) {
-      setLoading(false)
-      return
-    }
-
-    // Show overlay for a short fixed duration on full-page loads to the home page only
+    }    
+    
+    // Show preloader for all homepage visits (remove full page load check temporarily)
+    console.log('Homepage detected - showing preloader'); // Debug log
     setLoading(true)
+    
     // If we're not using the video preloader, keep previous fixed duration
     if (!showVideoPreloader) {
       const t = setTimeout(()=> setLoading(false), 1800)
@@ -152,13 +170,23 @@ export default function Layout({ children }){
         if (v && !v.paused) { v.pause() }
       } catch (e) {}
       setLoading(false)
+      
+      // Hide initial loading screen and show main content
       try {
         var el = document.getElementById('initial-loading-screen')
         if (el) el.style.display = 'none'
+        // Now make the main content visible
+        document.body.classList.add('content-ready')
       } catch(e){}
     }
 
     const onCanPlay = () => {
+      // Hide initial loading screen when video is ready to play
+      try {
+        var el = document.getElementById('initial-loading-screen')
+        if (el) el.style.display = 'none'
+      } catch(e){}
+      
       try {
         if (v) { v.muted = true; v.volume = 0 }
         v.play().catch(()=>{})
@@ -216,6 +244,7 @@ export default function Layout({ children }){
                 preload="auto"
                 className="max-w-full max-h-[60vh] mx-auto"
                 onLoadedMetadata={() => {
+                  console.log('Preloader video metadata loaded'); // Debug log
                   const v = preloaderRef.current
                   if (!v) return
                   try {
@@ -229,7 +258,10 @@ export default function Layout({ children }){
                     }
                   } catch(e){}
                 }}
-                onError={() => setShowVideoPreloader(false)}
+                onError={() => {
+                  console.log('Preloader video error, falling back'); // Debug log
+                  setShowVideoPreloader(false)
+                }}
               />
             ) : (
               <>

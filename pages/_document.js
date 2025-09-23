@@ -12,11 +12,38 @@ export default function Document(){
         </noscript>
         {/* Viewport meta for responsive mobile layout */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* Initial loading overlay: visible by default to block first paint until
-            the client script or React removes it. The inline script below will
-            hide it immediately for non-home pages so it doesn't block other routes. */}
+        {/* Initial loading overlay: Black screen until preloader video shows */}
         <style dangerouslySetInnerHTML={{ __html: `
-          #initial-loading-screen { display: block; position: fixed; inset: 0; z-index: 99999; background: #000; }
+          /* Keep everything hidden and black until preloader is ready */
+          body { 
+            visibility: visible; 
+            opacity: 1; 
+            background: #000 !important;
+          }
+          
+          /* Hide main content until preloader finishes, but allow preloader to show */
+          #__next > *:not([id*="loading"]) { 
+            visibility: hidden !important; 
+            opacity: 0 !important; 
+          }
+          body.content-ready #__next > * { 
+            visibility: visible !important; 
+            opacity: 1 !important; 
+            transition: opacity 0.3s ease; 
+          }
+          
+          /* Specifically hide site background until content is ready */
+          body:not(.content-ready) #site-bg {
+            display: none !important;
+          }
+          
+          #initial-loading-screen { 
+            display: block; 
+            position: fixed; 
+            inset: 0; 
+            z-index: 99999; 
+            background: #000; 
+          }
         ` }} />
         <script dangerouslySetInnerHTML={{ __html: `
           (function(){
@@ -34,8 +61,7 @@ export default function Document(){
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
   {/* Preload local Playfair SemiBold WOFF2 (optimized) */}
   <link rel="preload" href="/fonts/PlayfairDisplay-SemiBold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-  {/* Preload LCP background image (nebula) - prefer AVIF variant we generated */}
-  <link rel="preload" href="/Images/optimized/nebula/nebula-1600.avif" as="image" type="image/avif" crossOrigin="anonymous" />
+  {/* Remove nebula preload to prevent background flash before preloader */}
         {/* Inline guard to suppress errors from browser extensions that inject scripts */}
         <script dangerouslySetInnerHTML={{ __html: `
           (function(){
@@ -63,7 +89,7 @@ export default function Document(){
         `}} />
       </Head>
       <body>
-        {/* Minimal initial overlay shown immediately on first-paint for home */}
+        {/* Completely black initial overlay - no text */}
         <div id="initial-loading-screen" aria-hidden="true"></div>
         <Main />
         <NextScript />

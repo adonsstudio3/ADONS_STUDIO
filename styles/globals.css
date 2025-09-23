@@ -13,6 +13,9 @@
   color: #FFD700;
   margin-bottom: 1.2rem;
 }
+/* Prevent FOUC (Flash of Unstyled Content) - Enhanced version */
+/* Initial body state is set in _document.js inline styles */
+
 /* Gold text utility */
 .text-gold {
   color: #FFD700;

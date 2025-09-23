@@ -1,0 +1,587 @@
+{
+  "about/studio_1": {
+    "original": "/Images/about/studio_1.JPG",
+    "avif": {
+      "320": "/Images/optimized/Images/about/studio_1/studio_1-320.avif",
+      "640": "/Images/optimized/Images/about/studio_1/studio_1-640.avif",
+      "960": "/Images/optimized/Images/about/studio_1/studio_1-960.avif",
+      "1280": "/Images/optimized/Images/about/studio_1/studio_1-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/about/studio_1/studio_1-320.webp",
+      "640": "/Images/optimized/Images/about/studio_1/studio_1-640.webp",
+      "960": "/Images/optimized/Images/about/studio_1/studio_1-960.webp",
+      "1280": "/Images/optimized/Images/about/studio_1/studio_1-1280.webp"
+    }
+  },
+  "about/studio_2": {
+    "original": "/Images/about/studio_2.JPG",
+    "avif": {
+      "320": "/Images/optimized/Images/about/studio_2/studio_2-320.avif",
+      "640": "/Images/optimized/Images/about/studio_2/studio_2-640.avif",
+      "960": "/Images/optimized/Images/about/studio_2/studio_2-960.avif",
+      "1280": "/Images/optimized/Images/about/studio_2/studio_2-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/about/studio_2/studio_2-320.webp",
+      "640": "/Images/optimized/Images/about/studio_2/studio_2-640.webp",
+      "960": "/Images/optimized/Images/about/studio_2/studio_2-960.webp",
+      "1280": "/Images/optimized/Images/about/studio_2/studio_2-1280.webp"
+    }
+  },
+  "Audio restoration": {
+    "original": "/Images/Audio restoration.webp",
+    "avif": {
+      "320": "/Images/optimized/Images/Audio restoration/Audio restoration-320.avif",
+      "640": "/Images/optimized/Images/Audio restoration/Audio restoration-640.avif",
+      "960": "/Images/optimized/Images/Audio restoration/Audio restoration-960.avif",
+      "1280": "/Images/optimized/Images/Audio restoration/Audio restoration-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Audio restoration/Audio restoration-320.webp",
+      "640": "/Images/optimized/Images/Audio restoration/Audio restoration-640.webp",
+      "960": "/Images/optimized/Images/Audio restoration/Audio restoration-960.webp",
+      "1280": "/Images/optimized/Images/Audio restoration/Audio restoration-1280.webp"
+    }
+  },
+  "background/nebula": {
+    "original": "/Images/background/nebula.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/background/nebula/nebula-320.avif",
+      "640": "/Images/optimized/Images/background/nebula/nebula-640.avif",
+      "960": "/Images/optimized/Images/background/nebula/nebula-960.avif",
+      "1280": "/Images/optimized/Images/background/nebula/nebula-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/background/nebula/nebula-320.webp",
+      "640": "/Images/optimized/Images/background/nebula/nebula-640.webp",
+      "960": "/Images/optimized/Images/background/nebula/nebula-960.webp",
+      "1280": "/Images/optimized/Images/background/nebula/nebula-1280.webp"
+    }
+  },
+  "bw-banner/bw-banner": {
+    "original": "/Images/bw-banner/bw-banner.png",
+    "avif": {
+      "320": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-320.avif",
+      "640": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-640.avif",
+      "960": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-960.avif",
+      "1280": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-320.webp",
+      "640": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-640.webp",
+      "960": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-960.webp",
+      "1280": "/Images/optimized/Images/bw-banner/bw-banner/bw-banner-1280.webp"
+    }
+  },
+  "Event production": {
+    "original": "/Images/Event production.webp",
+    "avif": {
+      "320": "/Images/optimized/Images/Event production/Event production-320.avif",
+      "640": "/Images/optimized/Images/Event production/Event production-640.avif",
+      "960": "/Images/optimized/Images/Event production/Event production-960.avif",
+      "1280": "/Images/optimized/Images/Event production/Event production-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Event production/Event production-320.webp",
+      "640": "/Images/optimized/Images/Event production/Event production-640.webp",
+      "960": "/Images/optimized/Images/Event production/Event production-960.webp",
+      "1280": "/Images/optimized/Images/Event production/Event production-1280.webp"
+    }
+  },
+  "Firefly_Gemini Flash_Corporate and commercial ads": {
+    "original": "/Images/Firefly_Gemini Flash_Corporate and commercial ads.png",
+    "avif": {
+      "320": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-320.avif",
+      "640": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-640.avif",
+      "960": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-960.avif",
+      "1280": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-320.webp",
+      "640": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-640.webp",
+      "960": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-960.webp",
+      "1280": "/Images/optimized/Images/Firefly_Gemini Flash_Corporate and commercial ads/Firefly_Gemini Flash_Corporate and commercial ads-1280.webp"
+    }
+  },
+  "Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598": {
+    "original": "/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598.png",
+    "avif": {
+      "320": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-320.avif",
+      "640": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-640.avif",
+      "960": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-960.avif",
+      "1280": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-320.webp",
+      "640": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-640.webp",
+      "960": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-960.webp",
+      "1280": "/Images/optimized/Images/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598/Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-1280.webp"
+    }
+  },
+  "hero/Contact": {
+    "original": "/Images/hero/Contact.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/hero/Contact/Contact-320.avif",
+      "640": "/Images/optimized/Images/hero/Contact/Contact-640.avif",
+      "960": "/Images/optimized/Images/hero/Contact/Contact-960.avif",
+      "1280": "/Images/optimized/Images/hero/Contact/Contact-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/hero/Contact/Contact-320.webp",
+      "640": "/Images/optimized/Images/hero/Contact/Contact-640.webp",
+      "960": "/Images/optimized/Images/hero/Contact/Contact-960.webp",
+      "1280": "/Images/optimized/Images/hero/Contact/Contact-1280.webp"
+    }
+  },
+  "hero/Contact_Hero_Demo": {
+    "original": "/Images/hero/Contact_Hero_Demo.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-320.avif",
+      "640": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-640.avif",
+      "960": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-960.avif",
+      "1280": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-320.webp",
+      "640": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-640.webp",
+      "960": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-960.webp",
+      "1280": "/Images/optimized/Images/hero/Contact_Hero_Demo/Contact_Hero_Demo-1280.webp"
+    }
+  },
+  "hero/Projects": {
+    "original": "/Images/hero/Projects.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/hero/Projects/Projects-320.avif",
+      "640": "/Images/optimized/Images/hero/Projects/Projects-640.avif",
+      "960": "/Images/optimized/Images/hero/Projects/Projects-960.avif",
+      "1280": "/Images/optimized/Images/hero/Projects/Projects-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/hero/Projects/Projects-320.webp",
+      "640": "/Images/optimized/Images/hero/Projects/Projects-640.webp",
+      "960": "/Images/optimized/Images/hero/Projects/Projects-960.webp",
+      "1280": "/Images/optimized/Images/hero/Projects/Projects-1280.webp"
+    }
+  },
+  "hero/project_hero_demo": {
+    "original": "/Images/hero/project_hero_demo.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-320.avif",
+      "640": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-640.avif",
+      "960": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-960.avif",
+      "1280": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-320.webp",
+      "640": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-640.webp",
+      "960": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-960.webp",
+      "1280": "/Images/optimized/Images/hero/project_hero_demo/project_hero_demo-1280.webp"
+    }
+  },
+  "hero/Services": {
+    "original": "/Images/hero/Services.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/hero/Services/Services-320.avif",
+      "640": "/Images/optimized/Images/hero/Services/Services-640.avif",
+      "960": "/Images/optimized/Images/hero/Services/Services-960.avif",
+      "1280": "/Images/optimized/Images/hero/Services/Services-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/hero/Services/Services-320.webp",
+      "640": "/Images/optimized/Images/hero/Services/Services-640.webp",
+      "960": "/Images/optimized/Images/hero/Services/Services-960.webp",
+      "1280": "/Images/optimized/Images/hero/Services/Services-1280.webp"
+    }
+  },
+  "hero/Team": {
+    "original": "/Images/hero/Team.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/hero/Team/Team-320.avif",
+      "640": "/Images/optimized/Images/hero/Team/Team-640.avif",
+      "960": "/Images/optimized/Images/hero/Team/Team-960.avif",
+      "1280": "/Images/optimized/Images/hero/Team/Team-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/hero/Team/Team-320.webp",
+      "640": "/Images/optimized/Images/hero/Team/Team-640.webp",
+      "960": "/Images/optimized/Images/hero/Team/Team-960.webp",
+      "1280": "/Images/optimized/Images/hero/Team/Team-1280.webp"
+    }
+  },
+  "hero/team_Hero_Demo": {
+    "original": "/Images/hero/team_Hero_Demo.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-320.avif",
+      "640": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-640.avif",
+      "960": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-960.avif",
+      "1280": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-320.webp",
+      "640": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-640.webp",
+      "960": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-960.webp",
+      "1280": "/Images/optimized/Images/hero/team_Hero_Demo/team_Hero_Demo-1280.webp"
+    }
+  },
+  "Music production": {
+    "original": "/Images/Music production.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/Music production/Music production-320.avif",
+      "640": "/Images/optimized/Images/Music production/Music production-640.avif",
+      "960": "/Images/optimized/Images/Music production/Music production-960.avif",
+      "1280": "/Images/optimized/Images/Music production/Music production-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Music production/Music production-320.webp",
+      "640": "/Images/optimized/Images/Music production/Music production-640.webp",
+      "960": "/Images/optimized/Images/Music production/Music production-960.webp",
+      "1280": "/Images/optimized/Images/Music production/Music production-1280.webp"
+    }
+  },
+  "podcast Production": {
+    "original": "/Images/podcast Production.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/podcast Production/podcast Production-320.avif",
+      "640": "/Images/optimized/Images/podcast Production/podcast Production-640.avif",
+      "960": "/Images/optimized/Images/podcast Production/podcast Production-960.avif",
+      "1280": "/Images/optimized/Images/podcast Production/podcast Production-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/podcast Production/podcast Production-320.webp",
+      "640": "/Images/optimized/Images/podcast Production/podcast Production-640.webp",
+      "960": "/Images/optimized/Images/podcast Production/podcast Production-960.webp",
+      "1280": "/Images/optimized/Images/podcast Production/podcast Production-1280.webp"
+    }
+  },
+  "Podcast production_additional": {
+    "original": "/Images/Podcast production_additional.jpeg",
+    "avif": {
+      "320": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-320.avif",
+      "640": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-640.avif",
+      "960": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-960.avif",
+      "1280": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-320.webp",
+      "640": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-640.webp",
+      "960": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-960.webp",
+      "1280": "/Images/optimized/Images/Podcast production_additional/Podcast production_additional-1280.webp"
+    }
+  },
+  "Post production": {
+    "original": "/Images/Post production.png",
+    "avif": {
+      "320": "/Images/optimized/Images/Post production/Post production-320.avif",
+      "640": "/Images/optimized/Images/Post production/Post production-640.avif",
+      "960": "/Images/optimized/Images/Post production/Post production-960.avif",
+      "1280": "/Images/optimized/Images/Post production/Post production-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Post production/Post production-320.webp",
+      "640": "/Images/optimized/Images/Post production/Post production-640.webp",
+      "960": "/Images/optimized/Images/Post production/Post production-960.webp",
+      "1280": "/Images/optimized/Images/Post production/Post production-1280.webp"
+    }
+  },
+  "Pre production": {
+    "original": "/Images/Pre production.png",
+    "avif": {
+      "320": "/Images/optimized/Images/Pre production/Pre production-320.avif",
+      "640": "/Images/optimized/Images/Pre production/Pre production-640.avif",
+      "960": "/Images/optimized/Images/Pre production/Pre production-960.avif",
+      "1280": "/Images/optimized/Images/Pre production/Pre production-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Pre production/Pre production-320.webp",
+      "640": "/Images/optimized/Images/Pre production/Pre production-640.webp",
+      "960": "/Images/optimized/Images/Pre production/Pre production-960.webp",
+      "1280": "/Images/optimized/Images/Pre production/Pre production-1280.webp"
+    }
+  },
+  "Production": {
+    "original": "/Images/Production.png",
+    "avif": {
+      "320": "/Images/optimized/Images/Production/Production-320.avif",
+      "640": "/Images/optimized/Images/Production/Production-640.avif",
+      "960": "/Images/optimized/Images/Production/Production-960.avif",
+      "1280": "/Images/optimized/Images/Production/Production-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Production/Production-320.webp",
+      "640": "/Images/optimized/Images/Production/Production-640.webp",
+      "960": "/Images/optimized/Images/Production/Production-960.webp",
+      "1280": "/Images/optimized/Images/Production/Production-1280.webp"
+    }
+  },
+  "Sound design": {
+    "original": "/Images/Sound design.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/Sound design/Sound design-320.avif",
+      "640": "/Images/optimized/Images/Sound design/Sound design-640.avif",
+      "960": "/Images/optimized/Images/Sound design/Sound design-960.avif",
+      "1280": "/Images/optimized/Images/Sound design/Sound design-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/Sound design/Sound design-320.webp",
+      "640": "/Images/optimized/Images/Sound design/Sound design-640.webp",
+      "960": "/Images/optimized/Images/Sound design/Sound design-960.webp",
+      "1280": "/Images/optimized/Images/Sound design/Sound design-1280.webp"
+    }
+  },
+  "team/ADI": {
+    "original": "/Images/team/ADI.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/team/ADI/ADI-320.avif",
+      "640": "/Images/optimized/Images/team/ADI/ADI-640.avif",
+      "960": "/Images/optimized/Images/team/ADI/ADI-960.avif",
+      "1280": "/Images/optimized/Images/team/ADI/ADI-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/team/ADI/ADI-320.webp",
+      "640": "/Images/optimized/Images/team/ADI/ADI-640.webp",
+      "960": "/Images/optimized/Images/team/ADI/ADI-960.webp",
+      "1280": "/Images/optimized/Images/team/ADI/ADI-1280.webp"
+    }
+  },
+  "team/SAM": {
+    "original": "/Images/team/SAM.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/team/SAM/SAM-320.avif",
+      "640": "/Images/optimized/Images/team/SAM/SAM-640.avif",
+      "960": "/Images/optimized/Images/team/SAM/SAM-960.avif",
+      "1280": "/Images/optimized/Images/team/SAM/SAM-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/team/SAM/SAM-320.webp",
+      "640": "/Images/optimized/Images/team/SAM/SAM-640.webp",
+      "960": "/Images/optimized/Images/team/SAM/SAM-960.webp",
+      "1280": "/Images/optimized/Images/team/SAM/SAM-1280.webp"
+    }
+  },
+  "team/SID": {
+    "original": "/Images/team/SID.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/team/SID/SID-320.avif",
+      "640": "/Images/optimized/Images/team/SID/SID-640.avif",
+      "960": "/Images/optimized/Images/team/SID/SID-960.avif",
+      "1280": "/Images/optimized/Images/team/SID/SID-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/team/SID/SID-320.webp",
+      "640": "/Images/optimized/Images/team/SID/SID-640.webp",
+      "960": "/Images/optimized/Images/team/SID/SID-960.webp",
+      "1280": "/Images/optimized/Images/team/SID/SID-1280.webp"
+    }
+  },
+  "team/SUMU": {
+    "original": "/Images/team/SUMU.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/team/SUMU/SUMU-320.avif",
+      "640": "/Images/optimized/Images/team/SUMU/SUMU-640.avif",
+      "960": "/Images/optimized/Images/team/SUMU/SUMU-960.avif",
+      "1280": "/Images/optimized/Images/team/SUMU/SUMU-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/team/SUMU/SUMU-320.webp",
+      "640": "/Images/optimized/Images/team/SUMU/SUMU-640.webp",
+      "960": "/Images/optimized/Images/team/SUMU/SUMU-960.webp",
+      "1280": "/Images/optimized/Images/team/SUMU/SUMU-1280.webp"
+    }
+  },
+  "team/SWAPU": {
+    "original": "/Images/team/SWAPU.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/team/SWAPU/SWAPU-320.avif",
+      "640": "/Images/optimized/Images/team/SWAPU/SWAPU-640.avif",
+      "960": "/Images/optimized/Images/team/SWAPU/SWAPU-960.avif",
+      "1280": "/Images/optimized/Images/team/SWAPU/SWAPU-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/team/SWAPU/SWAPU-320.webp",
+      "640": "/Images/optimized/Images/team/SWAPU/SWAPU-640.webp",
+      "960": "/Images/optimized/Images/team/SWAPU/SWAPU-960.webp",
+      "1280": "/Images/optimized/Images/team/SWAPU/SWAPU-1280.webp"
+    }
+  },
+  "test-new-image": {
+    "original": "/Images/test-new-image.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/test-new-image/test-new-image-320.avif",
+      "640": "/Images/optimized/Images/test-new-image/test-new-image-640.avif",
+      "960": "/Images/optimized/Images/test-new-image/test-new-image-960.avif",
+      "1280": "/Images/optimized/Images/test-new-image/test-new-image-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/test-new-image/test-new-image-320.webp",
+      "640": "/Images/optimized/Images/test-new-image/test-new-image-640.webp",
+      "960": "/Images/optimized/Images/test-new-image/test-new-image-960.webp",
+      "1280": "/Images/optimized/Images/test-new-image/test-new-image-1280.webp"
+    }
+  },
+  "vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky": {
+    "original": "/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-320.avif",
+      "640": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-640.avif",
+      "960": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-960.avif",
+      "1280": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-320.webp",
+      "640": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-640.webp",
+      "960": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-960.webp",
+      "1280": "/Images/optimized/Images/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky/vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-1280.webp"
+    }
+  },
+  "visuals/3D-CGI-after": {
+    "original": "/Images/visuals/3D-CGI-after.png",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-320.avif",
+      "640": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-640.avif",
+      "960": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-960.avif",
+      "1280": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-320.webp",
+      "640": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-640.webp",
+      "960": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-960.webp",
+      "1280": "/Images/optimized/Images/visuals/3D-CGI-after/3D-CGI-after-1280.webp"
+    }
+  },
+  "visuals/3D-CGI-before": {
+    "original": "/Images/visuals/3D-CGI-before.png",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-320.avif",
+      "640": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-640.avif",
+      "960": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-960.avif",
+      "1280": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-320.webp",
+      "640": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-640.webp",
+      "960": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-960.webp",
+      "1280": "/Images/optimized/Images/visuals/3D-CGI-before/3D-CGI-before-1280.webp"
+    }
+  },
+  "visuals/3D_2D-Animation-after": {
+    "original": "/Images/visuals/3D_2D-Animation-after.png",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-320.avif",
+      "640": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-640.avif",
+      "960": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-960.avif",
+      "1280": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-320.webp",
+      "640": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-640.webp",
+      "960": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-960.webp",
+      "1280": "/Images/optimized/Images/visuals/3D_2D-Animation-after/3D_2D-Animation-after-1280.webp"
+    }
+  },
+  "visuals/3D_2D-Animation-before": {
+    "original": "/Images/visuals/3D_2D-Animation-before.png",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-320.avif",
+      "640": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-640.avif",
+      "960": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-960.avif",
+      "1280": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-320.webp",
+      "640": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-640.webp",
+      "960": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-960.webp",
+      "1280": "/Images/optimized/Images/visuals/3D_2D-Animation-before/3D_2D-Animation-before-1280.webp"
+    }
+  },
+  "visuals/Cleanup-after": {
+    "original": "/Images/visuals/Cleanup-after.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-320.avif",
+      "640": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-640.avif",
+      "960": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-960.avif",
+      "1280": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-320.webp",
+      "640": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-640.webp",
+      "960": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-960.webp",
+      "1280": "/Images/optimized/Images/visuals/Cleanup-after/Cleanup-after-1280.webp"
+    }
+  },
+  "visuals/Cleanup-before": {
+    "original": "/Images/visuals/Cleanup-before.jpg",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-320.avif",
+      "640": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-640.avif",
+      "960": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-960.avif",
+      "1280": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-320.webp",
+      "640": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-640.webp",
+      "960": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-960.webp",
+      "1280": "/Images/optimized/Images/visuals/Cleanup-before/Cleanup-before-1280.webp"
+    }
+  },
+  "visuals/Rotoscope-after": {
+    "original": "/Images/visuals/Rotoscope-after.png",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-320.avif",
+      "640": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-640.avif",
+      "960": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-960.avif",
+      "1280": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-320.webp",
+      "640": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-640.webp",
+      "960": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-960.webp",
+      "1280": "/Images/optimized/Images/visuals/Rotoscope-after/Rotoscope-after-1280.webp"
+    }
+  },
+  "visuals/Rotoscope-before": {
+    "original": "/Images/visuals/Rotoscope-before.png",
+    "avif": {
+      "320": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-320.avif",
+      "640": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-640.avif",
+      "960": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-960.avif",
+      "1280": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-320.webp",
+      "640": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-640.webp",
+      "960": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-960.webp",
+      "1280": "/Images/optimized/Images/visuals/Rotoscope-before/Rotoscope-before-1280.webp"
+    }
+  },
+  "voice-over and dubbing": {
+    "original": "/Images/voice-over and dubbing.png",
+    "avif": {
+      "320": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-320.avif",
+      "640": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-640.avif",
+      "960": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-960.avif",
+      "1280": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-320.webp",
+      "640": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-640.webp",
+      "960": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-960.webp",
+      "1280": "/Images/optimized/Images/voice-over and dubbing/voice-over and dubbing-1280.webp"
+    }
+  },
+  "..\\Logo/brand-logo": {
+    "original": "/Logo/brand-logo.png",
+    "avif": {
+      "320": "/Images/optimized/Logo/brand-logo/brand-logo-320.avif",
+      "640": "/Images/optimized/Logo/brand-logo/brand-logo-640.avif",
+      "960": "/Images/optimized/Logo/brand-logo/brand-logo-960.avif",
+      "1280": "/Images/optimized/Logo/brand-logo/brand-logo-1280.avif"
+    },
+    "webp": {
+      "320": "/Images/optimized/Logo/brand-logo/brand-logo-320.webp",
+      "640": "/Images/optimized/Logo/brand-logo/brand-logo-640.webp",
+      "960": "/Images/optimized/Logo/brand-logo/brand-logo-960.webp",
+      "1280": "/Images/optimized/Logo/brand-logo/brand-logo-1280.webp"
+    }
+  }
+}

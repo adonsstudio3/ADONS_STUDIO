@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Layout from '../components/Layout'
 import Header from '../components/Header'
 import Team from '../components/Team'
+import OptimizedImage from '../components/OptimizedImage'
 import { useEffect, useState, useRef, useCallback } from 'react'
 
 // keep constant outside component so it doesn't recreate on every render
@@ -64,20 +65,26 @@ export default function TeamPage(){
         overflow: 'hidden',
         background: 'linear-gradient(120deg, #0a0a0a 60%, #FFD700 100%)',
       }}>
-          <img
-            src="/Images/hero/Contact.jpg"
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 1,
+          opacity: 0.55,
+        }}>
+          <OptimizedImage
+            name="hero/Contact"
+            width={1920}
             alt="Team Hero"
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              zIndex: 1,
-              opacity: 0.55,
             }}
           />
+        </div>
         <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
           <h1 className="heroTitle">Meet Our Team</h1>
           <p className="heroSubtitle">{typedSubtitle}</p>

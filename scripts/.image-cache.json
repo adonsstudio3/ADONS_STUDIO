@@ -1,0 +1,548 @@
+{
+  "Images\\about\\studio_1.JPG": {
+    "hash": "c9040ef9b82badaba59995ba1a11f7f9",
+    "converted": 1758594932321,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_1\\studio_1-1280.webp"
+    ]
+  },
+  "Images\\about\\studio_2.JPG": {
+    "hash": "04eddb661c756c62a32ef9a5566f461d",
+    "converted": 1758594936465,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\about\\studio_2\\studio_2-1280.webp"
+    ]
+  },
+  "Images\\Audio restoration.webp": {
+    "hash": "dc204223570fff5c2043fc10933052cd",
+    "converted": 1758594940635,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Audio restoration\\Audio restoration-1280.webp"
+    ]
+  },
+  "Images\\background\\nebula.jpg": {
+    "hash": "d2d07023a583ad3269e5a73748c1017d",
+    "converted": 1758594943686,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\background\\nebula\\nebula-1280.webp"
+    ]
+  },
+  "Images\\bw-banner\\bw-banner.png": {
+    "hash": "e8a31d825587c15bd56285c54b56998a",
+    "converted": 1758594947437,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\bw-banner\\bw-banner\\bw-banner-1280.webp"
+    ]
+  },
+  "Images\\Event production.webp": {
+    "hash": "d0ec2025e37d88c3b7d375a1a575a47b",
+    "converted": 1758594951525,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Event production\\Event production-1280.webp"
+    ]
+  },
+  "Images\\Firefly_Gemini Flash_Corporate and commercial ads.png": {
+    "hash": "b77d3edcb63aa9f6e3aedb576c7fbfbf",
+    "converted": 1758594954207,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_Corporate and commercial ads\\Firefly_Gemini Flash_Corporate and commercial ads-1280.webp"
+    ]
+  },
+  "Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598.png": {
+    "hash": "f3fbe9acf25e6ec5d6867e12a42b0278",
+    "converted": 1758594957040,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598\\Firefly_Gemini Flash_make a logo image for Artist Management & Branding 191598-1280.webp"
+    ]
+  },
+  "Images\\hero\\Contact.jpg": {
+    "hash": "cba4e43d3b2a32b421e3eb05c8f3524f",
+    "converted": 1758594957977,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact\\Contact-1280.webp"
+    ]
+  },
+  "Images\\hero\\Contact_Hero_Demo.jpg": {
+    "hash": "ab752111de008ec3a6cc9a2a898507a2",
+    "converted": 1758594962645,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Contact_Hero_Demo\\Contact_Hero_Demo-1280.webp"
+    ]
+  },
+  "Images\\hero\\Projects.jpg": {
+    "hash": "982ead0bab416a24e0ea3e82e9630979",
+    "converted": 1758594964413,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Projects\\Projects-1280.webp"
+    ]
+  },
+  "Images\\hero\\project_hero_demo.jpg": {
+    "hash": "7a9d61c80ce7eac85e2bb7ae18b0e636",
+    "converted": 1758594968858,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\project_hero_demo\\project_hero_demo-1280.webp"
+    ]
+  },
+  "Images\\hero\\Services.jpg": {
+    "hash": "749ea19712e911fa07893c87a18bbcf4",
+    "converted": 1758594972178,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Services\\Services-1280.webp"
+    ]
+  },
+  "Images\\hero\\Team.jpg": {
+    "hash": "827159020e1bf32aa8959fed3c49fe42",
+    "converted": 1758594975499,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\Team\\Team-1280.webp"
+    ]
+  },
+  "Images\\hero\\team_Hero_Demo.jpg": {
+    "hash": "815148050b6bb9fe58de31bb14860689",
+    "converted": 1758594979382,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\hero\\team_Hero_Demo\\team_Hero_Demo-1280.webp"
+    ]
+  },
+  "Images\\Music production.jpg": {
+    "hash": "7f6aa50121c0c99e1c7ea40e1ee8569c",
+    "converted": 1758594984006,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Music production\\Music production-1280.webp"
+    ]
+  },
+  "Images\\podcast Production.jpg": {
+    "hash": "5594d7c33f5af386693e009a07663535",
+    "converted": 1758594987611,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\podcast Production\\podcast Production-1280.webp"
+    ]
+  },
+  "Images\\Podcast production_additional.jpeg": {
+    "hash": "24a39e1b62fbea6f98204b7057158f93",
+    "converted": 1758594990283,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Podcast production_additional\\Podcast production_additional-1280.webp"
+    ]
+  },
+  "Images\\Post production.png": {
+    "hash": "0644435e537e5ee563002682a2e703ae",
+    "converted": 1758594994990,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Post production\\Post production-1280.webp"
+    ]
+  },
+  "Images\\Pre production.png": {
+    "hash": "2f2461c28c1d19df7f1370e23db94c4d",
+    "converted": 1758595000374,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Pre production\\Pre production-1280.webp"
+    ]
+  },
+  "Images\\Production.png": {
+    "hash": "cd8ab79127f0d60d0b91001ee753cf43",
+    "converted": 1758595005338,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Production\\Production-1280.webp"
+    ]
+  },
+  "Images\\Sound design.jpg": {
+    "hash": "4c94dda85e21a9582589f4729ba209ef",
+    "converted": 1758595008609,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\Sound design\\Sound design-1280.webp"
+    ]
+  },
+  "Images\\team\\ADI.jpg": {
+    "hash": "41cfaad89594013c909fd9d90cc8aa77",
+    "converted": 1758595014498,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\ADI\\ADI-1280.webp"
+    ]
+  },
+  "Images\\team\\SAM.jpg": {
+    "hash": "798dc111a3bffdfda72fd3fce8b8e9ac",
+    "converted": 1758595020792,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SAM\\SAM-1280.webp"
+    ]
+  },
+  "Images\\team\\SID.jpg": {
+    "hash": "95fccd4040e78aaa343c8e6108794b65",
+    "converted": 1758595026865,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SID\\SID-1280.webp"
+    ]
+  },
+  "Images\\team\\SUMU.jpg": {
+    "hash": "0b06091dd697394b4e6c25f69accb4d8",
+    "converted": 1758595031944,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SUMU\\SUMU-1280.webp"
+    ]
+  },
+  "Images\\team\\SWAPU.jpg": {
+    "hash": "efaff625f4b4cc98cf99ada7966d384a",
+    "converted": 1758595037004,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\team\\SWAPU\\SWAPU-1280.webp"
+    ]
+  },
+  "Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky.jpg": {
+    "hash": "978dccc8f4bbf55693951e8e7231f7d3",
+    "converted": 1758595044169,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky\\vecteezy_a-woman-looks-up-at-a-fiery-ethereal-face-in-the-sky-1280.webp"
+    ]
+  },
+  "Images\\visuals\\3D-CGI-after.png": {
+    "hash": "11cf76daf7396b3c0662724c94f5c4d5",
+    "converted": 1758595052562,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-after\\3D-CGI-after-1280.webp"
+    ]
+  },
+  "Images\\visuals\\3D-CGI-before.png": {
+    "hash": "97f23f91a677d78d3f688ad933a6e389",
+    "converted": 1758595060606,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D-CGI-before\\3D-CGI-before-1280.webp"
+    ]
+  },
+  "Images\\visuals\\3D_2D-Animation-after.png": {
+    "hash": "b4b994b72691dae4fa7f3265b3023996",
+    "converted": 1758595067271,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-after\\3D_2D-Animation-after-1280.webp"
+    ]
+  },
+  "Images\\visuals\\3D_2D-Animation-before.png": {
+    "hash": "fc35305f4606d5afac76ba13a6608a47",
+    "converted": 1758595073005,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\3D_2D-Animation-before\\3D_2D-Animation-before-1280.webp"
+    ]
+  },
+  "Images\\visuals\\Cleanup-after.jpg": {
+    "hash": "c05b3dfdd83df34e182b0e0c926f6046",
+    "converted": 1758595078487,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-after\\Cleanup-after-1280.webp"
+    ]
+  },
+  "Images\\visuals\\Cleanup-before.jpg": {
+    "hash": "a2938778c83bd3f50051390496247028",
+    "converted": 1758595083894,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Cleanup-before\\Cleanup-before-1280.webp"
+    ]
+  },
+  "Images\\visuals\\Rotoscope-after.png": {
+    "hash": "a082ecb5ab109becf8222b98276f4df9",
+    "converted": 1758595085463,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-after\\Rotoscope-after-1280.webp"
+    ]
+  },
+  "Images\\visuals\\Rotoscope-before.png": {
+    "hash": "a367af5ca4a396b8d7a2bb2f3dd62bd8",
+    "converted": 1758595088988,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\visuals\\Rotoscope-before\\Rotoscope-before-1280.webp"
+    ]
+  },
+  "Images\\voice-over and dubbing.png": {
+    "hash": "abebcbf9ae580e5801ad65e1575371fe",
+    "converted": 1758595094682,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\voice-over and dubbing\\voice-over and dubbing-1280.webp"
+    ]
+  },
+  "Logo\\brand-logo.png": {
+    "hash": "21d2ee300f3e41b34a41e41f0c491245",
+    "converted": 1758595100297,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Logo\\brand-logo\\brand-logo-1280.webp"
+    ]
+  },
+  "Images\\test-new-image.jpg": {
+    "hash": "798dc111a3bffdfda72fd3fce8b8e9ac",
+    "converted": 1758595680974,
+    "files": [
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-320.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-320.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-640.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-640.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-960.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-960.webp",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-1280.avif",
+      "E:\\Websites\\Adons\\frontend\\public\\Images\\optimized\\Images\\test-new-image\\test-new-image-1280.webp"
+    ]
+  }
+}

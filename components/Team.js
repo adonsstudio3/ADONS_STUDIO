@@ -1,50 +1,16 @@
 import Image from 'next/image'
 import { useState, useCallback } from 'react'
+import OptimizedImage from './OptimizedImage'
 import styles from './TeamPopup.module.css'
 
-// TeamImage: a small wrapper that uses a custom loader to point to pre-generated
-// optimized assets in /Images/optimized/team/<base>/<base>-<w>.(avif|webp)
-function TeamImage({ base, alt }){
-  const isProd = process.env.NODE_ENV === 'production'
-
-  if (isProd) {
-    // Let Next's optimizer do resizing and format negotiation in production
-    // by pointing src to the original JPG path under public/Images
-    return (
-      <Image
-        src={`/Images/${base}.jpg`}
-        alt={alt}
-        width={384}
-        height={384}
-        // Accept style prop for custom overrides
-        style={arguments[0]?.style || { width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
-      />
-    )
-  }
-
-  // Development: prefer static pre-generated AVIF/WebP (reliable local serving)
-  const [src, setSrc] = useState(`/Images/optimized/team/${base}/${base}-640.avif`)
-
-  const loader = useCallback(({ width }) => {
-    const w = width <= 320 ? 320 : width <= 640 ? 640 : width <= 960 ? 960 : 1280
-    return `/Images/optimized/team/${base}/${base}-${w}.avif`
-  }, [base])
-
-  const handleError = useCallback(() => {
-    if (src.endsWith('.avif')) setSrc(`/Images/optimized/team/${base}/${base}-640.webp`)
-    else if (src.endsWith('.webp')) setSrc(`/Images/${base}.jpg`)
-  }, [base, src])
-
+// TeamImage: simplified wrapper using OptimizedImage component
+function TeamImage({ base, alt, style }){
   return (
-    <Image
-      loader={loader}
-      src={src}
+    <OptimizedImage
+      name={`team/${base}`}
+      width={640}
       alt={alt}
-      width={384}
-      height={384}
-      onError={handleError}
-      unoptimized={true}
-      style={arguments[0]?.style || { width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
+      style={style || { width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
     />
   )
 }
@@ -159,18 +125,15 @@ export default function Team(){
             {/* Alternate layout: even indices (0,2,4...) = image left, odd indices (1,3,5...) = image right */}
             {popupIdx % 2 === 0 ? (
               <>
-                {/* Image on left - use Next.js Image for original/high-res */}
-                <div className={styles.popupImageSide}>
-                  <Image
-                    src={members[popupIdx].image}
-                    alt={members[popupIdx].name}
-                    width={700}
-                    height={700}
-                    className={styles.popupImage}
-                    style={{ objectFit: 'cover', objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center', width: '100%', height: '100%' }}
-                    priority
-                  />
-                </div>
+                {/* Image on left - use TeamImage wrapper to avoid optimizer issues */}
+                    <div className={styles.popupImageSide}>
+                      {(() => {
+                        const popupBase = members[popupIdx].image ? members[popupIdx].image.split('/').pop().replace(/\.(jpg|jpeg|png)$/i, '') : ''
+                        return (
+                          <TeamImage base={popupBase} alt={members[popupIdx].name} style={{ objectFit: 'cover', objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center', width: '100%', height: '100%' }} />
+                        )
+                      })()}
+                    </div>
                 {/* Text on right */}
                 <div className={styles.popupTextSide}>
                   <div className={styles.popupName}>{members[popupIdx].name}</div>
@@ -190,15 +153,12 @@ export default function Team(){
                 </div>
                 {/* Image on right - use Next.js Image for original/high-res */}
                 <div className={styles.popupImageSideRight}>
-                  <Image
-                    src={members[popupIdx].image}
-                    alt={members[popupIdx].name}
-                    width={700}
-                    height={700}
-                    className={styles.popupImage}
-                    style={{ objectFit: 'cover', objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center', width: '100%', height: '100%' }}
-                    priority
-                  />
+                  {(() => {
+                    const popupBase = members[popupIdx].image ? members[popupIdx].image.split('/').pop().replace(/\.(jpg|jpeg|png)$/i, '') : ''
+                    return (
+                      <TeamImage base={popupBase} alt={members[popupIdx].name} style={{ objectFit: 'cover', objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center', width: '100%', height: '100%' }} />
+                    )
+                  })()}
                 </div>
               </>
             )}

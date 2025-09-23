@@ -19,13 +19,15 @@ export default function AdditionalTab(){
         @media (min-width: 640px) { .tile { grid-column: span 2; grid-row: span 2; } }
       `}</style>
 
-      {blocks.map((b) => (
+    {blocks.map((b) => {
+  const safeSrc = typeof b.img === 'string' ? encodeURI(b.img).replace(/&/g, '%26') : b.img
+  return (
   <article key={b.key} className="masonry-card tile bg-white/5 backdrop-blur-sm shadow-sm transition-all duration-200 group overflow-hidden rounded hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1" role="article" aria-labelledby={`additional-${b.key}-title`}>
 
           {b.img ? (
             <div className="relative h-[75%] p-3 flex items-stretch">
               <div className="relative w-full h-full border border-white/10 rounded-md overflow-hidden">
-                <img src={b.img} alt={b.title} loading="lazy" width="640" height="420" className="object-cover w-full h-full block" />
+                <img src={safeSrc} alt={b.title} loading="lazy" width="640" height="420" className="object-cover w-full h-full block" />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/28 transition-colors" />
               </div>
             </div>
@@ -42,7 +44,8 @@ export default function AdditionalTab(){
             </div>
           </div>
         </article>
-      ))}
+      );
+      })}
     </div>
   )
 }

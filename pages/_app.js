@@ -4,6 +4,11 @@ import Head from 'next/head'
 import ScrollToTop from '../components/ScrollToTop'
 import ScrollbarGutter from '../components/ScrollbarGutter'
 
+// Import memory leak detector for development
+if (process.env.NODE_ENV === 'development') {
+  import('../utils/memoryLeakDetector.js').catch(console.warn)
+}
+
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Client-only libs can be initialized here if needed

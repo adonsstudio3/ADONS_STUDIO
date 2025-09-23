@@ -3,12 +3,75 @@
 import { useState, useEffect, useCallback } from 'react';
 import styles from '../styles/ProjectsDesign.module.css';
 
+// Internal error boundary hook for catching and handling errors within the component
+const useErrorHandler = () => {
+  const [error, setError] = useState(null);
+
+  const resetError = () => setError(null);
+
+  const handleError = (error, errorInfo) => {
+    console.error('ProjectsDesign Error:', error, errorInfo);
+    setError({ error, errorInfo });
+  };
+
+  useEffect(() => {
+    const handleUnhandledRejection = (event) => {
+      console.error('Unhandled promise rejection in ProjectsDesign:', event.reason);
+      handleError(new Error('Unhandled Promise Rejection'), { componentStack: 'Promise rejection' });
+    };
+
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    return () => window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+  }, []);
+
+  return { error, resetError, handleError };
+};
+
 const ProjectsDesign = () => {
+  const { error, resetError, handleError } = useErrorHandler();
+  
   // Typing animation state
   const [typedSubtitle, setTypedSubtitle] = useState('');
   const [descVisible, setDescVisible] = useState(false);
   const [showShowreel, setShowShowreel] = useState(false);
   const subtitleFull = "Bringing Imagination To Life";
+
+  // If there's an internal error, show error UI
+  if (error) {
+    return (
+      <div style={{
+        padding: '2rem',
+        textAlign: 'center',
+        background: '#1a1a1a',
+        color: '#ffffff',
+        minHeight: '50vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <h2 style={{ color: '#FFD700', marginBottom: '1rem' }}>
+          Projects Section Temporarily Unavailable
+        </h2>
+        <p style={{ color: '#cccccc', marginBottom: '2rem' }}>
+          We're experiencing technical difficulties. Please try again.
+        </p>
+        <button
+          onClick={resetError}
+          style={{
+            background: '#FFD700',
+            color: '#000',
+            border: 'none',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '8px',
+            cursor: 'pointer'
+          }}
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
   const [projects] = useState([
     {
@@ -133,13 +196,21 @@ const ProjectsDesign = () => {
   }, [projects]);
 
   const openModal = useCallback((projectId) => {
-    const project = projects.find(p => p.id === projectId);
-    if (!project) return;
+    try {
+      const project = projects.find(p => p.id === projectId);
+      if (!project) {
+        console.warn('Project not found:', projectId);
+        return;
+      }
 
-    setSelectedProject(project);
-    setCurrentProjectIndex(filteredProjects.findIndex(p => p.id === projectId));
-    setIsModalVisible(true);
-  }, [projects, filteredProjects]);
+      setSelectedProject(project);
+      setCurrentProjectIndex(filteredProjects.findIndex(p => p.id === projectId));
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error('Error opening modal:', error);
+      handleError(error, { componentStack: 'openModal function' });
+    }
+  }, [projects, filteredProjects, handleError]);
 
   const closeModal = useCallback(() => {
     setIsModalVisible(false);
@@ -147,14 +218,21 @@ const ProjectsDesign = () => {
   }, []);
 
   const navigateModal = useCallback((direction) => {
-    const newIndex = currentProjectIndex + direction;
-    
-    if (newIndex >= 0 && newIndex < filteredProjects.length) {
-      const project = filteredProjects[newIndex];
-      setSelectedProject(project);
-      setCurrentProjectIndex(newIndex);
+    try {
+      const newIndex = currentProjectIndex + direction;
+      
+      if (newIndex >= 0 && newIndex < filteredProjects.length) {
+        const project = filteredProjects[newIndex];
+        if (project) {
+          setSelectedProject(project);
+          setCurrentProjectIndex(newIndex);
+        }
+      }
+    } catch (error) {
+      console.error('Error navigating modal:', error);
+      handleError(error, { componentStack: 'navigateModal function' });
     }
-  }, [currentProjectIndex, filteredProjects]);
+  }, [currentProjectIndex, filteredProjects, handleError]);
 
   const playShowreel = useCallback(() => {
     setShowShowreel(true);
@@ -164,9 +242,12 @@ const ProjectsDesign = () => {
     setShowShowreel(false);
   }, []);
 
-  // Keyboard navigation
+  // Keyboard navigation with safety checks
   useEffect(() => {
+    if (!isModalVisible) return;
+
     const handleKeyPress = (e) => {
+      // Additional safety check
       if (!isModalVisible) return;
 
       switch(e.key) {
@@ -174,23 +255,33 @@ const ProjectsDesign = () => {
           closeModal();
           break;
         case 'ArrowLeft':
+          e.preventDefault(); // Prevent default browser behavior
           navigateModal(-1);
           break;
         case 'ArrowRight':
+          e.preventDefault(); // Prevent default browser behavior
           navigateModal(1);
           break;
+        default:
+          break; // Explicit default case
       }
     };
 
     document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
   }, [isModalVisible, closeModal, navigateModal]);
 
-  // Parallax effect for hero background
+  // Parallax effect for hero background with safety checks
   useEffect(() => {
     let ticking = false;
+    let isMounted = true;
 
     const updateScrollEffects = () => {
+      if (!isMounted) return; // Safety check
+      
       const scrolled = window.pageYOffset;
       const rate = scrolled * -0.3;
       
@@ -203,57 +294,97 @@ const ProjectsDesign = () => {
     };
 
     const handleScroll = () => {
-      if (!ticking) {
+      if (!ticking && isMounted) {
         requestAnimationFrame(updateScrollEffects);
         ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      isMounted = false; // Mark as unmounted
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  // Typing animation effect
+  // Typing animation effect with safety checks
   useEffect(() => {
-    let subtitleTimer, descTimer;
+    let subtitleTimer, descTimer, subtitleDelay;
     let j = 0;
-    setTypedSubtitle('');
-    setDescVisible(false);
+    let isMounted = true; // Safety flag to prevent state updates after unmount
+    
+    console.log('Starting typing animation useEffect'); // Debug log
+    
+    try {
+      setTypedSubtitle('');
+      setDescVisible(false);
 
-    // Type subtitle
-    const typeSubtitle = () => {
-      if (j <= subtitleFull.length) {
-        setTypedSubtitle(subtitleFull.slice(0, j));
-        j++;
-        subtitleTimer = setTimeout(typeSubtitle, 40);
-      } else {
-        // After subtitle, fade in desc
-        descTimer = setTimeout(() => setDescVisible(true), 250);
-      }
-    };
-    // Start subtitle animation after a short delay
-    const subtitleDelay = setTimeout(typeSubtitle, 300);
+      // Type subtitle with safety check
+      const typeSubtitle = () => {
+        if (!isMounted) return; // Prevent updates if component unmounted
+        
+        try {
+          if (j <= subtitleFull.length) {
+            const currentText = subtitleFull.slice(0, j);
+            setTypedSubtitle(currentText);
+            console.log('Typing animation progress:', currentText); // Debug log
+            j++;
+            subtitleTimer = setTimeout(typeSubtitle, 40);
+          } else {
+            // After subtitle, fade in desc
+            descTimer = setTimeout(() => {
+              if (isMounted) setDescVisible(true);
+            }, 250);
+          }
+        } catch (error) {
+          console.error('Error in typing animation:', error);
+        }
+      };
+      
+      // Start subtitle animation after a short delay
+      subtitleDelay = setTimeout(typeSubtitle, 300);
+    } catch (error) {
+      console.error('Error setting up typing animation:', error);
+    }
+    
     return () => {
+      isMounted = false; // Mark as unmounted
       clearTimeout(subtitleTimer);
       clearTimeout(descTimer);
       clearTimeout(subtitleDelay);
     };
-  }, []);
+  }, []); // Remove dependencies to prevent re-runs
 
-  // Centralized body overflow handling: lock scroll when any modal/showreel is open
+  // Centralized body overflow handling with improved safety
   useEffect(() => {
-    // If either modal is visible, lock body scroll. The cleanup restores it.
     if (isModalVisible || showShowreel) {
-      const prev = document.body.style.overflow;
+      // Store the original value more safely
+      const originalOverflow = document.body.style.overflow || '';
       document.body.style.overflow = 'hidden';
+      
       return () => {
-        // restore previous value (usually '') to avoid stomping other consumers
-        document.body.style.overflow = prev || '';
+        // Restore original value safely
+        try {
+          document.body.style.overflow = originalOverflow;
+        } catch (error) {
+          console.warn('Failed to restore body overflow:', error);
+          // Fallback: remove the property entirely
+          document.body.style.removeProperty('overflow');
+        }
       };
     }
-    // When neither is open ensure overflow is cleared (no-op if already empty)
-    document.body.style.overflow = '';
-    return () => {};
+    
+    // Ensure overflow is cleared when neither modal is open
+    if (!isModalVisible && !showShowreel) {
+      try {
+        document.body.style.removeProperty('overflow');
+      } catch (error) {
+        console.warn('Failed to clear body overflow:', error);
+      }
+    }
+    
+    return () => {}; // No-op cleanup when no action needed
   }, [isModalVisible, showShowreel]);
 
   return (
@@ -265,13 +396,17 @@ const ProjectsDesign = () => {
             src="/Images/hero/Team.jpg" 
             alt="Showreel Preview" 
             className={styles.heroBackground}
+            onError={(e) => {
+              console.warn('Hero image failed to load');
+              e.target.style.display = 'none';
+            }}
           />
           <div className={styles.heroOverlay}></div>
         </div>
         <div className={styles.heroContent}>
           <h2 className="heroTitle">Portfolio & Showreel</h2>
-          <p className="heroSubtitle">
-            {typedSubtitle}
+          <p className="heroSubtitle" style={{ color: '#FFD700', fontSize: '1.25rem', fontWeight: '400', textAlign: 'center', marginBottom: '1.2rem' }}>
+            {typedSubtitle || "Bringing Imagination To Life"}
           </p>
           <p className={styles.heroDescription + ' ' + (descVisible ? styles.showDesc : '')}>
             {/* Removed hero description as requested */}
@@ -305,6 +440,10 @@ const ProjectsDesign = () => {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                   className={styles.showreelIframe}
+                  onError={(e) => {
+                    console.error('Showreel iframe failed to load');
+                    handleError(new Error('Showreel load failed'), { componentStack: 'showreel iframe' });
+                  }}
                 ></iframe>
               </div>
             </div>
@@ -344,12 +483,7 @@ const ProjectsDesign = () => {
                   className={styles.projectCard}
                   onClick={() => openModal(project.id)}
                 >
-                  <img 
-                    src={project.thumbnail} 
-                    alt={project.title} 
-                    className={styles.projectThumbnail}
-                    loading="lazy"
-                  />
+                  {/* Image removed as per request */}
                   <div className={styles.projectOverlay}>
                     <div className={styles.projectInfo}>
                       <h3 className={styles.projectTitle}>{project.title}</h3>
@@ -400,11 +534,7 @@ const ProjectsDesign = () => {
             
             <div className={styles.modalBody}>
               <div className={styles.modalMedia}>
-                <img 
-                  src={selectedProject.thumbnail} 
-                  alt={selectedProject.title} 
-                  className={styles.modalImage}
-                />
+                {/* Modal image removed as per request */}
                 <div className={styles.modalPlayOverlay}>
                   <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                     <circle cx="40" cy="40" r="40" fill="rgba(255, 215, 0, 0.9)"/>
