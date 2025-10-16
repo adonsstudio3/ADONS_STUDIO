@@ -1,0 +1,19 @@
+/* Admin-specific styles (moved out of globals.css)
+   This file is imported only by admin layout components to scope admin
+   background styles and avoid global overrides. */
+
+.admin-root, .admin-root html, .admin-root body, body.admin-root, html.admin-root {
+  background-image: url('/Images/admin/admin_bg.png') !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-color: #000 !important;
+}
+
+/* Mobile: avoid background-attachment: fixed to prevent janky scrolling on mobile devices */
+@media (max-width: 767px) {
+  .admin-root, .admin-root html, .admin-root body, body.admin-root, html.admin-root {
+    background-attachment: scroll !important;
+  }
+}

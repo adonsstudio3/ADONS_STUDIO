@@ -148,15 +148,9 @@ html, body {
   background-color: #000 !important;
 }
 
-/* Admin pages should use their own admin background image and override the global nebula */
-.admin-root, .admin-root html, .admin-root body, body.admin-root, html.admin-root {
-  background-image: url('/Images/admin/admin_bg.png') !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-color: #000 !important;
-}
+/* Admin pages: moved to `styles/admin.css` and imported only by admin layout.
+   Keeping admin-specific background rules in a dedicated file avoids
+   global overrides and makes the behavior easier to reason about. */
 
 /* Override background-attachment for mobile devices to prevent janky scrolling */
 @media (max-width: 767px) {

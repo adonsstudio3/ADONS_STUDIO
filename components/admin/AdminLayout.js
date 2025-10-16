@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import '../../styles/admin.css';
 import Link from 'next/link';
 import { ChartBarIcon, FilmIcon, PlayCircleIcon, FolderIcon, PhotoIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { usePathname } from 'next/navigation';
@@ -99,15 +100,7 @@ const AdminLayout = ({ children }) => {
   }, []);
 
   return (
-    <div
-      className="h-screen flex overflow-hidden admin-root"
-      style={{
-        backgroundImage: "linear-gradient(rgba(255,255,255,0.02), rgba(255,255,255,0.02)), url('/Images/admin/admin_bg.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}
-    >
+    <div className="h-screen flex overflow-hidden admin-root">
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'block' : 'hidden'} fixed inset-0 flex z-40 md:hidden`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={handleSidebarClose} tabIndex={-1} aria-hidden="true" />
