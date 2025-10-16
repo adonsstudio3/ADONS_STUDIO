@@ -1,7 +1,7 @@
 'use client';
 
-import AdminLoginGlassmorphic from '@/components/auth/AdminLoginGlassmorphic';
+import AdminLoginAnimated from '@/components/auth/AdminLoginAnimated';
 
 export default function LoginPage() {
-  return <AdminLoginGlassmorphic />;
+  return <AdminLoginAnimated />;
 }
