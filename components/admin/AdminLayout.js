@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import '../../styles/admin.css';
 import Link from 'next/link';
 import { ChartBarIcon, FilmIcon, PlayCircleIcon, FolderIcon, PhotoIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { usePathname } from 'next/navigation';
 import { useAdmin } from '../../contexts/AdminContext';
 import SessionTimer from './SessionTimer';
+import '../../styles/admin.css';
 
 const AdminLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -100,7 +100,9 @@ const AdminLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="h-screen flex overflow-hidden admin-root">
+    <div
+      className="h-screen flex overflow-hidden admin-root"
+    >
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'block' : 'hidden'} fixed inset-0 flex z-40 md:hidden`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={handleSidebarClose} tabIndex={-1} aria-hidden="true" />
