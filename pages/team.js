@@ -1,8 +1,8 @@
-import Head from 'next/head'
 import Layout from '../components/Layout'
 import Header from '../components/Header'
 import Team from '../components/Team'
 import OptimizedImage from '../components/OptimizedImage'
+import SEOHead from '../components/SEOHead'
 import { useEffect, useState, useRef, useCallback } from 'react'
 
 // keep constant outside component so it doesn't recreate on every render
@@ -48,10 +48,7 @@ export default function TeamPage(){
 
   return (
     <Layout>
-      <Head>
-        <title>Team — Adons Studio</title>
-        <meta name="description" content="Meet the team at Adons Studio." />
-      </Head>
+      <SEOHead page={{ type: 'team' }} />
 
       <Header />
       {/* Full-page hero section */}
@@ -75,14 +72,15 @@ export default function TeamPage(){
           opacity: 0.55,
         }}>
           <OptimizedImage
-            name="hero/Contact"
-            width={1920}
+            name="hero/team"
             alt="Team Hero"
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
             }}
+            width={1920}
+            priority
           />
         </div>
         <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>

@@ -58,6 +58,34 @@ export default function Header(){
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isMobileMenuOpen]);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  // Close mobile menu on Escape key
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    
+    const handleEscapeKey = (e) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, [isMobileMenuOpen]);
+
   // route-aware active checker which understands hash links (e.g. '/#about')
   const isLinkActive = (href) => {
     if (!href || !router) return false
@@ -76,6 +104,9 @@ export default function Header(){
   const handleLogoClick = (e) => {
     try {
       const el = e && e.currentTarget ? e.currentTarget : (e && e.target ? e.target : null)
+      // Close mobile menu when logo is clicked
+      setIsMobileMenuOpen(false)
+      
       // If we're already on the homepage, smooth-scroll to the hero section.
       if (router && router.pathname === '/') {
         const target = document.querySelector('#hero')
@@ -122,34 +153,75 @@ export default function Header(){
       className={`floating-navbar ${scrolled ? 'scrolled' : ''}`}
     >
       <div className="navbar-container">
+        {/* Mobile Hamburger Menu Checkbox (hidden but controls the animation) */}
+        <input 
+          className="mobile-menu-checkbox" 
+          type="checkbox" 
+          checked={isMobileMenuOpen}
+          onChange={(e) => setIsMobileMenuOpen(e.target.checked)}
+          aria-label="Toggle mobile menu"
+          id="mobile-menu-toggle"
+        />
+        
+        {/* Mobile Hamburger Lines */}
+        <label className="hamburger-lines" htmlFor="mobile-menu-toggle">
+          <span className="line line1"></span>
+          <span className="line line2"></span>
+          <span className="line line3"></span>
+        </label>
+
+        {/* Center: Brand (always visible) */}
         <div className="navbar-brand">
           <button
+            className={`brand-link ${isMobileMenuOpen ? 'menu-open' : ''}`}
             onClick={handleLogoClick}
             aria-label="Go to home"
-            className="brand-link"
           >
             ADONS
           </button>
         </div>
 
-  <div id="navbar-menu" className={`navbar-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+        {/* Desktop Navigation Links */}
+        <div className="navbar-menu desktop-menu">
           <Link href="/services" className={`navbar-item ${isLinkActive('/services') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/services') ? 'true' : undefined}>Services</Link>
           <Link href="/projects" className={`navbar-item ${isLinkActive('/projects') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/projects') ? 'true' : undefined}>Projects</Link>
           <Link href="/team" className={`navbar-item ${isLinkActive('/team') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/team') ? 'true' : undefined}>Team</Link>
           <Link href="/contact" className={`navbar-item ${isLinkActive('/contact') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/contact') ? 'true' : undefined}>Contact</Link>
         </div>
 
-        <button 
-          className="navbar-toggle" 
-          onClick={toggleMobileMenu}
-          aria-label="Toggle navigation menu"
-          aria-expanded={isMobileMenuOpen}
-          aria-controls="navbar-menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        {/* Full-Page Mobile Menu Overlay */}
+        <div className="mobile-menu-overlay">
+          <div className="mobile-menu-items">
+            <Link 
+              href="/services" 
+              className={`mobile-menu-item ${isLinkActive('/services') ? 'active' : ''}`} 
+              onClick={handleMobileNavClick}
+            >
+              Services
+            </Link>
+            <Link 
+              href="/projects" 
+              className={`mobile-menu-item ${isLinkActive('/projects') ? 'active' : ''}`} 
+              onClick={handleMobileNavClick}
+            >
+              Projects
+            </Link>
+            <Link 
+              href="/team" 
+              className={`mobile-menu-item ${isLinkActive('/team') ? 'active' : ''}`} 
+              onClick={handleMobileNavClick}
+            >
+              Team
+            </Link>
+            <Link 
+              href="/contact" 
+              className={`mobile-menu-item ${isLinkActive('/contact') ? 'active' : ''}`} 
+              onClick={handleMobileNavClick}
+            >
+              Contact
+            </Link>
+          </div>
+        </div>
       </div>
     </header>
   )

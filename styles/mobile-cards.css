@@ -1,0 +1,108 @@
+/* Mobile Card Layout Optimizations */
+/* All cards should display vertically (image on top, text below) on mobile only */
+
+@media (max-width: 768px) {
+  /* Team Cards - Mobile Vertical Layout */
+  .team-member {
+    flex-direction: column !important;
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .team-member .image-container {
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .team-member .content {
+    width: 100% !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+  }
+
+  /* VisualsTab Cards - Mobile Vertical Layout */
+  .visuals-card {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .visuals-card .image-section {
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+    margin-right: 0 !important;
+  }
+  
+  .visuals-card .content-section {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* AudioTab - Remove Masonry, Stack Cards Vertically */
+  .audio-cards-container {
+    column-count: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+  
+  .audio-card {
+    break-inside: auto !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* AdditionalTab - Remove Grid, Stack Cards Vertically */
+  .additional-cards-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+  
+  .additional-card {
+    width: 100% !important;
+  }
+
+  /* ProductionTab - Ensure Vertical Layout */
+  .production-cards-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+  
+  .production-card {
+    width: 100% !important;
+    flex-direction: column !important;
+  }
+  
+  .production-card .image-container {
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .production-card .text-content {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Generic Card Styling for All Mobile Cards */
+  .mobile-card-vertical {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .mobile-card-vertical img {
+    width: 100% !important;
+    height: auto !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .mobile-card-vertical .card-content {
+    width: 100% !important;
+    text-align: center !important;
+  }
+}

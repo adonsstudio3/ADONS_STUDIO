@@ -1,15 +1,36 @@
 import '../styles/globals.css'
+import '../styles/mobile-cards.css'
 import { useEffect } from 'react'
 import Head from 'next/head'
 import ScrollToTop from '../components/ScrollToTop'
 import ScrollbarGutter from '../components/ScrollbarGutter'
+import { ConsentProvider } from '../components/ConsentProvider'
+import ConsentBanner from '../components/ConsentBanner'
+import { trackPageView } from '../lib/gtm'
+import { useRouter } from 'next/router'
 
 // Import memory leak detector for development
 if (process.env.NODE_ENV === 'development') {
-  import('../utils/memoryLeakDetector.js').catch(console.warn)
+  import('../utils/memoryLeakDetector.js').catch((err) => {
+    console.warn('[Adons] Memory leak detector failed to load:', err && (err.message || err), '\nThis does not affect production. Ensure ../utils/memoryLeakDetector.js exists and is error-free if you want leak detection in development.');
+  });
 }
 
 export default function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+  
+  useEffect(() => {
+    // Track page views on route change
+    const handleRouteChange = (url) => {
+      trackPageView(url, document.title);
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   useEffect(() => {
     // Client-only libs can be initialized here if needed
 
@@ -67,16 +88,19 @@ export default function MyApp({ Component, pageProps }) {
   }, [])
 
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Adons Studio</title>
-      </Head>
-      {/* Fixed background element placed behind the app content. */}
-      <div id="site-bg" aria-hidden="true" />
-      <ScrollToTop />
-      <ScrollbarGutter />
-      <Component {...pageProps} />
-    </>
+    <ConsentProvider>
+      <>
+        <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>Adons Studio</title>
+        </Head>
+        {/* Fixed background element placed behind the app content. */}
+        <div id="site-bg" aria-hidden="true" />
+        <ScrollToTop />
+        <ScrollbarGutter />
+        <Component {...pageProps} />
+        <ConsentBanner />
+      </>
+    </ConsentProvider>
   )
 }

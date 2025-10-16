@@ -3,6 +3,7 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "../../hooks/use-outside-click";
+import OptimizedImage from "../OptimizedImage";
 
 export default function ProductionTab(){
   const cards = [
@@ -10,7 +11,7 @@ export default function ProductionTab(){
       key: 'pre',
       title: 'Pre-Production',
       description: 'This phase lays the groundwork for the entire project.',
-      src: '/Images/Pre production.png',
+      src: 'production/pre-production',
       content: () => {
         return (
           <div>
@@ -34,7 +35,7 @@ export default function ProductionTab(){
       key: 'main',
       title: 'Production',
       description: 'This is where the project is physically created.',
-      src: '/Images/Production.png',
+      src: 'production/production',
       content: () => {
         return (
           <div>
@@ -55,7 +56,7 @@ export default function ProductionTab(){
       key: 'post',
       title: 'Post-Production',
       description: 'After shooting, all elements are refined and assembled.',
-      src: '/Images/Post production.png',
+      src: 'production/post-production',
       content: () => {
         return (
           <div>
@@ -93,6 +94,20 @@ export default function ProductionTab(){
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [active]);
 
+  // When a modal opens, ensure it is scrolled into the center of the viewport (mobile-friendly)
+  useEffect(() => {
+    if (active && ref && ref.current && typeof window !== 'undefined') {
+      try {
+        // only auto-center on small screens (mobile). On desktop we keep normal positioning.
+        if (window.innerWidth < 768) {
+          ref.current.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
+      } catch (e) {
+        // ignore if scrollIntoView is not allowed
+      }
+    }
+  }, [active]);
+
   useOutsideClick(ref, () => setActive(null));
 
   return (
@@ -109,7 +124,7 @@ export default function ProductionTab(){
       </AnimatePresence>
       <AnimatePresence>
         {active && typeof active !== "boolean" ? (
-          <div className="fixed inset-0 grid place-items-center z-[100]" id={`production-modal-${active.key}`}> 
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto" id={`production-modal-${active.key}`}> 
             <motion.button
               key={`button-${active.title}-${id}`}
               layout
@@ -141,23 +156,23 @@ export default function ProductionTab(){
                   ease: [0.25, 0.1, 0.25, 1]
                 }
               }}
-              className="w-full max-w-[600px] h-auto max-h-[95vh] flex flex-col bg-white/10 backdrop-blur-[10px] sm:rounded-3xl overflow-hidden overflow-y-auto shadow-2xl border border-white/20">
+              className="w-full max-w-[680px] min-h-[50vh] h-auto max-h-[85vh] flex flex-col bg-white/10 backdrop-blur-[10px] sm:rounded-3xl overflow-hidden shadow-2xl border border-white/20">
               <motion.div 
                 layoutId={`image-${active.title}-${id}`}
                 transition={{ 
                   duration: 0.15,
                   ease: [0.25, 0.1, 0.25, 1]
-                }}>
-                <img
-                  width={200}
-                  height={200}
-                  src={active.src}
+                }}
+                className="w-full flex-none">
+                <OptimizedImage
+                  width={900}
+                  name={active.src}
                   alt={active.title}
-                  className="w-full h-60 lg:h-60 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top" />
+                  className="w-full h-[28vh] md:h-[32vh] lg:h-[36vh] object-cover object-top" />
               </motion.div>
 
-              <div className="flex-1 overflow-y-auto">
-                <div className="flex justify-between items-start p-4">
+              <div className="flex-1 overflow-auto p-4 md:p-6">
+                <div className="flex justify-between items-start w-full">
                   <div className="">
                     <motion.h3
                       layoutId={`title-${active.title}-${id}`}
@@ -193,7 +208,7 @@ export default function ProductionTab(){
                     Close
                   </motion.button>
                 </div>
-                <div className="pt-4 relative px-4 pb-6">
+                <div className="pt-4 relative pb-6">
                   <motion.div
                     layout
                     initial={{ opacity: 0, y: 15 }}
@@ -204,7 +219,7 @@ export default function ProductionTab(){
                       ease: [0.25, 0.1, 0.25, 1],
                       delay: 0.02
                     }}
-                    className="text-neutral-400 text-xs md:text-sm lg:text-base flex flex-col items-start gap-4">
+                    className="text-neutral-400 text-sm lg:text-base flex flex-col items-start gap-4">
                     {typeof active.content === "function"
                       ? active.content()
                       : active.content}
@@ -256,10 +271,9 @@ export default function ProductionTab(){
                   duration: 0.15,
                   ease: [0.25, 0.1, 0.25, 1]
                 }}>
-                <img
-                  width={100}
-                  height={100}
-                  src={card.src}
+                <OptimizedImage
+                  width={400}
+                  name={card.src}
                   alt={card.title ? card.title + ' service image' : 'Service image'}
                   className="h-60 w-full rounded-lg object-cover object-top" />
               </motion.div>

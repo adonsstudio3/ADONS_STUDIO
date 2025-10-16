@@ -1,20 +1,21 @@
 "use client";
 
 import React from 'react';
+import OptimizedImage from '../OptimizedImage';
 
 export default function AudioTab(){
   const tracks = [
-    { key: 'sd', title: 'Sound Design', body: 'Designing sound effects for media', h: 560, img: '/Images/Sound design.jpg' },
-    { key: 'mp', title: 'Music Production', body: 'Composing, recording, mixing and mastering', h: 520, img: '/Images/Music production.jpg' },
-    { key: 'vo', title: 'Voiceover & Dubbing', body: 'Recording and editing voice work', h: 420, img: '/Images/voice-over and dubbing.png' },
-    { key: 'pp', title: 'Podcast Production', body: 'End-to-end podcast production', h: 480, img: '/Images/podcast Production.jpg' },
-    { key: 'ar', title: 'Audio Restoration', body: 'Cleaning and remastering audio', h: 400, img: '/Images/Audio restoration.webp' }
+    { key: 'sd', title: 'Sound Design', body: 'Designing sound effects for media', h: 560, img: 'audio/sound-design' },
+    { key: 'mp', title: 'Music Production', body: 'Composing, recording, mixing and mastering', h: 520, img: 'audio/music-production' },
+    { key: 'vo', title: 'Voiceover & Dubbing', body: 'Recording and editing voice work', h: 420, img: 'audio/voiceover-dubbing' },
+    { key: 'pp', title: 'Podcast Production', body: 'End-to-end podcast production', h: 480, img: 'audio/podcast-production' },
+    { key: 'ar', title: 'Audio Restoration', body: 'Cleaning and remastering audio', h: 400, img: 'audio/audio-restoration' }
   ]
 
   return (
     <div className="masonry-wrapper">
       <style jsx>{`
-        /* Mobile-first default */
+        /* Mobile-first default: stack vertically on mobile */
         .masonry-wrapper {
           -webkit-column-count: 2;
           -moz-column-count: 2;
@@ -22,6 +23,26 @@ export default function AudioTab(){
           -webkit-column-gap: 0.75rem;
           -moz-column-gap: 0.75rem;
           column-gap: 0.75rem;
+        }
+
+        /* Mobile: single column vertical stack */
+        @media (max-width: 768px) {
+          .masonry-wrapper {
+            -webkit-column-count: 1;
+            -moz-column-count: 1;
+            column-count: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+          }
+          
+          .masonry-card {
+            width: 100% !important;
+            height: auto !important;
+            min-height: 400px;
+            break-inside: auto;
+            margin: 0;
+          }
         }
 
         /* Larger screens: increase to 3 columns */
@@ -34,6 +55,9 @@ export default function AudioTab(){
             -moz-column-gap: 1rem;
             column-gap: 1rem;
           }
+            .masonry-card p {
+              font-size: 1.15rem;
+            }
         }
 
         .masonry-card { display: inline-block; width: 100%; margin: 0 0 0.75rem; break-inside: avoid; border-radius: 0.5rem; overflow: hidden; }
@@ -59,8 +83,8 @@ export default function AudioTab(){
           {t.img ? (
             <div className="relative h-[68%] p-3 flex items-stretch">
               <div className="relative w-full h-full border border-white/10 rounded-md overflow-hidden">
-                <img
-                  src={t.img}
+                <OptimizedImage
+                  name={t.img}
                   loading="lazy"
                   alt={
                     t.title && t.description
@@ -70,6 +94,8 @@ export default function AudioTab(){
                         : 'Service image'
                   }
                   className="object-cover w-full h-full block"
+                  style={{ width: '100%', height: '100%' }}
+                  width={400}
                 />
                 <div className="absolute inset-0 bg-black/25 group-hover:bg-black/30 transition-colors" />
               </div>

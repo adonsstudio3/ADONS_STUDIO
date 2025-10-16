@@ -80,6 +80,8 @@ export default function Contact() {
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,7 +97,11 @@ export default function Contact() {
   };
 
   const handleCountryChange = (country) => {
-  setFormData(prev => ({ ...prev, countryCode: country.dial, countryAlpha: (country.alpha2 || country.code || '').toLowerCase() }));
+    setFormData(prev => ({
+      ...prev,
+      countryCode: country.dial,
+      countryAlpha: (country.alpha2 || country.code || '').toLowerCase()
+    }));
   };
 
   const validateForm = () => {
@@ -106,14 +112,79 @@ export default function Contact() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
-    if (Object.keys(newErrors).length === 0) {
-      console.log('Form submitted:', formData);
-      setFormData({ firstName: '', lastName: '', email: '', phone: '', subject: '', message: '' });
-      alert('Message sent successfully!');
-    } else setErrors(newErrors);
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus({ type: '', message: '' });
+
+    try {
+      // Combine first and last name
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim() || 'Unknown';
+      
+      // Combine phone with country code
+      const phoneNumber = formData.phone ? `${formData.countryCode}${formData.phone}` : '';
+
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: fullName,
+          email: formData.email,
+          phone: phoneNumber,
+          subject: formData.subject || 'Contact Form Submission',
+          message: formData.message,
+          source: 'contact_form'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      // Success!
+      setSubmitStatus({
+        type: 'success',
+        message: 'Thank you! Your message has been sent successfully. We\'ll get back to you soon.'
+      });
+      
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        countryCode: '+1',
+        countryAlpha: 'us',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+      setErrors({});
+
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus({ type: '', message: '' });
+      }, 5000);
+
+    } catch (error) {
+      console.error('Contact form error:', error);
+      setSubmitStatus({
+        type: 'error',
+        message: error.message || 'Failed to send message. Please try again or contact us directly.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -154,7 +225,7 @@ export default function Contact() {
             <div className={styles.inputGroup} style={{ width: '100%' }}>
               <label className={styles.label}>PHONE</label>
               <div className={styles.phoneRow}>
-                <CountryDropdown value={formData.countryAlpha || formData.countryCode} onChange={handleCountryChange} className={styles.countrySelectWrap} />
+                <CountryDropdown value={formData.countryAlpha} onChange={handleCountryChange} className={styles.countrySelectWrap} />
                 <span className={styles.phoneSeparator} aria-hidden> </span>
                 <input
                   className={styles.input}
@@ -185,9 +256,25 @@ export default function Contact() {
             </div>
           </div>
 
+          {/* Status Message */}
+          {submitStatus.message && (
+            <div className={styles.row}>
+              <div className={submitStatus.type === 'success' ? styles.successMessage : styles.errorMessage}>
+                {submitStatus.message}
+              </div>
+            </div>
+          )}
+
           <div className={styles.row}>
             <div style={{ width: '100%' }}>
-              <button type="submit" className={styles.btn} style={{ width: '100%' }}>Send Message</button>
+              <button 
+                type="submit" 
+                className={styles.btn} 
+                style={{ width: '100%' }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+              </button>
             </div>
           </div>
         </form>

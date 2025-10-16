@@ -53,10 +53,11 @@
 }
 
 .footerLogoImg {
-  width: 100px;
-  height: 100px;
+  width: 140px !important;
+  height: 140px !important;
   object-fit: contain;
   display: block;
+  /* border removed as requested */
 }
 
 .footerBrandName {

@@ -1,12 +1,13 @@
 import ImageCompareSlider from '../ImageCompareSlider';
+import OptimizedImage from '../OptimizedImage';
 
 export default function VisualsTab() {
   // Keyed before/after images for cards that support comparison
   const compareImages = {
-    cg: { before: '/Images/visuals/3D-CGI-before.png', after: '/Images/visuals/3D-CGI-after.png' },
-    rot: { before: '/Images/visuals/Rotoscope-before.png', after: '/Images/visuals/Rotoscope-after.png' },
-    paint: { before: '/Images/visuals/Cleanup-before.jpg', after: '/Images/visuals/Cleanup-after.jpg' },
-    anim: { before: '/Images/visuals/3D_2D-Animation-before.png', after: '/Images/visuals/3D_2D-Animation-after.png' },
+    cg: { before: 'visuals/3D-CGI-before', after: 'visuals/3D-CGI-after' },
+    rot: { before: 'visuals/rotoscope-before', after: 'visuals/rotoscope-after' },
+    paint: { before: 'visuals/cleanup-before', after: 'visuals/cleanup-after' },
+    anim: { before: 'visuals/3D_2D-animation-before', after: 'visuals/3D_2D-animation-after' },
   };
 
   // Cards now explicitly declare the mediaType to avoid brittle index-based logic
@@ -15,8 +16,9 @@ export default function VisualsTab() {
     { key: 'rot', title: 'Rotoscope & Keying', body: `Rotoscoping and keying isolate subjects from backgrounds, enabling seamless compositing and integration of live-action footage with digital elements.`, mediaType: 'compare' },
     { key: 'paint', title: 'Paint & Cleanup', body: `Paint and cleanup remove unwanted objects, fix imperfections, and restore footage for seamless, polished visual effects and final compositions.`, mediaType: 'compare' },
     { key: 'anim', title: '3D & 2D Animation', body: `Producing animated content for ads, explainer videos, and films.`, mediaType: 'compare' },
-    { key: 'edit', title: 'Video Editing', body: `Cutting, color grading, and post-production for videos and films.`, mediaType: 'image', img: '' },
-    { key: 'motion', title: 'Motion Graphics', body: `Designing animated graphics for branding, social media, and videos.`, mediaType: 'video', videoSrc: '/Images/visuals/Cookies_motion_graphics.mp4' }
+  { key: 'edit', title: 'Video Editing', body: `Cutting, color grading, and post-production for videos and films.`, mediaType: 'image', img: 'visuals/video-editing' },
+  { key: 'matte', title: 'Matte Painting', body: `We specialize in creating high-quality matte paints for films, ads, and digital media. From set extensions to photorealistic environments, our matte painting service blends artistry and technology to craft immersive worlds that seamlessly integrate with live-action or CGI.`, mediaType: 'image', img: 'visuals/matte-painting' },
+  { key: 'motion', title: 'Motion Graphics', body: `Designing animated graphics for branding, social media, and videos.`, mediaType: 'video', videoSrc: '/Images/visuals/Cookies_motion_graphics.mp4' }
   ];
 
   return (
@@ -81,10 +83,23 @@ export default function VisualsTab() {
           .visuals-horizontal-card-content { padding: 1.5rem 1rem; }
           .visuals-horizontal-card-title { font-size: 1.1rem; }
         }
-        @media (max-width: 700px) {
-          .visuals-horizontal-card { flex-direction: column; min-height: 0; }
-          .visuals-horizontal-card-image, .visuals-horizontal-card-content { flex: unset; min-width: unset; }
-          .visuals-horizontal-card-image { height: 220px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        @media (max-width: 768px) {
+          .visuals-horizontal-card { 
+            flex-direction: column !important; 
+            min-height: 0; 
+          }
+          .visuals-horizontal-card-image, .visuals-horizontal-card-content { 
+            flex: unset; 
+            min-width: unset; 
+          }
+          .visuals-horizontal-card-image { 
+            height: 220px; 
+            border-bottom: 1px solid rgba(255,255,255,0.08); 
+          }
+          .visuals-horizontal-card-content {
+            text-align: center;
+            padding: 2rem 1.5rem;
+          }
         }
       `}</style>
       {cards.map((c, idx) => {
@@ -109,7 +124,7 @@ export default function VisualsTab() {
                   style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
                 />
               ) : c.img ? (
-                <img src={c.img} alt={c.title} />
+                <OptimizedImage name={c.img} alt={c.title} width={800} className="w-full h-full object-cover block" />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-black/6 to-black/12 flex items-center justify-center">
                   <div className="w-full h-full border border-white/8 rounded-md" />

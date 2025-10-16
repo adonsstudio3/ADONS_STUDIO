@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import styles from '../styles/ProjectsDesign.module.css';
+import OptimizedImage from './OptimizedImage';
+import analytics, { consentGiven } from '../lib/analytics';
+import { useRealtimePublicProjects } from '../hooks/useRealtimePublicProjects';
 
 // Internal error boundary hook for catching and handling errors within the component
 const useErrorHandler = () => {
@@ -27,6 +30,18 @@ const useErrorHandler = () => {
   return { error, resetError, handleError };
 };
 
+// Helper to emit analytics events only when the user has given consent.
+// This prevents sending events unexpectedly and centralizes try/catch logic.
+const safeAnalyticsEvent = (name, props) => {
+  try {
+    if (typeof consentGiven === 'function' && !consentGiven()) return;
+    if (analytics && typeof analytics.event === 'function') analytics.event(name, props);
+  } catch (e) {
+    // Non-fatal: don't let analytics failures break UI
+    console.warn('Analytics event failed:', e);
+  }
+};
+
 const ProjectsDesign = () => {
   const { error, resetError, handleError } = useErrorHandler();
   
@@ -35,6 +50,11 @@ const ProjectsDesign = () => {
   const [descVisible, setDescVisible] = useState(false);
   const [showShowreel, setShowShowreel] = useState(false);
   const subtitleFull = "Bringing Imagination To Life";
+
+  // Use realtime projects hook - no more manual API fetching!
+  const { projects, loading: projectsLoading, error: projectsError } = useRealtimePublicProjects();
+
+  console.log('🔄 Projects from realtime:', projects.length);
 
   // If there's an internal error, show error UI
   if (error) {
@@ -73,240 +93,88 @@ const ProjectsDesign = () => {
     );
   }
 
-  const [projects] = useState([
-    {
-      id: 1,
-      title: "Quantum Realms",
-      category: "VFX",
-      client: "Marvel Studios",
-      year: "2024",
-      description: "Epic dimensional portal sequences featuring complex particle systems and reality-bending visual effects.",
-      software: "Houdini, After Effects, Nuke",
-      thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=600&h=400&fit=crop",
-      featured: true
-    },
-    {
-      id: 2,
-      title: "Future City",
-      category: "3D Animation",
-      client: "Tesla",
-      year: "2024",
-      description: "Photorealistic architectural visualization of autonomous vehicle infrastructure in futuristic cityscapes.",
-      software: "Cinema 4D, Octane, After Effects",
-      thumbnail: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?w=600&h=400&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Elemental Fury",
-      category: "VFX",
-      client: "Warner Bros",
-      year: "2024",
-      description: "Large-scale destruction sequences with realistic fire, water, and debris simulations.",
-      software: "Houdini, Maya, Nuke",
-      thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=400&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Luxury Redefined",
-      category: "Commercials",
-      client: "Mercedes-Benz",
-      year: "2024",
-      description: "High-end automotive commercial with sophisticated lighting and product visualization.",
-      software: "Cinema 4D, Redshift, After Effects",
-      thumbnail: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=400&fit=crop"
-    },
-    {
-      id: 5,
-      title: "Digital Dreams",
-      category: "Motion Graphics",
-      client: "Adobe",
-      year: "2024",
-      description: "Abstract motion graphics piece exploring the intersection of creativity and technology.",
-      software: "After Effects, Cinema 4D, Illustrator",
-      thumbnail: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600&h=400&fit=crop"
-    },
-    {
-      id: 6,
-      title: "Ocean Deep",
-      category: "Compositing",
-      client: "National Geographic",
-      year: "2024",
-      description: "Underwater documentary sequences with seamless creature integration and environmental compositing.",
-      software: "Nuke, After Effects, Mocha",
-      thumbnail: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop"
-    },
-    {
-      id: 7,
-      title: "Neon Nights",
-      category: "Motion Graphics",
-      client: "Spotify",
-      year: "2023",
-      description: "Vibrant music visualization with dynamic typography and pulsing geometric forms.",
-      software: "After Effects, Cinema 4D, X-Particles",
-      thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop"
-    },
-    {
-      id: 8,
-      title: "Space Odyssey",
-      category: "VFX",
-      client: "Netflix",
-      year: "2023",
-      description: "Spectacular space battle sequences with detailed spacecraft and nebula environments.",
-      software: "Houdini, Maya, Nuke, After Effects",
-      thumbnail: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=600&h=400&fit=crop"
-    },
-    {
-      id: 9,
-      title: "Product Showcase",
-      category: "3D Animation",
-      client: "Apple",
-      year: "2023",
-      description: "Clean, minimal product animation highlighting innovative design and functionality.",
-      software: "Cinema 4D, Octane, After Effects",
-      thumbnail: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop"
-    },
-    {
-      id: 10,
-      title: "Urban Legends",
-      category: "Compositing",
-      client: "HBO",
-      year: "2023",
-      description: "Complex urban environment compositing with crowd simulation and atmospheric effects.",
-      software: "Nuke, Houdini, After Effects",
-      thumbnail: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=600&h=400&fit=crop"
-    }
-  ]);
+  // Realtime handles project fetching automatically - no manual fetch needed!
+  // Projects are updated in real-time via useRealtimePublicProjects hook
 
-  const [filteredProjects, setFilteredProjects] = useState(projects);
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const filters = ['All', 'VFX', 'Motion Graphics', '3D Animation', 'Compositing', 'Commercials'];
-
-  const handleFilterClick = useCallback((filter) => {
-    setActiveFilter(filter);
-    
-    if (filter === 'All') {
-      setFilteredProjects(projects);
-    } else {
-      setFilteredProjects(projects.filter(project => project.category === filter));
-    }
-  }, [projects]);
-
-  const openModal = useCallback((projectId) => {
-    try {
-      const project = projects.find(p => p.id === projectId);
-      if (!project) {
-        console.warn('Project not found:', projectId);
-        return;
-      }
-
-      setSelectedProject(project);
-      setCurrentProjectIndex(filteredProjects.findIndex(p => p.id === projectId));
-      setIsModalVisible(true);
-    } catch (error) {
-      console.error('Error opening modal:', error);
-      handleError(error, { componentStack: 'openModal function' });
-    }
-  }, [projects, filteredProjects, handleError]);
-
-  const closeModal = useCallback(() => {
-    setIsModalVisible(false);
-    setSelectedProject(null);
+  // Fetch a lightweight public showreel payload (fast)
+  const [publicShowreel, setPublicShowreel] = useState(null);
+  useEffect(() => {
+    let mounted = true;
+    fetch('/api/public/showreel')
+      .then(res => res.json())
+      .then(data => {
+        if (!mounted) return;
+        setPublicShowreel(data?.showreel || null);
+      })
+      .catch(err => {
+        console.warn('Failed to load public showreel:', err);
+      });
+    return () => { mounted = false; };
   }, []);
 
-  const navigateModal = useCallback((direction) => {
-    try {
-      const newIndex = currentProjectIndex + direction;
-      
-      if (newIndex >= 0 && newIndex < filteredProjects.length) {
-        const project = filteredProjects[newIndex];
-        if (project) {
-          setSelectedProject(project);
-          setCurrentProjectIndex(newIndex);
-        }
-      }
-    } catch (error) {
-      console.error('Error navigating modal:', error);
-      handleError(error, { componentStack: 'navigateModal function' });
+  // Handle project card click - opens project URL in new tab
+  const handleProjectClick = useCallback((project) => {
+    console.log('🖱️ Card clicked:', {
+      title: project.title,
+      hasUrl: !!project.project_url,
+      url: project.project_url
+    });
+    
+    if (!project.project_url) {
+      console.warn('⚠️ Project has no URL:', project.title);
+      return;
     }
-  }, [currentProjectIndex, filteredProjects, handleError]);
+
+    try {
+      console.log('🚀 Opening URL:', project.project_url);
+      window.open(project.project_url, '_blank', 'noopener,noreferrer');
+      safeAnalyticsEvent('project_click', { 
+        project_id: project.id,
+        project_title: project.title,
+        project_url: project.project_url,
+        category: project.category,
+        platform: project.platform
+      });
+    } catch (error) {
+      console.error('❌ Failed to open project URL:', error);
+    }
+  }, []);
+
+  // Display only real projects from database - no demo fallback
+  const displayProjects = projects || [];
+
+  // No modal state: expanded project modals removed per client request
 
   const playShowreel = useCallback(() => {
     setShowShowreel(true);
+    safeAnalyticsEvent('showreel_play', { method: 'hero_button' });
   }, []);
 
   const closeShowreel = useCallback(() => {
     setShowShowreel(false);
+    safeAnalyticsEvent('showreel_close', { method: 'overlay' });
   }, []);
 
-  // Keyboard navigation with safety checks
-  useEffect(() => {
-    if (!isModalVisible) return;
-
-    const handleKeyPress = (e) => {
-      // Additional safety check
-      if (!isModalVisible) return;
-
-      switch(e.key) {
-        case 'Escape':
-          closeModal();
-          break;
-        case 'ArrowLeft':
-          e.preventDefault(); // Prevent default browser behavior
-          navigateModal(-1);
-          break;
-        case 'ArrowRight':
-          e.preventDefault(); // Prevent default browser behavior
-          navigateModal(1);
-          break;
-        default:
-          break; // Explicit default case
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-    
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [isModalVisible, closeModal, navigateModal]);
-
-  // Parallax effect for hero background with safety checks
-  useEffect(() => {
-    let ticking = false;
-    let isMounted = true;
-
-    const updateScrollEffects = () => {
-      if (!isMounted) return; // Safety check
-      
-      const scrolled = window.pageYOffset;
-      const rate = scrolled * -0.3;
-      
-      const hero = document.querySelector(`.${styles.heroBackground}`);
-      if (hero) {
-        hero.style.transform = `translateY(${rate}px)`;
-      }
-      
-      ticking = false;
-    };
-
-    const handleScroll = () => {
-      if (!ticking && isMounted) {
-        requestAnimationFrame(updateScrollEffects);
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      isMounted = false; // Mark as unmounted
-      window.removeEventListener('scroll', handleScroll);
-    };
+  // Close the showreel when clicking the backdrop (only when clicking the overlay itself)
+  const handleShowreelOverlayClick = useCallback((e) => {
+    // Only close when clicking directly on the overlay container, not its children
+    if (e.target === e.currentTarget) {
+      setShowShowreel(false);
+      safeAnalyticsEvent('showreel_close', { method: 'backdrop' });
+    }
   }, []);
+
+  // Close showreel on Escape key for accessibility
+  useEffect(() => {
+    if (!showShowreel) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') setShowShowreel(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showShowreel]);
+
+  // openModal/closeModal removed — cards do not expand into modals
 
   // Typing animation effect with safety checks
   useEffect(() => {
@@ -356,50 +224,33 @@ const ProjectsDesign = () => {
     };
   }, []); // Remove dependencies to prevent re-runs
 
-  // Centralized body overflow handling with improved safety
+  // Body overflow handling only for showreel (modal removed)
   useEffect(() => {
-    if (isModalVisible || showShowreel) {
-      // Store the original value more safely
-      const originalOverflow = document.body.style.overflow || '';
-      document.body.style.overflow = 'hidden';
-      
-      return () => {
-        // Restore original value safely
-        try {
-          document.body.style.overflow = originalOverflow;
-        } catch (error) {
-          console.warn('Failed to restore body overflow:', error);
-          // Fallback: remove the property entirely
-          document.body.style.removeProperty('overflow');
-        }
-      };
-    }
-    
-    // Ensure overflow is cleared when neither modal is open
-    if (!isModalVisible && !showShowreel) {
+    const originalOverflow = document.body.style.overflow || '';
+    if (showShowreel) document.body.style.overflow = 'hidden';
+
+    return () => {
       try {
-        document.body.style.removeProperty('overflow');
+        document.body.style.overflow = originalOverflow;
       } catch (error) {
-        console.warn('Failed to clear body overflow:', error);
+        console.warn('Failed to restore body overflow:', error);
+        document.body.style.removeProperty('overflow');
       }
-    }
-    
-    return () => {}; // No-op cleanup when no action needed
-  }, [isModalVisible, showShowreel]);
+    };
+  }, [showShowreel]);
 
   return (
     <div className={styles.vfxContainer}>
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroVideoContainer}>
-          <img 
-            src="/Images/hero/Team.jpg" 
+          <OptimizedImage 
+            name="hero/project" 
             alt="Showreel Preview" 
             className={styles.heroBackground}
-            onError={(e) => {
-              console.warn('Hero image failed to load');
-              e.target.style.display = 'none';
-            }}
+            style={{ display: 'block' }}
+            width={1920}
+            priority
           />
           <div className={styles.heroOverlay}></div>
         </div>
@@ -420,7 +271,7 @@ const ProjectsDesign = () => {
           </button>
 
           {showShowreel && (
-            <div className={styles.showreelOverlay}>
+            <div className={styles.showreelOverlay} onClick={handleShowreelOverlayClick}>
               <button
                 onClick={closeShowreel}
                 className={styles.showreelCloseBtn}
@@ -432,10 +283,24 @@ const ProjectsDesign = () => {
                 </svg>
               </button>
               <div style={{ maxWidth: '98vw', maxHeight: '90vh', background: 'transparent', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {
+                  // Choose the top active showreel (featured first, then latest)
+                }
                 <iframe
                   width="1000"
                   height="562"
-                  src="https://www.youtube.com/embed/ScMzIvxBSi4?autoplay=1"
+                  src={(() => {
+                    try {
+                      const active = publicShowreel;
+                      if (!active || !active.video_url) return 'about:blank';
+                      const m = active.video_url.match(/(?:v=|youtu\.be\/)([^&\n?#]+)/);
+                      const id = m ? m[1] : null;
+                      return id ? `https://www.youtube.com/embed/${id}?autoplay=1` : 'about:blank';
+                    } catch (e) {
+                      console.error('Error building showreel embed URL', e);
+                      return 'about:blank';
+                    }
+                  })()}
                   title="Adons Studio Showreel"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
@@ -451,150 +316,118 @@ const ProjectsDesign = () => {
         </div>
       </section>
 
-      {/* Filter Navigation */}
-      <section className={styles.filterSection}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className={styles.filterNav} role="navigation" aria-label="Project categories">
-            {filters.map(filter => (
-              <button
-                key={filter}
-                className={`${styles.filterBtn} ${activeFilter === filter ? styles.active : ''}`}
-                onClick={() => handleFilterClick(filter)}
-              >
-                {filter}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </section>
+      {/* Filter Navigation removed */}
 
-      {/* Projects Grid */}
+      {/* Projects Grid with clickable cards */}
       <section className={styles.projectsSection}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={styles.projectsGrid}>
-            {filteredProjects.length === 0 ? (
-              <div className={styles.noProjects}>
-                No projects found for this filter.
-              </div>
-            ) : (
-              filteredProjects.map((project) => (
-                <div
-                  key={project.id}
-                  className={styles.projectCard}
-                  onClick={() => openModal(project.id)}
-                >
-                  {/* Image removed as per request */}
-                  <div className={styles.projectOverlay}>
-                    <div className={styles.projectInfo}>
-                      <h3 className={styles.projectTitle}>{project.title}</h3>
-                      <span className={styles.projectCategory}>{project.category}</span>
-                      <p className={styles.projectDescription}>{project.description}</p>
-                      <div className={styles.projectMeta}>
-                        <span><strong>Client:</strong> {project.client}</span>
-                        <span><strong>Year:</strong> {project.year}</span>
-                      </div>
-                      <button 
-                        className={styles.viewProjectBtn}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openModal(project.id);
-                        }}
-                      >
-                        View Project
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+        {projectsLoading && (
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Loading projects...</p>
           </div>
+        )}
+        
+        {projectsError && (
+          <div className={styles.errorContainer}>
+            <p>Error loading projects: {projectsError}</p>
+            <p>Showing demo projects instead.</p>
+          </div>
+        )}
+
+        <div className={styles.projectsGrid}>
+          {displayProjects.map((project) => (
+            <article
+              key={project.id}
+              className={`${styles.projectCard} ${project.project_url ? styles.clickableCard : ''}`}
+              onClick={project.project_url ? () => handleProjectClick(project) : undefined}
+              onKeyDown={project.project_url ? (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleProjectClick(project);
+                }
+              } : undefined}
+              tabIndex={project.project_url ? 0 : -1}
+              role={project.project_url ? "button" : "article"}
+              aria-label={project.project_url ? `View project: ${project.title}` : project.title}
+              title={project.project_url ? `Click to view ${project.title}` : project.title}
+            >
+              <img
+                src={project.thumbnail_url || project.thumbnail_image_url || project.thumbnail || '/Images/placeholder-project.svg'}
+                alt={project.title}
+                className={styles.projectThumbnail}
+                onLoad={(e) => {
+                  console.log('✅ Image loaded successfully:', {
+                    title: project.title,
+                    src: e.target.src
+                  });
+                }}
+                onError={e => {
+                  console.error('❌ Image failed to load:', {
+                    title: project.title,
+                    attemptedSrc: e.target.src,
+                    thumbnail_url: project.thumbnail_url
+                  });
+                  // Only hide if not already hidden
+                  if (e.target.style.display !== 'none') {
+                    e.target.alt = 'Image unavailable';
+                    e.target.src = '/Images/placeholder-project.svg';
+                  }
+                }}
+              />
+              <div className={styles.projectOverlay}>
+                <div style={{ width: '100%' }}>
+                  <h3 className={styles.projectTitle}>{project.title}</h3>
+                  {project.description && <p className={styles.projectSubtitle}>{project.description}</p>}
+                  {project.client_name && (
+                    <p className={styles.projectClient}>Client: {project.client_name}</p>
+                  )}
+                  {project.project_url && (
+                    <div className={styles.projectCTA}>
+                      <span className={styles.ctaText}>Click to view →</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Tags placed at the top-right of the card (positioned relative to .projectCard) */}
+              {project.tags && project.tags.length > 0 && (
+                <div className={styles.projectTags} role="list" aria-label="Project tags">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className={styles.projectTag}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Project tag: ${tag}`}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent card click
+                        safeAnalyticsEvent('tag_click', { tag, project: project.id });
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.stopPropagation(); // Prevent card click
+                          safeAnalyticsEvent('tag_click', { tag, project: project.id });
+                        }
+                      }}
+                    >
+                      <span aria-hidden="true">{tag}</span>
+                      <span style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+                        Project tag: {tag}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {/* Featured badge */}
+              {project.is_featured && (
+                <div className={styles.featuredBadge} aria-label="Featured project">
+                  ⭐ Featured
+                </div>
+              )}
+            </article>
+          ))}
         </div>
       </section>
-
-      {/* Project Modal */}
-      {selectedProject && (
-        <div 
-          className={`${styles.modal} ${isModalVisible ? styles.visible : styles.hidden}`}
-          role="dialog" 
-          aria-modal="true" 
-          aria-labelledby="modalTitle"
-        >
-          <div className={styles.modalOverlay} onClick={closeModal}></div>
-          <div className={styles.modalContent}>
-            <button 
-              className={styles.modalClose} 
-              onClick={closeModal} 
-              aria-label="Close modal"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-            
-            <div className={styles.modalBody}>
-              <div className={styles.modalMedia}>
-                {/* Modal image removed as per request */}
-                <div className={styles.modalPlayOverlay}>
-                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                    <circle cx="40" cy="40" r="40" fill="rgba(255, 215, 0, 0.9)"/>
-                    <polygon points="32,25 32,55 55,40" fill="#000"/>
-                  </svg>
-                </div>
-              </div>
-              
-              <div className={styles.modalInfo}>
-                <div className={styles.modalHeader}>
-                  <h2 className={styles.modalProjectTitle}>{selectedProject.title}</h2>
-                  <span className={styles.modalCategoryBadge}>{selectedProject.category}</span>
-                </div>
-                
-                <div className={styles.modalDetails}>
-                  <div className={styles.modalMeta}>
-                    <div className={styles.metaItem}>
-                      <span className={styles.metaLabel}>Client:</span>
-                      <span className={styles.metaValue}>{selectedProject.client}</span>
-                    </div>
-                    <div className={styles.metaItem}>
-                      <span className={styles.metaLabel}>Year:</span>
-                      <span className={styles.metaValue}>{selectedProject.year}</span>
-                    </div>
-                    <div className={styles.metaItem}>
-                      <span className={styles.metaLabel}>Software:</span>
-                      <span className={styles.metaValue}>{selectedProject.software}</span>
-                    </div>
-                  </div>
-                  
-                  <p className={styles.modalDescription}>{selectedProject.description}</p>
-                </div>
-              </div>
-            </div>
-            
-            <nav className={styles.modalNavigation}>
-              <button 
-                className={styles.modalNavBtn}
-                onClick={() => navigateModal(-1)} 
-                disabled={currentProjectIndex === 0}
-                aria-label="Previous project"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="15,18 9,12 15,6"></polyline>
-                </svg>
-              </button>
-              <button 
-                className={styles.modalNavBtn}
-                onClick={() => navigateModal(1)} 
-                disabled={currentProjectIndex === filteredProjects.length - 1}
-                aria-label="Next project"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="9,18 15,12 9,6"></polyline>
-                </svg>
-              </button>
-            </nav>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 };

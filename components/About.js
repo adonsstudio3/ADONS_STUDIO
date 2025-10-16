@@ -1,46 +1,20 @@
+import OptimizedImage from './OptimizedImage';
+
 export default function About(){
   return (
     <section id="about" className="py-20">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-10">
-          {/* Centered banner image placed above the headings. File: public/Images/bw-banner.png */}
+          {/* Centered banner image placed above the headings. File: public/Images/bw-banner/bw-banner.png */}
           <div className="mb-6">
-            {/* Safe full-bleed to viewport edges without causing horizontal scroll */}
-            {/* Uses calc negative margins so the element spans the viewport while respecting scrollbar width */}
             <div style={{ marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)', width: '100vw', display: 'block' }}>
-              {/* Responsive picture element: AVIF -> WebP -> PNG fallback. Optimized files in public/Images/optimized/bw-banner/ */}
-              <picture>
-                <source
-                  type="image/avif"
-                  srcSet={
-                    '/Images/optimized/bw-banner/bw-banner-400.avif 400w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-800.avif 800w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-1200.avif 1200w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-1600.avif 1600w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-2400.avif 2400w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-3387.avif 3387w'
-                  }
-                  sizes="100vw"
-                />
-                <source
-                  type="image/webp"
-                  srcSet={
-                    '/Images/optimized/bw-banner/bw-banner-400.webp 400w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-800.webp 800w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-1200.webp 1200w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-1600.webp 1600w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-2400.webp 2400w, ' +
-                    '/Images/optimized/bw-banner/bw-banner-3387.webp 3387w'
-                  }
-                  sizes="100vw"
-                />
-                <img
-                  src="/Images/bw-banner/bw-banner.png"
-                  alt="ADONS banner full-bleed"
-                  style={{ width: '100%', height: 'auto', display: 'block', maxWidth: 'none' }}
-                  loading="eager"
-                />
-              </picture>
+              <OptimizedImage
+                name="bw-banner/bw-banner"
+                alt="ADONS banner full-bleed"
+                style={{ width: '100%', height: 'auto', display: 'block', maxWidth: 'none' }}
+                loading="eager"
+                width={1920}
+              />
             </div>
           </div>
           <h2 className="font-semibold text-4xl md:text-5xl">About Our Studio</h2>
@@ -58,30 +32,8 @@ export default function About(){
           <p>Each member of our founding team brings a distinctive set of skills, experiences, and ideas, creating a diverse foundation that fuels our creativity and sets us apart. We believe that our differences are not only our greatest asset but also the key to delivering exceptional work that pushes boundaries and inspires others.</p>
           <p style={{ marginTop: '2.5em' }}>
             <picture style={{ float: 'left', marginRight: '44px', marginTop: '-12px', marginBottom: '12px', zIndex: 1, position: 'relative' }}>
-              <source
-                type="image/avif"
-                srcSet={
-                  '/Images/optimized/about/studio_1-400.avif 400w, ' +
-                  '/Images/optimized/about/studio_1-800.avif 800w, ' +
-                  '/Images/optimized/about/studio_1-1200.avif 1200w, ' +
-                  '/Images/optimized/about/studio_1-1600.avif 1600w, ' +
-                  '/Images/optimized/about/studio_1-2400.avif 2400w'
-                }
-                sizes="(max-width: 600px) 90vw, 420px"
-              />
-              <source
-                type="image/webp"
-                srcSet={
-                  '/Images/optimized/about/studio_1-400.webp 400w, ' +
-                  '/Images/optimized/about/studio_1-800.webp 800w, ' +
-                  '/Images/optimized/about/studio_1-1200.webp 1200w, ' +
-                  '/Images/optimized/about/studio_1-1600.webp 1600w, ' +
-                  '/Images/optimized/about/studio_1-2400.webp 2400w'
-                }
-                sizes="(max-width: 600px) 90vw, 420px"
-              />
-              <img
-                src="/Images/about/studio_1.JPG"
+              <OptimizedImage
+                name="about/studio_1"
                 alt="ADONS Studio - Team Collaboration"
                 style={{
                   width: '420px',
@@ -94,6 +46,7 @@ export default function About(){
                   display: 'block',
                 }}
                 loading="lazy"
+                width={420}
               />
             </picture>
             <span style={{ display: 'block', marginBottom: '10px' }}>
@@ -108,30 +61,8 @@ export default function About(){
 
           <p style={{ marginTop: '2.5em' }}>
             <picture style={{ float: 'right', marginLeft: '44px', marginTop: '-12px', marginBottom: '12px', zIndex: 1, position: 'relative' }}>
-              <source
-                type="image/avif"
-                srcSet={
-                  '/Images/optimized/about/studio_2-400.avif 400w, ' +
-                  '/Images/optimized/about/studio_2-800.avif 800w, ' +
-                  '/Images/optimized/about/studio_2-1200.avif 1200w, ' +
-                  '/Images/optimized/about/studio_2-1600.avif 1600w, ' +
-                  '/Images/optimized/about/studio_2-2400.avif 2400w'
-                }
-                sizes="(max-width: 600px) 90vw, 420px"
-              />
-              <source
-                type="image/webp"
-                srcSet={
-                  '/Images/optimized/about/studio_2-400.webp 400w, ' +
-                  '/Images/optimized/about/studio_2-800.webp 800w, ' +
-                  '/Images/optimized/about/studio_2-1200.webp 1200w, ' +
-                  '/Images/optimized/about/studio_2-1600.webp 1600w, ' +
-                  '/Images/optimized/about/studio_2-2400.webp 2400w'
-                }
-                sizes="(max-width: 600px) 90vw, 420px"
-              />
-              <img
-                src="/Images/about/studio_2.JPG"
+              <OptimizedImage
+                name="about/studio_2"
                 alt="ADONS Studio - Creative Hub"
                 style={{
                   width: '420px',
@@ -144,6 +75,7 @@ export default function About(){
                   display: 'block',
                 }}
                 loading="lazy"
+                width={420}
               />
             </picture>
             <span style={{ display: 'block', marginBottom: '10px' }}>
@@ -155,22 +87,21 @@ export default function About(){
           </p>
 
           <h3 
-            className="mt-24 text-2xl font-semibold inline-block border-b-4 pb-1"
-            style={{ borderBottomColor: 'var(--brand-gold)', color: '#fff' }}
+            className="mt-24 text-2xl font-semibold inline-block border-b-4 pb-1 border-brand text-white"
           >
             We Keep our word
           </h3>
           <ul className="list-none ml-6 space-y-2">
             <li>
-              <strong className="inline-block mt-2" style={{ color: 'var(--brand-gold)' }}>WE ARE ON TIME</strong>
+              <strong className="inline-block mt-2 text-brand">WE ARE ON TIME</strong>
               <div>We take pride in delivering high-quality work on time, ensuring reliability, efficiency, and professionalism in every project we complete.</div>
             </li>
             <li>
-              <strong className="inline-block mt-6" style={{ color: 'var(--brand-gold)' }}>WE ARE SATISFACTORY</strong>
+              <strong className="inline-block mt-6 text-brand">WE ARE SATISFACTORY</strong>
               <div>We ensure exceptional quality and satisfaction in every project, delivering reliable, professional results tailored to meet our clients' needs with precision, creativity, and dedication to excellence in every detail.</div>
             </li>
             <li>
-              <strong className="inline-block mt-6" style={{ color: 'var(--brand-gold)' }}>WE KEEP YOU SECURED</strong>
+              <strong className="inline-block mt-6 text-brand">WE KEEP YOU SECURED</strong>
               <div>We prioritize privacy in every project, ensuring complete confidentiality and security for all client data, ideas, and materials, maintaining trust and discretion throughout every stage of development and collaboration.</div>
             </li>
           </ul>

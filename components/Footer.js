@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Footer.module.css';
+import OptimizedImage from './OptimizedImage';
 
 export default function Footer() {
   const handleContactClick = (type) => {
@@ -15,15 +16,17 @@ export default function Footer() {
             {/* Company Info Column */}
             <div className={`${styles.footerColumn} ${styles.footerColumnCompany}`}>
               <div className={styles.footerBrand}>
-                <picture className={styles.footerLogo}>
-                  <source type="image/avif"
-                    srcSet="/Images/optimized/new-logo-upscaled/new-logo-upscaled-320.avif 320w, /Images/optimized/new-logo-upscaled/new-logo-upscaled-640.avif 640w, /Images/optimized/new-logo-upscaled/new-logo-upscaled-960.avif 960w"
-                    sizes="(max-width:640px) 80px, 100px" />
-                  <source type="image/webp"
-                    srcSet="/Images/optimized/new-logo-upscaled/new-logo-upscaled-320.webp 320w, /Images/optimized/new-logo-upscaled/new-logo-upscaled-640.webp 640w, /Images/optimized/new-logo-upscaled/new-logo-upscaled-960.webp 960w"
-                    sizes="(max-width:640px) 80px, 100px" />
-                  <img src="/Logo/brand-logo.png" alt="ADONS Studio logo" className={styles.footerLogoImg} width="100" height="100" loading="lazy" />
-                </picture>
+                <div className={styles.footerLogo}>
+                  <OptimizedImage
+                    name="Logo/brand-logo"
+                    alt="ADONS Studio logo"
+                    className={styles.footerLogoImg}
+                    width={140}
+                    height={140}
+                    sizes="(max-width:640px) 100px, 140px"
+                    loading="lazy"
+                  />
+                </div>
                 <h3 className={styles.footerBrandName}>ADONS Studio</h3>
                 <p className={styles.footerBrandTagline}>Professional VFX & Digital Media Solutions</p>
               </div>
@@ -79,11 +82,11 @@ export default function Footer() {
                     <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                   </svg>
                   <a 
-                    href="tel:+919876543210" 
+                    href="tel:+919337963354" 
                     className={styles.footerContactLink}
                     onClick={() => handleContactClick('phone')}
                   >
-                    +91 9876543210
+                    +91 93379 63354
                   </a>
                 </div>
               </div>
@@ -133,9 +136,19 @@ export default function Footer() {
               <p>&copy; {new Date().getFullYear()} ADONS Studio — All rights reserved</p>
             </div>
             <div className={styles.footerLegal}>
-              <a href="#terms" className={styles.footerLegalLink}>Terms and Conditions</a>
+              <a href="#terms" onClick={(e)=>{ 
+                e.preventDefault(); 
+                console.log('Terms and Conditions clicked - dispatching event'); 
+                window.dispatchEvent(new Event('openTermsModal')); 
+                document.dispatchEvent(new Event('openTermsModal')); 
+              }} className={styles.footerLegalLink}>Terms and Conditions</a>
               <span className={styles.footerLegalSeparator}>|</span>
-              <a href="#privacy" className={styles.footerLegalLink}>Privacy Policy</a>
+              <a href="#privacy" onClick={(e)=>{ 
+                e.preventDefault(); 
+                console.log('Privacy Policy clicked - dispatching event'); 
+                window.dispatchEvent(new Event('openPrivacyModal')); 
+                document.dispatchEvent(new Event('openPrivacyModal')); 
+              }} className={styles.footerLegalLink}>Privacy Policy</a>
             </div>
           </div>
         </div>

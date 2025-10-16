@@ -1,24 +1,24 @@
-import Head from 'next/head'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
-// Services and Team removed from homepage per request
 import Contact from '../components/Contact'
 import Layout from '../components/Layout'
 import About from '../components/About'
+import SEOHead from '../components/SEOHead'
 
 export default function Home() {
   return (
     <Layout>
-      <Head>
-        <title>Adons Studio - Crafting Visual Masterpieces | VFX & Animation</title>
-        <meta name="description" content="Adons Studio is a cutting-edge VFX studio transforming creative visions into stunning visual experiences for films, commercials, and digital media." />
-      </Head>
+      <SEOHead page={{ type: 'home' }} />
 
       <Header />
       <main>
         <Hero />
-        <About />
-        <Contact />
+  <About />
+
+  {/* Yellow separator between About and Contact */}
+  <div aria-hidden="true" className="mx-auto my-12 w-24 h-1 rounded-sm bg-yellow-400" style={{ opacity: 0.95 }}></div>
+
+  <Contact />
       </main>
       
     </Layout>

@@ -2,11 +2,16 @@ import useSmoothScroll from './useSmoothScroll'
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Footer from './Footer'
+import PrivacyModal from './PrivacyModal'
+import TermsModal from './TermsModal'
+import SEOAnalytics from './SEOAnalytics'
+import analytics, { consentGiven, init as analyticsInit } from '../lib/analytics'
 
 export default function Layout({ children }){
   useSmoothScroll()
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || ''
   const initialLoadRef = useRef(false)
   const [previousPathname, setPreviousPathname] = useState('')
 
@@ -83,6 +88,37 @@ export default function Layout({ children }){
       if (routeTimeout) clearTimeout(routeTimeout)
     }
   }, [router])
+
+  // Google Analytics (gtag) injection and SPA pageview tracking
+  useEffect(() => {
+    if (!GTM_ID) return
+    if (typeof window === 'undefined') return
+
+    // Initialize analytics only if consent was previously granted
+    if (consentGiven()) {
+      try {
+        analyticsInit(GTM_ID)
+      } catch (e) {
+        console.warn('analytics init failed', e)
+      }
+    }
+
+    const handleRouteChangeGA = (url) => {
+      try { analytics.pageview(url) } catch (e) { console.warn('analytics.pageview failed', e) }
+    }
+
+    // watch route changes
+    router.events.on('routeChangeComplete', handleRouteChangeGA)
+
+    // initial pageview (only if analytics initialized)
+    try {
+      if (consentGiven()) analytics.pageview(window.location.pathname)
+    } catch (e) {}
+
+    return () => {
+      try { router.events.off('routeChangeComplete', handleRouteChangeGA) } catch(e) {}
+    }
+  }, [GTM_ID, router.events])
 
   useEffect(()=>{
     if (typeof window === 'undefined') return
@@ -284,7 +320,11 @@ export default function Layout({ children }){
         <main className="site-content">
           {children}
         </main>
+  {/* ConsentBanner is now the only consent UI. AnalyticsConsent removed. */}
         <Footer />
+        <PrivacyModal />
+        <TermsModal />
+        <SEOAnalytics />
       </div>
     </>
   )

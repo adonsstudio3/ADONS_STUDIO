@@ -1,9 +1,57 @@
 import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document(){
+  // Sanitize GTM_ID to prevent XSS: only allow GTM- followed by alphanumerics/hyphens (7-20 chars)
+  const rawGtmId = process.env.NEXT_PUBLIC_GTM_ID;
+  const GTM_ID = rawGtmId && /^GTM-[A-Z0-9\-]{6,20}$/i.test(rawGtmId) ? rawGtmId : '';
+
   return (
-    <Html lang="en">
+    <Html lang="en" dir="ltr">
       <Head>
+        {/* Essential Meta Tags */}
+        <meta charSet="utf-8" />
+        <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+        
+        {/* Favicon and Icons */}
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        
+        {/* DNS Prefetch for External Resources */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="//api.fontshare.com" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        
+        {/* Google Tag Manager - Initialize dataLayer first (only if GTM_ID is valid) */}
+        {GTM_ID && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                // Initialize consent with default denied state (GDPR compliant)
+                window.dataLayer.push({
+                  event: 'consent_default',
+                  consent: {
+                    ad_storage: 'denied',
+                    analytics_storage: 'denied',
+                    functionality_storage: 'denied',
+                    personalization_storage: 'denied',
+                    security_storage: 'granted'
+                  }
+                });
+                // GTM Script
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','${GTM_ID}');
+              `,
+            }}
+          />
+        )}
         {/* Load Satoshi via Fontshare per ITF EULA (serves fonts from their servers) */}
         {/* Load Satoshi via Fontshare (non-blocking preload pattern) */}
         <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=satoshi@500,600,700&display=swap" as="style" onLoad="this.rel='stylesheet'" />
@@ -89,6 +137,18 @@ export default function Document(){
         `}} />
       </Head>
       <body>
+        {/* Google Tag Manager (noscript, only if GTM_ID is valid) */}
+        {GTM_ID && (
+          <noscript>
+            <iframe 
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0" 
+              width="0" 
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
+        )}
+        
         {/* Completely black initial overlay - no text */}
         <div id="initial-loading-screen" aria-hidden="true"></div>
         <Main />

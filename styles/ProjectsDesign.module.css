@@ -6,8 +6,6 @@
   width: 100vw;
   height: 100vh;
   background: rgba(30,30,40,0.32);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
   z-index: 3000;
   display: flex;
   align-items: center;
@@ -27,8 +25,6 @@
   font-weight: bold;
   color: #fff;
   background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
   box-shadow: 0 4px 24px #0006;
   cursor: pointer;
   z-index: 3100;
@@ -42,6 +38,24 @@
   line-height: 1;
   padding: 0;
   margin: 0;
+}
+
+/* Mobile-specific showreel modal adjustments */
+@media (max-width: 768px) {
+  .showreelCloseBtn {
+    top: 80px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+  
+  .showreelIframe {
+    width: 90vw !important;
+    height: 50.625vw !important;
+    max-width: 90vw !important;
+    max-height: 60vh !important;
+  }
 }
 
 .showreelCloseBtn:hover {
@@ -214,366 +228,221 @@
   fill: var(--vfx-primary-gold);
 }
 
-/* Filter Section */
-.filterSection {
-  background: var(--vfx-dark-surface);
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--vfx-border);
-}
-
-.filterNav {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  align-items: center;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.filterBtn {
-  background: transparent;
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  color: var(--vfx-text-secondary);
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--vfx-transition);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.filterBtn:hover,
-.filterBtn.active {
-  background: var(--vfx-primary-gold);
-  color: var(--vfx-dark-bg);
-  border-color: var(--vfx-primary-gold);
-  box-shadow: var(--vfx-glow);
-}
+/* Filter UI removed - styles removed intentionally */
 
 /* Projects Section */
+
+/* Robust full-bleed section using container queries and logical properties */
 .projectsSection {
-  padding: 4rem 0;
-  min-height: 50vh;
+  padding-block: 2rem 4rem;
+  min-block-size: 60vh;
+  /* Use container queries if supported */
+  width: 100vw;
+  position: relative;
+  inset-inline: 50% auto;
+  margin-inline: -50vw;
+  /* Fallback for browsers without logical props */
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  box-sizing: border-box;
+  /* Prevent horizontal scrollbars due to rounding errors */
+  overflow-x: clip;
 }
 
+/* projects grid removed intentionally */
+
+/* Projects Grid and Tall Card Styles */
 .projectsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-  justify-items: center;
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
+  /* Full-bleed masonry-like layout using CSS columns (no side padding) */
+  column-count: 3;
+  column-gap: 1.5rem;
+  width: 100%;
+  max-width: 100vw;
+  padding: 0 2rem;
+  margin: 2rem auto 0;
+  box-sizing: border-box;
 }
 
 .projectCard {
-  position: relative;
-  background: var(--vfx-dark-surface);
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: var(--vfx-transition);
-  border: 1px solid rgba(255, 215, 0, 0.1);
-  aspect-ratio: 16/10;
+  /* Inline-block so it flows into columns for masonry effect */
+  display: inline-block;
   width: 100%;
-  max-width: 400px;
+  position: relative;
+  min-height: 600px; /* Much taller cards for dramatic vertical effect */
+  height: auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: transparent; /* No dark surface background */
+  cursor: pointer;
+  transition: transform 0.28s ease;
+  margin: 0 0 1.5rem 0; /* vertical spacing between items in a column */
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Add varied heights for masonry effect */
+.projectCard:nth-child(3n+1) {
+  min-height: 650px;
+}
+
+.projectCard:nth-child(3n+2) {
+  min-height: 750px;
+}
+
+.projectCard:nth-child(3n) {
+  min-height: 550px;
 }
 
 .projectCard:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--vfx-glow), 0 20px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-8px);
 }
 
 .projectThumbnail {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--vfx-transition);
+  display: block;
 }
 
-.projectCard:hover .projectThumbnail {
-  filter: brightness(0.7);
-}
-
+/* Title overlay that appears on hover */
 .projectOverlay {
   position: absolute;
-  top: 0;
   left: 0;
+  bottom: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  height: 40%;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.5rem;
+  align-items: flex-end;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(0deg, rgba(0,0,0,0.75), rgba(0,0,0,0));
   opacity: 0;
-  transition: var(--vfx-transition);
+  transition: opacity 0.22s ease;
 }
 
 .projectCard:hover .projectOverlay {
   opacity: 1;
 }
 
-.projectInfo {
-  color: var(--vfx-text-primary);
-}
-
 .projectTitle {
-  font-size: 1.125rem;
-  font-weight: 550;
-  margin-bottom: 0.5rem;
   color: var(--vfx-primary-gold);
+  font-size: 2rem;
+  line-height: 1.02;
+  font-weight: 600;
+  margin: 0;
 }
 
-.projectCategory {
-  display: inline-block;
-  background: rgba(255, 215, 0, 0.2);
-  color: var(--vfx-primary-gold);
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.projectDescription {
+.projectSubtitle {
   color: var(--vfx-text-secondary);
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  margin: 0.25rem 0 0 0;
+  max-width: 92%;
+  opacity: 0.95;
 }
 
-.projectMeta {
+/* Tags container placed in the bottom-right corner of the overlay */
+.projectTags {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
-  color: var(--vfx-text-muted);
-}
-
-.viewProjectBtn {
-  background: var(--vfx-primary-gold);
-  color: var(--vfx-dark-bg);
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--vfx-transition);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.viewProjectBtn:hover {
-  background: var(--vfx-text-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-}
-
-/* Modal Styles */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-  display: flex;
+  gap: 0.5rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  z-index: 4;
   opacity: 0;
-  visibility: hidden;
-  transition: var(--vfx-transition);
+  transform: translateY(-6px) scale(0.98);
+  transition: opacity 220ms ease, transform 220ms ease;
+  pointer-events: none; /* hidden by default */
 }
 
-.modal.visible {
+.projectTag {
+  /* Glass-style translucent pill */
+  background: rgba(10,10,10,0.78); /* darker glass base */
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  color: var(--vfx-primary-gold);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+/* If the browser supports backdrop-filter, ensure a slightly stronger glass effect */
+@supports ((-webkit-backdrop-filter: blur(6px)) or (backdrop-filter: blur(6px))) {
+  .projectTag {
+    /* Keep glass effect but use dark tint so tags remain dark-themed */
+    background: rgba(10,10,10,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: var(--vfx-primary-gold);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+  }
+}
+
+/* Reveal tags when hovering the card (desktop) */
+.projectCard:hover .projectTags,
+.projectCard:focus-within .projectTags {
   opacity: 1;
-  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
-.modalOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+/* Modal styles for project preview */
+/* Modal styles removed: project page will not expand cards into modals */
+
+/* Apply backdrop-filter only where supported (prefixed or unprefixed).
+   We don't use card modals; keep a tuned, lighter blur for the showreel to
+   preserve visuals while reducing potential performance cost on low-end devices. */
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .showreelOverlay {
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
+  }
+
+  .showreelCloseBtn {
+    -webkit-backdrop-filter: blur(6px) saturate(140%);
+    backdrop-filter: blur(6px) saturate(140%);
+  }
 }
 
-.modalContent {
-  position: relative;
-  background: var(--vfx-dark-surface);
-  border-radius: 12px;
-  max-width: 90vw;
-  max-height: 90vh;
-  width: 1000px;
-  border: 1px solid var(--vfx-border);
-  box-shadow: var(--vfx-glow);
-  overflow: hidden;
-}
 
-.modalClose {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  color: var(--vfx-text-primary);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+/* Placeholder shown when projects are removed */
+.projectsRemovedMessage {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: var(--vfx-transition);
-  z-index: 1001;
-}
-
-.modalClose:hover {
-  background: var(--vfx-primary-gold);
-  color: var(--vfx-dark-bg);
-}
-
-.modalBody {
-  display: flex;
-  flex-direction: column;
-}
-
-.modalMedia {
-  position: relative;
+  min-height: 40vh;
   width: 100%;
-  height: 400px;
-  overflow: hidden;
-}
-
-.modalImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.modalPlayOverlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  transition: var(--vfx-transition);
-}
-
-.modalPlayOverlay:hover {
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-.modalInfo {
-  padding: 2rem;
-}
-
-.modalHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.modalProjectTitle {
-  font-size: 1.5rem;
-  font-weight: 550;
-  color: var(--vfx-primary-gold);
-}
-
-.modalCategoryBadge {
-  background: rgba(255, 215, 0, 0.2);
-  color: var(--vfx-primary-gold);
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.modalMeta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.metaItem {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.metaLabel {
-  font-size: 0.75rem;
-  color: var(--vfx-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 500;
-}
-
-.metaValue {
-  font-size: 0.875rem;
+  padding: 4rem 1rem;
+  background: linear-gradient(180deg, rgba(10,10,10,0.9), rgba(20,20,20,0.95));
   color: var(--vfx-text-primary);
-  font-weight: 500;
 }
 
-.modalDescription {
-  font-size: 1rem;
+.projectsRemovedInner {
+  text-align: center;
+  max-width: 880px;
+}
+
+.projectsRemovedInner h2 {
+  color: var(--vfx-primary-gold);
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.projectsRemovedInner p {
   color: var(--vfx-text-secondary);
-  line-height: 1.6;
+  font-size: 1.125rem;
 }
+/* project card styles removed */
 
-.modalNavigation {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 1rem;
-  pointer-events: none;
-}
-
-.modalNavBtn {
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  color: var(--vfx-text-primary);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: var(--vfx-transition);
-  pointer-events: all;
-}
-
-.modalNavBtn:hover {
-  background: var(--vfx-primary-gold);
-  color: var(--vfx-dark-bg);
-}
-
-.modalNavBtn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
+/* modal styles removed */
 
 .hidden {
   display: none;
@@ -586,7 +455,109 @@
   font-size: 1.5rem;
   margin-bottom: 2rem;
 }
+/* Clickable Card Styles */
+.clickableCard {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--vfx-transition), border-color 0.3s ease;
+}
+
+.clickableCard:hover {
+  border-color: var(--vfx-primary-gold);
+  box-shadow: var(--vfx-glow), 0 18px 36px rgba(0,0,0,0.45);
+}
+
+.clickableCard:focus {
+  outline: none;
+  border-color: var(--vfx-primary-gold);
+  box-shadow: var(--vfx-glow), 0 0 0 3px rgba(255, 215, 0, 0.3);
+}
+
+/* Project CTA (Call to Action) */
+.projectCTA {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.clickableCard:hover .projectCTA {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ctaText {
+  color: var(--vfx-primary-gold);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Project Client */
+.projectClient {
+  color: var(--vfx-text-muted);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
+/* Featured Badge */
+.featuredBadge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: linear-gradient(135deg, var(--vfx-primary-gold), #ffed4e);
+  color: var(--vfx-dark-bg);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
 /* Loading State */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--vfx-text-secondary);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 215, 0, 0.2);
+  border-top: 3px solid var(--vfx-primary-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.errorContainer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--vfx-text-secondary);
+  background: rgba(139, 69, 19, 0.1);
+  border: 1px solid rgba(139, 69, 19, 0.3);
+  border-radius: 8px;
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
 .projectsGrid.loading {
   opacity: 0.5;
   pointer-events: none;
@@ -614,9 +585,9 @@
     max-width: 700px;
     padding: 0 1.5rem;
   }
-  
-  .filterNav {
-    gap: 0.5rem;
+  .projectsGrid {
+    column-count: 2;
+    padding: 0 1.5rem;
   }
 }
 
@@ -635,29 +606,63 @@
     font-size: clamp(1.5rem, 8vw, 2.5rem);
   }
   
-  .filterNav {
-    gap: 0.5rem;
-    padding: 0 1rem;
-    justify-content: center;
-  }
-  
-  .filterBtn {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-  }
-  
   .projectsGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    justify-items: center;
-    max-width: 100%;
+    column-count: 1;
+    gap: 1rem;
     padding: 0 1rem;
+  }
+  
+  .projectCard {
+    min-height: 500px !important;
+  }
+  
+  .projectCard:nth-child(3n+1),
+  .projectCard:nth-child(3n+2),
+  .projectCard:nth-child(3n) {
+    min-height: 500px !important;
   }
   
   .projectOverlay {
     opacity: 1;
     background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 70%);
+  }
+
+  /* Mobile-specific clickable card adjustments */
+  .clickableCard {
+    min-height: 300px;
+  }
+
+  .clickableCard:active {
+    transform: scale(0.98);
+    border-color: var(--vfx-primary-gold);
+  }
+
+  /* Show CTA on mobile always since hover doesn't work */
+  .projectCTA {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Featured badge adjustments for mobile */
+  .featuredBadge {
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  /* Project tags always visible on mobile */
+  .projectTags {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .projectTag {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.6rem;
   }
   
   .modalContent {
@@ -684,6 +689,11 @@
   
   .modalProjectTitle {
     font-size: 1.25rem;
+  }
+
+  /* Slightly reduce card title size on small screens to avoid overflow */
+  .projectTitle {
+    font-size: 1.4rem;
   }
   
   .modalMeta {

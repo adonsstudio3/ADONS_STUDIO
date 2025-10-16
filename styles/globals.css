@@ -5,6 +5,40 @@
   text-align: center;
   margin-bottom: 1.5rem;
   color: #fff;
+  line-height: 1.2;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* Mobile-specific hero title optimization */
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
+    line-height: 1.3;
+    padding: 0 1rem;
+    word-break: normal;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+  
+  /* Hero video title styling */
+  .carousel-caption h5 {
+    font-size: clamp(0.9rem, 4vw, 1.2rem) !important;
+    line-height: 1.4 !important;
+    padding: 0 1rem !important;
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+  }
+  
+  /* Typewriter text specific styling */
+  .typewriter {
+    min-height: 1.4em;
+    display: block !important;
+    width: 100% !important;
+  }
 }
 .heroSubtitle, .heroDescription {
   font-size: 1.25rem;
@@ -68,19 +102,7 @@ html, body {
   height: 100%;
   /* Host the static nebula background on the document so it remains fixed while content scrolls */
   background-color: #000; /* fallback color while image loads */
-  /* Prefer AVIF, then WebP, then JPEG for the nebula background when supported */
-  background-image: -webkit-image-set(
-    url('/Images/optimized/nebula/nebula-1600.avif') type('image/avif') 1x,
-    url('/Images/optimized/nebula/nebula-2400.avif') type('image/avif') 2x,
-    url('/Images/optimized/nebula/nebula-1600.webp') type('image/webp') 1x,
-  url('/Images/background/nebula.jpg') type('image/jpeg') 1x
-  );
-  background-image: image-set(
-    url('/Images/optimized/nebula/nebula-1600.avif') type('image/avif') 1x,
-    url('/Images/optimized/nebula/nebula-2400.avif') type('image/avif') 2x,
-    url('/Images/optimized/nebula/nebula-1600.webp') type('image/webp') 1x,
-  url('/Images/background/nebula.jpg') type('image/jpeg') 1x
-  );
+  background-image: url('/Images/background/nebula.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -103,60 +125,60 @@ html, body {
 /* Fixed background element (composited) - used to provide a pinned background effect
    while avoiding `background-attachment: fixed` browser issues on mobile. We still
    use the document-level background as a fallback. */
-#site-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  will-change: transform;
-  transform: translateZ(0);
-  /* Use CSS variable for the image so we can swap in mobile via media queries */
-  background-image: var(--site-nebula, url('/Images/background/nebula.jpg'));
-  pointer-events: none;
-}
+
 
 /* Desktop: use large nebula; mobile media query will override. */
-:root {
-  --site-nebula: url('/Images/optimized/nebula/nebula-1600.avif');
-  --brand-gold: #FFD700;
-}
 
-@media (max-width: 767px) {
-  /* Use lower-res nebula for mobile to reduce bandwidth */
-  :root { --site-nebula: url('/Images/optimized/nebula/nebula-640.avif'); }
-}
+
+
 /* Use a lower-resolution nebula background on mobile to reduce bandwidth */
-@media (max-width: 767px) {
-  html, body {
-    background-image: -webkit-image-set(
-      url('/Images/optimized/nebula/nebula-640.avif') type('image/avif') 1x,
-      url('/Images/optimized/nebula/nebula-960.avif') type('image/avif') 2x,
-      url('/Images/optimized/nebula/nebula-640.webp') type('image/webp') 1x
-    );
-    background-image: image-set(
-      url('/Images/optimized/nebula/nebula-640.avif') type('image/avif') 1x,
-      url('/Images/optimized/nebula/nebula-960.avif') type('image/avif') 2x,
-      url('/Images/optimized/nebula/nebula-640.webp') type('image/webp') 1x
-    );
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-  }
-}
+
 
 /*
   Strong site-wide background rule to ensure the nebula image is shown once,
   remains fixed while content scrolls, and covers the entire viewport.
   Use high-specificity + !important to override any compiled or component styles.
 */
-:root, html, body {
+html, body {
   background-image: url('/Images/background/nebula.jpg') !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
   background-color: #000 !important;
+}
+
+/* Admin pages should use their own admin background image and override the global nebula */
+.admin-root, .admin-root html, .admin-root body, body.admin-root, html.admin-root {
+  background-image: url('/Images/admin/admin_bg.png') !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-color: #000 !important;
+}
+
+/* Override background-attachment for mobile devices to prevent janky scrolling */
+@media (max-width: 767px) {
+  html, body {
+    background-attachment: scroll !important;
+  }
+
+  html::after {
+    content: '';
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    background-image: url('/Images/background/nebula.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    opacity: 1;
+  }
 }
 
 /* Ensure Next root doesn't paint its own background on top */
@@ -327,8 +349,8 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   right: 0;
   z-index: 1000;
   width: fit-content;
-  min-width: min(200px, calc(100vw - 1px));
-  max-width: min(500px, calc(100vw - 1px));
+  min-width: min(200px, calc(100vw - 40px));
+  max-width: min(500px, calc(100vw - 40px));
   margin: 0 auto;
   background: transparent;
   -webkit-backdrop-filter: none;
@@ -469,31 +491,154 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   transform: scaleX(1);
 }
 
-/* Mobile Toggle */
-.navbar-toggle {
+/* ===== HAMBURGER MENU STYLES ===== */
+
+/* Hide hamburger menu on desktop */
+.mobile-menu-checkbox,
+.hamburger-lines {
   display: none;
+}
+
+@media (max-width: 768px) {
+  /* Mobile Menu Checkbox (invisible but functional) */
+  .mobile-menu-checkbox {
+    position: absolute;
+    display: block;
+    height: 28px;
+    width: 28px;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    z-index: 1005;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Hamburger Lines Container */
+  .hamburger-lines {
+    display: flex;
+    height: 20px;
+    width: 24px;
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+    z-index: 1004;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Individual Hamburger Lines */
+  .hamburger-lines .line {
+    display: block;
+    height: 2px;
+    width: 100%;
+    border-radius: 10px;
+    background: #ffffff;
+    transition: all 0.4s ease-in-out;
+  }
+
+  .hamburger-lines .line1 {
+    transform-origin: 0% 0%;
+  }
+
+  .hamburger-lines .line2 {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .hamburger-lines .line3 {
+    transform-origin: 0% 100%;
+  }
+}
+
+/* Mobile Menu Overlay (initially hidden) */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: -100%;
+  left: auto;
+  transition: right 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Mobile Menu Items Container */
+.mobile-menu-items {
+  display: flex;
   flex-direction: column;
-  cursor: pointer;
-  padding: 8px;
-  gap: 4px;
-  border-radius: 6px;
-  transition: background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  text-align: center;
 }
 
-.navbar-toggle:hover {
-  background: rgba(245, 196, 66, 0.2);
-}
-
-.navbar-toggle span {
-  width: 24px;
-  height: 2px;
-  background: #ffffff;
-  border-radius: 2px;
+/* Mobile Menu Individual Items */
+.mobile-menu-item {
+  font-family: 'Saira Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 2rem;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  border-radius: 8px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  letter-spacing: 0.02em;
+}
+
+.mobile-menu-item:hover,
+.mobile-menu-item:focus {
+  color: #FFD700;
+  transform: translateY(-2px);
+  text-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.mobile-menu-item.active {
+  color: #FFD700;
+}
+
+/* Hamburger Animation when Menu is Open */
+.mobile-menu-checkbox:checked ~ .hamburger-lines .line1 {
+  transform: rotate(45deg);
+}
+
+.mobile-menu-checkbox:checked ~ .hamburger-lines .line2 {
+  transform: scaleY(0);
+}
+
+.mobile-menu-checkbox:checked ~ .hamburger-lines .line3 {
+  transform: rotate(-45deg);
+}
+
+/* Show Mobile Menu when Checkbox is Checked */
+.mobile-menu-checkbox:checked ~ .mobile-menu-overlay {
+  right: 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Remove the automatic yellow color change for brand link when menu opens */
+/* .mobile-menu-checkbox:checked ~ .navbar-brand .brand-link {
+  color: #FFD700 !important;
+} */
+
+/* Desktop Menu (hide on mobile) */
+.desktop-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 /* Mobile Responsive */
@@ -517,58 +662,43 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
     min-width: auto;
     width: calc(100% - 32px);
     max-width: none;
+    z-index: 1010;
   }
   
   .navbar-container {
-    padding: 10px 2px;
+    padding: 12px 16px;
     justify-content: center;
-    gap: 20px;
+    position: relative;
+    min-height: 48px;
   }
   
-  .navbar-toggle {
-    right: 2px;
-  }
-  
-  .navbar-menu {
+  /* Center the ADONS brand text on mobile only */
+  .navbar-brand {
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.95);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
-    border-radius: 0 0 10px 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    flex-direction: column;
-    gap: 0;
-    padding: 20px;
-    transform: translateY(-10px);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
   
-  .navbar-menu.active {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .navbar-item {
-    width: 100%;
+  .navbar-brand .brand-link {
+    margin-right: 0;
     text-align: center;
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 12px;
+    transition: color 0.3s ease;
   }
   
-  .navbar-item:hover {
-    color: #19142B;
-    transform: translateY(0);
+  /* Hide desktop menu on mobile */
+  .desktop-menu {
+    display: none;
   }
   
-  .navbar-toggle {
-    display: flex;
+  /* Ensure mobile menu overlay covers everything except navbar */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
   }
 }
 
@@ -579,21 +709,23 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   }
   
   .navbar-container {
-    padding: 6px 2px;
-    justify-content: center;
-    gap: 12px;
-  }
-  
-  .navbar-toggle {
-    right: 2px;
+    padding: 6px 12px;
   }
   
   .navbar-brand .brand-link {
     font-size: 1.8rem;
   }
   
-  .navbar-item {
-    font-size: 1rem;
+  .mobile-menu-item {
+    font-size: 1.5rem;
+  }
+  
+  .hamburger-lines {
+    right: 12px;
+  }
+  
+  .mobile-menu-checkbox {
+    right: 12px;
   }
 }
 
@@ -625,6 +757,43 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 }
 
 /* ===== END FLOATING NAVBAR STYLES ===== */
+
+/* ===== MODAL IMPROVEMENTS ===== */
+/* Ensure all modals are centered and close on outside click */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+
+.modal-content {
+  position: relative;
+  cursor: default;
+  max-width: 95vw;
+  max-height: 95vh;
+  overflow: auto;
+}
+
+/* Mobile modal optimizations */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 1rem;
+  }
+  
+  .modal-content {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+  }
+}
 
 /* Logo button styles */
 .logo-button {
@@ -734,16 +903,13 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 /* Full-page hero video styles */
 .hero-full-video {
   position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  /* ensure the media always covers and won't produce sub-pixel gaps */
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
+  inset: 0;
+  display: block;
+  /* make the element fill the hero and center/crop the media */
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
+  object-position: center center;
   z-index: 0;
   /* use the site background as video fallback */
   background: #333333;
@@ -759,6 +925,40 @@ section#hero, .hero {
   z-index: 10;
 }
 .video-thumb-list { margin-top: 4px; }
+
+/* Force team card images to fully cover their image area and avoid side gaps */
+.team-card-image img,
+.team-card-image picture > img,
+.team-card-image picture > source + img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* More aggressive fixes for any remaining gaps inside team cards */
+.team-card-image {
+  background: transparent !important;
+  line-height: 0 !important; /* remove inline whitespace gaps */
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.team-card-image { position: relative !important; }
+.team-card-image picture,
+.team-card-image picture img,
+.team-card-image img {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 none transparent !important;
+}
+
+/* DEBUG helpers removed */
 .video-dot-list { margin-top: 8px; }
 .carousel-indicators { margin-top: 0px !important; transform: translateY(-12px); }
 .video-dot { width: 10px; height: 10px; border-radius: 9999px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; }
@@ -882,32 +1082,62 @@ section#hero, .hero {
 .hero-desc-fade { opacity: 0; transform: translateY(4px); transition: opacity 300ms ease, transform 300ms ease; }
 .hero-desc-fade.show { opacity: 0.85; transform: translateY(0) }
 
-/* Make the hero title and description larger for stronger emphasis */
+/* Default hero title sizing (rem-based, consistent with other rules).
+   Desktop: 35px -> 2.1875rem. Responsive downscaling for tablets/phones.
+   These rules apply by default; `.carousel-caption.force-large` still
+   exists for the very-large opt-in treatment. */
 .carousel-caption h5.typewriter {
-  font-size: 2.8rem; /* larger desktop hero title */
+  font-size: 2.1875rem; /* 35px */
   line-height: 1.02;
   letter-spacing: -0.01em;
 }
 .carousel-caption p.hero-desc-fade {
+  font-size: 1rem; /* sensible default subtitle size */
+  opacity: 0.95;
+  margin-top: 0.45rem;
+}
+
+@media (max-width: 1024px) {
+  .carousel-caption h5.typewriter { font-size: 1.875rem; } /* ~30px */
+  .carousel-caption p.hero-desc-fade { font-size: 0.95rem; }
+}
+
+@media (max-width: 640px) {
+  .carousel-caption h5.typewriter { font-size: 1.5rem; } /* ~24px */
+  .carousel-caption p.hero-desc-fade { font-size: 0.95rem; }
+}
+
+/* Make the hero title and description larger for stronger emphasis.
+   NOTE: This is now opt-in — the large sizing will only apply when the
+   carousel caption has the `force-large` class (e.g. `.carousel-caption.force-large`).
+   That allows Tailwind utility classes on the H5 (like `text-xs`) to take
+   precedence in normal use. */
+.carousel-caption.force-large h5.typewriter {
+  font-size: 2.8rem; /* larger desktop hero title */
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+.carousel-caption.force-large p.hero-desc-fade {
   font-size: 1.25rem; /* larger desktop subtitle */
   opacity: 0.95;
   margin-top: 0.6rem;
 }
 
-/* Nudge hero caption upward slightly for tighter visual grouping */
+/* Nudge hero caption upward slightly for tighter visual grouping.
+   Reduced upward offset so the title sits a bit lower on the hero. */
 .carousel-caption {
-  transform: translateY(-1.9rem);
+  transform: translateY(-0.8rem);
 }
 
 @media (max-width: 1024px) {
-  .carousel-caption h5.typewriter { font-size: 2.3rem }
-  .carousel-caption p.hero-desc-fade { font-size: 1.15rem }
+  .carousel-caption.force-large h5.typewriter { font-size: 2.3rem }
+  .carousel-caption.force-large p.hero-desc-fade { font-size: 1.15rem }
 }
 
 @media (max-width: 640px) {
-  .carousel-caption h5.typewriter { font-size: 1.8rem }
-  .carousel-caption p.hero-desc-fade { font-size: 1.05rem }
-  .carousel-caption { transform: translateY(-1.4rem); }
+  .carousel-caption.force-large h5.typewriter { font-size: 1.8rem }
+  .carousel-caption.force-large p.hero-desc-fade { font-size: 1.05rem }
+  .carousel-caption { transform: translateY(-0.6rem); }
 }
 
 

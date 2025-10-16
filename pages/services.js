@@ -1,9 +1,10 @@
-import Head from 'next/head'
 import Layout from '../components/Layout'
 import Header from '../components/Header'
+import SEOHead from '../components/SEOHead'
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import TypingText from '../components/TypingText'
+import OptimizedImage from '../components/OptimizedImage'
 import ProductionTab from '../components/Services/ProductionTab'
 import VisualsTab from '../components/Services/VisualsTab'
 import AudioTab from '../components/Services/AudioTab'
@@ -77,20 +78,17 @@ export default function ServicesPage(){
 
   return (
     <Layout>
-      <Head>
-        <title>Services — Adons Studio</title>
-        <meta name="description" content="Services offered by Adons Studio." />
-      </Head>
+      <SEOHead page={{ type: 'services' }} />
 
       <Header />
       <main>
         {/* Hero with user-provided image */}
         <section id="hero" className="relative h-screen w-full bg-black">
-          <Image
-            src="/Images/hero/Projects.jpg"
+          <OptimizedImage
+            name="hero/services"
             alt="ADONS Services Hero"
-            fill
-            style={{ objectFit: 'cover', objectPosition: 'center', opacity: 0.5 }}
+            style={{ objectFit: 'cover', objectPosition: 'center', opacity: 0.5, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+            width={1920}
             priority
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">

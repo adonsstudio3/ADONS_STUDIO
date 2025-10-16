@@ -8,7 +8,7 @@ const outBase = path.join(publicDir, 'Images', 'optimized');
 const mappingFile = path.join(__dirname, '..', 'utils', 'imageMapping.json');
 const componentFile = path.join(__dirname, '..', 'components', 'OptimizedImage.js');
 
-const widths = [320, 640, 960, 1280];
+const widths = [400, 800, 1200, 1600, 2400, 3387];
 
 // Cache file to track image hashes and modification times
 const cacheFile = path.join(__dirname, '.image-cache.json');
@@ -58,7 +58,21 @@ async function convertFile(file, cache, mapping) {
   const rel = path.relative(publicDir, file);
   const relDir = path.dirname(rel);
   const baseName = path.basename(file, path.extname(file));
-  const targetDir = path.join(outBase, relDir, baseName);
+  
+  // Determine relative path and target directory based on file location
+  let imageRel, imageRelDir, targetDir;
+  
+  if (file.includes(path.join(publicDir, 'Images'))) {
+    // File is in Images folder - maintain structure in optimized
+    imageRel = path.relative(path.join(publicDir, 'Images'), file);
+    imageRelDir = path.dirname(imageRel);
+    targetDir = imageRelDir === '.' ? outBase : path.join(outBase, imageRelDir);
+  } else {
+    // File is elsewhere in public - create flat structure in optimized with prefix
+    const publicRel = path.relative(publicDir, file);
+    const publicRelDir = path.dirname(publicRel).replace(/\\/g, '-').replace(/\//g, '-');
+    targetDir = publicRelDir === '.' ? outBase : path.join(outBase, publicRelDir);
+  }
   
   // First check: Do all optimized files exist?
   const expectedFiles = [];
@@ -67,7 +81,24 @@ async function convertFile(file, cache, mapping) {
     expectedFiles.push(path.join(targetDir, `${baseName}-${w}.webp`));
   }
   
-  const allOptimizedExist = expectedFiles.every(file => fs.existsSync(file));
+  const allOptimizedExist = expectedFiles.every(f => fs.existsSync(f));
+
+  // Delete existing optimized files for this image first (automatic cleanup)
+  if (fs.existsSync(targetDir)) {
+    const existingFiles = fs.readdirSync(targetDir).filter(f => 
+      f.startsWith(`${baseName}-`) && (f.endsWith('.avif') || f.endsWith('.webp'))
+    );
+    
+    // Only delete if we're going to re-process (files missing or hash changed)
+    const shouldReprocess = !allOptimizedExist;
+    if (shouldReprocess && existingFiles.length > 0) {
+      existingFiles.forEach(f => {
+        const fullPath = path.join(targetDir, f);
+        fs.unlinkSync(fullPath);
+        console.log('🗑️  Deleted old:', f);
+      });
+    }
+  }
   
   // Second check: Has the source file changed since last optimization?
   const currentHash = getFileHash(file);
@@ -77,18 +108,18 @@ async function convertFile(file, cache, mapping) {
   
   // Skip conversion if files exist AND hash unchanged
   if (allOptimizedExist && hashUnchanged) {
-    console.log('✓ Already optimized:', path.relative(process.cwd(), file));
+    console.log('✅ Already optimized (skipping):', path.relative(process.cwd(), file));
     
     // Add to mapping even if skipped
     const imageKey = getImageKey(file);
-    mapping[imageKey] = generateImagePaths(rel, baseName);
+    mapping[imageKey] = generateImagePaths(file, rel, baseName);
     return;
   }
 
   // Determine why we're converting
   const reason = !allOptimizedExist ? 
     'Missing optimized files' : 
-    'Source file changed';
+    'Source file changed - replacing old optimized versions';
   
   console.log(`🔄 Converting (${reason}):`, path.relative(process.cwd(), file));
   fs.mkdirSync(targetDir, { recursive: true });
@@ -125,39 +156,60 @@ async function convertFile(file, cache, mapping) {
 
   // Add to mapping
   const imageKey = getImageKey(file);
-  mapping[imageKey] = generateImagePaths(rel, baseName);
+  mapping[imageKey] = generateImagePaths(file, rel, baseName);
 }
 
-function generateImagePaths(rel, baseName) {
-  const relDir = path.dirname(rel);
+function generateImagePaths(file, rel, baseName) {
+  // Determine path structure based on file location
+  let optimizedRelDir;
+  
+  if (file.includes(path.join(publicDir, 'Images'))) {
+    // File is in Images folder - maintain structure in optimized
+    const imageRel = path.relative(path.join(publicDir, 'Images'), file);
+    const imageRelDir = path.dirname(imageRel);
+    optimizedRelDir = imageRelDir === '.' ? 'Images/optimized' : path.join('Images/optimized', imageRelDir);
+  } else {
+    // File is elsewhere in public - create flat structure in optimized with prefix
+    const publicRel = path.relative(publicDir, file);
+    const publicRelDir = path.dirname(publicRel).replace(/\\/g, '-').replace(/\//g, '-');
+    optimizedRelDir = publicRelDir === '.' ? 'Images/optimized' : path.join('Images/optimized', publicRelDir);
+  }
+  
   return {
     original: `/${rel.replace(/\\/g, '/')}`,
     avif: widths.reduce((acc, w) => {
-      acc[w] = `/Images/optimized/${relDir}/${baseName}/${baseName}-${w}.avif`.replace(/\\/g, '/');
+      acc[w] = `/${optimizedRelDir}/${baseName}-${w}.avif`.replace(/\\/g, '/');
       return acc;
     }, {}),
     webp: widths.reduce((acc, w) => {
-      acc[w] = `/Images/optimized/${relDir}/${baseName}/${baseName}-${w}.webp`.replace(/\\/g, '/');
+      acc[w] = `/${optimizedRelDir}/${baseName}-${w}.webp`.replace(/\\/g, '/');
       return acc;
     }, {})
   };
 }
 
-function cleanupOrphanedFiles(cache, currentImages) {
+function cleanupOrphanedFiles(cache, currentImages, mapping) {
   console.log('\n🧹 Cleaning up orphaned optimized files...');
   
   const currentImageKeys = new Set(currentImages.map(img => path.relative(publicDir, img)));
   let cleanedCount = 0;
+  const oldImagePaths = [];
 
-  // Remove cache entries for deleted source images
+  // Remove cache entries for deleted source images and track old paths
   Object.keys(cache).forEach(cacheKey => {
     if (!currentImageKeys.has(cacheKey)) {
       const cached = cache[cacheKey];
+      
+      // Store old image path for code reference cleanup
+      const oldImagePath = `/${cacheKey.replace(/\\/g, '/')}`;
+      oldImagePaths.push(oldImagePath);
+      
+      // Delete optimized files
       if (cached.files) {
         cached.files.forEach(file => {
           if (fs.existsSync(file)) {
             fs.unlinkSync(file);
-            console.log('🗑️  Removed:', path.relative(publicDir, file));
+            console.log('🗑️  Removed orphaned:', path.relative(publicDir, file));
             cleanedCount++;
           }
         });
@@ -172,6 +224,131 @@ function cleanupOrphanedFiles(cache, currentImages) {
   }
 
   console.log(`✓ Cleaned ${cleanedCount} orphaned files`);
+  
+  // Clean up old references in code if any orphaned files were found
+  if (oldImagePaths.length > 0) {
+    cleanupOldCodeReferences(oldImagePaths);
+  }
+}
+
+function updateCodeReferences(mapping) {
+  console.log('\n🔄 Updating code references to optimized images...');
+  
+  const codeExtensions = ['.js', '.jsx', '.ts', '.tsx', '.vue', '.html', '.css', '.scss', '.sass', '.less'];
+  const frontendDir = path.dirname(publicDir); // Go up from public to frontend
+  let updatedFiles = 0;
+  let referencesFound = 0;
+  
+  function searchAndReplaceInFile(filePath) {
+    const content = fs.readFileSync(filePath, 'utf8');
+    let modified = false;
+    let newContent = content;
+    
+    // Look for image references and update them if needed
+    Object.keys(mapping).forEach(imageKey => {
+      const imagePaths = mapping[imageKey];
+      const originalPath = imagePaths.original;
+      
+      if (content.includes(originalPath)) {
+        referencesFound++;
+        console.log(`📝 Found reference in ${path.relative(frontendDir, filePath)}: ${originalPath}`);
+        
+        // For now, we keep original paths since OptimizedImage component handles optimization
+        // But we could add logic here to replace with component usage if needed
+      }
+    });
+    
+    if (modified) {
+      fs.writeFileSync(filePath, newContent);
+      updatedFiles++;
+      console.log(`✅ Updated: ${path.relative(frontendDir, filePath)}`);
+    }
+  }
+  
+  function walkDirectory(dir) {
+    if (!fs.existsSync(dir)) return;
+    
+    const items = fs.readdirSync(dir);
+    items.forEach(item => {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
+      
+      if (stat.isDirectory() && !item.startsWith('.') && item !== 'node_modules') {
+        walkDirectory(fullPath);
+      } else if (stat.isFile()) {
+        const ext = path.extname(item);
+        if (codeExtensions.includes(ext)) {
+          searchAndReplaceInFile(fullPath);
+        }
+      }
+    });
+  }
+  
+  walkDirectory(frontendDir);
+  console.log(`✅ Scanned codebase, found ${referencesFound} image references`);
+}
+
+function cleanupOldCodeReferences(oldImagePaths) {
+  console.log('\n🧹 Cleaning up old image references in code...');
+  
+  const codeExtensions = ['.js', '.jsx', '.ts', '.tsx', '.vue', '.html', '.css', '.scss', '.sass', '.less'];
+  const frontendDir = path.dirname(publicDir);
+  let cleanedFiles = 0;
+  let cleanedReferences = 0;
+  
+  function removeOldReferencesFromFile(filePath) {
+    const content = fs.readFileSync(filePath, 'utf8');
+    let newContent = content;
+    let modified = false;
+    
+    oldImagePaths.forEach(oldPath => {
+      if (content.includes(oldPath)) {
+        console.log(`�️  Removing old reference in ${path.relative(frontendDir, filePath)}: ${oldPath}`);
+        
+        // Remove or comment out lines containing old image references
+        const lines = newContent.split('\n');
+        const updatedLines = lines.map(line => {
+          if (line.includes(oldPath)) {
+            cleanedReferences++;
+            // Comment out the line instead of removing it completely
+            return `// REMOVED: ${line.trim()} // Image deleted`;
+          }
+          return line;
+        });
+        
+        newContent = updatedLines.join('\n');
+        modified = true;
+      }
+    });
+    
+    if (modified) {
+      fs.writeFileSync(filePath, newContent);
+      cleanedFiles++;
+      console.log(`✅ Cleaned references in: ${path.relative(frontendDir, filePath)}`);
+    }
+  }
+  
+  function walkDirectory(dir) {
+    if (!fs.existsSync(dir)) return;
+    
+    const items = fs.readdirSync(dir);
+    items.forEach(item => {
+      const fullPath = path.join(dir, item);
+      const stat = fs.statSync(fullPath);
+      
+      if (stat.isDirectory() && !item.startsWith('.') && item !== 'node_modules') {
+        walkDirectory(fullPath);
+      } else if (stat.isFile()) {
+        const ext = path.extname(item);
+        if (codeExtensions.includes(ext)) {
+          removeOldReferencesFromFile(fullPath);
+        }
+      }
+    });
+  }
+  
+  walkDirectory(frontendDir);
+  console.log(`✅ Cleaned ${cleanedReferences} old references in ${cleanedFiles} files`);
 }
 
 function removeEmptyDirs(dir) {
@@ -297,36 +474,77 @@ export function getImageData(name) {
 }
 
 async function main() {
-  console.log('🚀 Starting automated image conversion...\n');
+  console.log('🚀 Starting intelligent image optimization...\n');
   
   const cache = loadCache();
   const mapping = {};
   
-  console.log('📁 Scanning:', publicDir);
+  console.log('📁 Scanning entire public folder:', publicDir);
   const all = walkDir(publicDir);
   const images = all.filter(isImage).filter(p => !p.includes(path.join('Images','optimized')));
   
-  console.log(`🖼️  Found ${images.length} source images\n`);
+  console.log(`🖼️  Found ${images.length} source images from entire public folder`);
+  
+  // Track what we're going to do
+  let newImages = 0;
+  let changedImages = 0;
+  let skippedImages = 0;
+  
+  // Analyze images before processing
+  console.log('\n🔍 Analyzing images...');
+  for (const img of images) {
+    const rel = path.relative(publicDir, img);
+    const currentHash = getFileHash(img);
+    const cached = cache[rel];
+    
+    if (!cached) {
+      newImages++;
+      console.log(`🆕 New image: ${path.relative(process.cwd(), img)}`);
+    } else if (cached.hash !== currentHash) {
+      changedImages++;
+      console.log(`🔄 Changed image: ${path.relative(process.cwd(), img)}`);
+    } else {
+      skippedImages++;
+    }
+  }
+  
+  console.log(`\n📊 Analysis complete:`);
+  console.log(`   📸 New images to process: ${newImages}`);
+  console.log(`   🔄 Changed images to re-process: ${changedImages}`);
+  console.log(`   ✅ Already optimized (will skip): ${skippedImages}`);
+  
+  if (newImages === 0 && changedImages === 0) {
+    console.log('\n🎉 All images are already optimized! Nothing to do.');
+    return;
+  }
 
+  console.log('\n🔄 Processing images...');
+  
   // Convert all images
   for (const img of images) {
     await convertFile(img, cache, mapping);
   }
 
   // Cleanup orphaned files
-  cleanupOrphanedFiles(cache, images);
+  cleanupOrphanedFiles(cache, images, mapping);
+
+  // Update code references
+  updateCodeReferences(mapping);
 
   // Save cache and generate files
   saveCache(cache);
   generateMappingFile(mapping);
   generateOptimizedImageComponent();
 
-  console.log(`\n✅ Conversion complete!`);
-  console.log(`📊 Processed ${images.length} images`);
-  console.log(`🗂️  Generated ${Object.keys(mapping).length} image mappings`);
+  console.log(`\n✅ Optimization complete!`);
+  console.log(`📊 Final stats:`);
+  console.log(`   🆕 New images processed: ${newImages}`);
+  console.log(`   🔄 Changed images re-processed: ${changedImages}`);
+  console.log(`   ✅ Existing images skipped: ${skippedImages}`);
+  console.log(`   🗂️  Total image mappings: ${Object.keys(mapping).length}`);
   console.log(`\n💡 Usage example:`);
   console.log(`   import OptimizedImage from './components/OptimizedImage';`);
-  console.log(`   <OptimizedImage name="team/ADI" width={640} alt="Team member" />`);
+  console.log(`   <OptimizedImage name="hero/banner" width={800} alt="Hero banner" />`);
 }
 
 main().catch(err => { 

@@ -90,9 +90,30 @@
   padding: 2.2rem 2.2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background: rgba(0,0,0,0.3);
   overflow-y: auto;
+  max-height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #FFD700 rgba(255,255,255,0.1);
+}
+
+.popupTextSide::-webkit-scrollbar {
+  width: 6px;
+}
+
+.popupTextSide::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+}
+
+.popupTextSide::-webkit-scrollbar-thumb {
+  background: #FFD700;
+  border-radius: 3px;
+}
+
+.popupTextSide::-webkit-scrollbar-thumb:hover {
+  background: #F5C842;
 }
 
 .popupTextSideLeft {
@@ -100,10 +121,31 @@
   padding: 2.2rem 2.2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background: rgba(0,0,0,0.3);
   border-radius: 2rem 0 0 2rem;
   overflow-y: auto;
+  max-height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #FFD700 rgba(255,255,255,0.1);
+}
+
+.popupTextSideLeft::-webkit-scrollbar {
+  width: 6px;
+}
+
+.popupTextSideLeft::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+}
+
+.popupTextSideLeft::-webkit-scrollbar-thumb {
+  background: #FFD700;
+  border-radius: 3px;
+}
+
+.popupTextSideLeft::-webkit-scrollbar-thumb:hover {
+  background: #F5C842;
 }
 
 .popupImage {
@@ -142,4 +184,56 @@
   font-size: 1rem;
   line-height: 1.6;
   text-align: left;
+}
+
+/* Mobile optimizations - hide images, show text only */
+@media (max-width: 768px) {
+  .popupCard {
+    height: auto;
+    max-height: 80vh;
+    width: 95vw;
+    flex-direction: column;
+  }
+  
+  /* Hide image sections completely on mobile */
+  .popupImageSide,
+  .popupImageSideRight {
+    display: none !important;
+  }
+  
+  /* Make text section full width and properly rounded */
+  .popupTextSide,
+  .popupTextSideLeft {
+    flex: none;
+    width: 100%;
+    border-radius: 2rem;
+    background: rgba(0,0,0,0.5);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  
+  /* Center text content on mobile */
+  .popupName,
+  .popupRole,
+  .popupTagline,
+  .popupBio {
+    text-align: center;
+  }
+  
+  .popupName {
+    font-size: 1.15rem;
+  }
+
+  .popupRole {
+    font-size: 0.85rem;
+  }
+
+  .popupTagline {
+    font-size: 0.8rem;
+    margin-top: 1.1rem;
+  }
+
+  .popupBio {
+    font-size: 0.75rem;
+  }
 }

@@ -1,18 +1,22 @@
-import Image from 'next/image'
-import { useState, useCallback } from 'react'
-import OptimizedImage from './OptimizedImage'
+import { useState } from 'react'
 import styles from './TeamPopup.module.css'
+import OptimizedImage from './OptimizedImage'
 
-// TeamImage: simplified wrapper using OptimizedImage component
-function TeamImage({ base, alt, style }){
+// TeamImage: now using OptimizedImage for optimized delivery
+function TeamImage({ name, alt, style }) {
+  // prefer className for sizing so CSS/tailwind rules apply and avoid inline-style conflicts
+  const objPos = style && style.objectPosition ? { objectPosition: style.objectPosition } : {};
   return (
     <OptimizedImage
-      name={`team/${base}`}
-      width={640}
+      name={name}
       alt={alt}
-      style={style || { width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
+      className="w-full h-full object-cover block"
+      // Force height:100% and display:block to avoid sizing conflicts in card containers
+      style={{ height: '100%', display: 'block', ...objPos }}
+      width={500}
+      loading="lazy"
     />
-  )
+  );
 }
 
 export default function Team(){
@@ -20,7 +24,7 @@ export default function Team(){
   // First image provided by user: public/Images/SWAPU.jpg
   const members = [
     {
-  image: '/Images/team/SWAPU.jpg',
+      image: 'team/swapneel',
       name: 'SWAPNEEL CHOUDHURY',
       role: 'CEO, Founding Member of ADONS Studio.',
       tagline: '"Where creativity meets mastery, the impossible becomes real."',
@@ -30,17 +34,17 @@ export default function Team(){
       bioMargin: '-0.5rem'
     },
     {
-  image: '/Images/team/SUMU.jpg',
-        name: 'SUMAN SOURAV',
-        role: 'COO, Founding Member of ADONS Studio.',
-        tagline: '"Leading with calmness, perfecting with precision."',
-        bio:
-          "Suman Sourav, the COO of ADONS, specializes in 3D design and holds expertise in managing operations smoothly. His skills allow him to create dynamic and visually impressive animations. With a deep understanding of VFx technology, he brings creativity and technical proficiency to his work. As a leader, he contributes to the growth and success of ADONS by managing projects efficiently. His knowledge of 3D enables him to design realistic and interactive visual content. Passionate about innovation, he constantly explores new techniques to enhance his work. His dedication and proficient nature make him a valuable asset in this industry.",
-        taglineMargin: '20rem',
-        bioMargin: '-0.5rem'
-      },
+      image: 'team/suman',
+      name: 'SUMAN SOURAV',
+      role: 'COO, Founding Member of ADONS Studio.',
+      tagline: '"Leading with calmness, perfecting with precision."',
+      bio:
+        "Suman Sourav, the COO of ADONS, specializes in 3D design and holds expertise in managing operations smoothly. His skills allow him to create dynamic and visually impressive animations. With a deep understanding of VFx technology, he brings creativity and technical proficiency to his work. As a leader, he contributes to the growth and success of ADONS by managing projects efficiently. His knowledge of 3D enables him to design realistic and interactive visual content. Passionate about innovation, he constantly explores new techniques to enhance his work. His dedication and proficient nature make him a valuable asset in this industry.",
+      taglineMargin: '20rem',
+      bioMargin: '-0.5rem'
+    },
     {
-  image: '/Images/team/SAM.jpg',
+      image: 'team/sampanna',
       name: 'SAMPANNA MISHRA',
       role: 'CFO, Founding Member of ADONS Studio.',
       tagline: '"When it rains it pours."',
@@ -49,7 +53,7 @@ export default function Team(){
       bioMargin: '-0.5rem'
     },
     {
-  image: '/Images/team/SID.jpg',
+      image: 'team/siddhant',
       name: 'SIDDHANT KHEDKAR',
       role: 'CMO, Founding Member of ADONS Studio.',
       tagline: '"Expert in executing swiftly the visual arts, audio ethos and packaging outcomes with influential finesses."',
@@ -57,10 +61,9 @@ export default function Team(){
       forceRight: true,
       taglineMargin: '16rem',
       bioMargin: '-0.5rem'
-    }
-    ,
+    },
     {
-  image: '/Images/team/ADI.jpg',
+      image: 'team/adarsh',
       name: 'ADARSH  MOHANTY',
       role: 'CTO, Founding Member of ADONS Studio.',
       tagline: '"Vision without execution is just hallucination."',
@@ -69,13 +72,12 @@ export default function Team(){
       taglineMargin: '18rem',
       bioMargin: '-0.5rem'
     }
-  ]
+  ];
 
   const [popupIdx, setPopupIdx] = useState(null);
   const [hoveredIdx, setHoveredIdx] = useState(null);
 
   const memberNodes = members.map((m, idx) => {
-    const base = m.image ? m.image.split('/').pop().replace(/\.(jpg|jpeg|png)$/i, '') : '';
     const isHovered = hoveredIdx === idx;
     return (
       <div
@@ -88,16 +90,11 @@ export default function Team(){
         tabIndex={0}
       >
         {/* Image - now takes up more vertical space */}
-        <div style={{ width: '100%', height: '84%', minHeight: 0, overflow: 'hidden', borderRadius: '1.5rem 1.5rem 0 0', position: 'relative', background: '#222', display: 'flex', alignItems: 'stretch', justifyContent: 'center' }}>
+  <div className="team-card-image" style={{ width: '100%', height: '84%', minHeight: 0, overflow: 'hidden', borderRadius: '1.5rem 1.5rem 0 0', position: 'relative', background: '#222', display: 'flex', alignItems: 'stretch', justifyContent: 'center' }}>
           {m.image ? (
-            // Special handling for SAM image to improve placement
-            m.name === 'SAMPANNA MISHRA' ? (
-              <TeamImage base={base} alt={m.name || 'Team member'} style={{ objectFit: 'cover', objectPosition: 'center top', height: '100%', width: '100%' }} />
-            ) : (
-              <TeamImage base={base} alt={m.name || 'Team member'} />
-            )
+              <TeamImage name={m.image} alt={m.name || 'Team member'} style={{ objectPosition: m.name === 'SAMPANNA MISHRA' ? 'center top' : 'center', borderBottom: 'none' }} />
           ) : (
-            <div className="team-avatar w-36 h-36 rounded-full mb-4 flex-shrink-0" style={{ background: '#FFD700', margin: 'auto' }} aria-hidden />
+            <div className="team-avatar w-36 h-36 rounded-full mb-4 flex-shrink-0" style={{ background: '#FFD700', margin: 'auto', borderBottom: 'none' }} aria-hidden />
           )}
         </div>
         {/* Name and Role below image - compact area */}
@@ -111,8 +108,34 @@ export default function Team(){
 
   return (
     <section id="team" className="pt-16 md:pt-24 pb-32">
+      <style jsx>{`
+        /* Mobile-specific team card styles */
+        @media (max-width: 768px) {
+          .team-card {
+            width: 100% !important;
+            max-width: 300px !important;
+            margin: 0 auto 2rem auto !important;
+          }
+          
+          .team-cards-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+          }
+          
+          .team-card-image {
+            width: 100% !important;
+          }
+          
+          .team-card .text-content {
+            text-align: center !important;
+            padding: 1rem !important;
+          }
+        }
+      `}</style>
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex flex-wrap justify-center gap-8 team-cards-container">
           {memberNodes}
         </div>
       </div>
@@ -121,19 +144,13 @@ export default function Team(){
         <div className={styles.popupOverlay} onClick={() => setPopupIdx(null)}>
           <div className={styles.popupCard} onClick={e => e.stopPropagation()} tabIndex={0}>
             <button className={styles.popupCloseBtn} onClick={() => setPopupIdx(null)} aria-label="Close profile">&times;</button>
-            
             {/* Alternate layout: even indices (0,2,4...) = image left, odd indices (1,3,5...) = image right */}
             {popupIdx % 2 === 0 ? (
               <>
-                {/* Image on left - use TeamImage wrapper to avoid optimizer issues */}
-                    <div className={styles.popupImageSide}>
-                      {(() => {
-                        const popupBase = members[popupIdx].image ? members[popupIdx].image.split('/').pop().replace(/\.(jpg|jpeg|png)$/i, '') : ''
-                        return (
-                          <TeamImage base={popupBase} alt={members[popupIdx].name} style={{ objectFit: 'cover', objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center', width: '100%', height: '100%' }} />
-                        )
-                      })()}
-                    </div>
+                {/* Image on left - use direct <img> */}
+                <div className={styles.popupImageSide}>
+                  <TeamImage name={members[popupIdx].image} alt={members[popupIdx].name} style={{ objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center' }} />
+                </div>
                 {/* Text on right */}
                 <div className={styles.popupTextSide}>
                   <div className={styles.popupName}>{members[popupIdx].name}</div>
@@ -151,14 +168,9 @@ export default function Team(){
                   <div className={styles.popupTagline}>{members[popupIdx].tagline}</div>
                   <div className={styles.popupBio}>{members[popupIdx].bio}</div>
                 </div>
-                {/* Image on right - use Next.js Image for original/high-res */}
+                {/* Image on right - use direct <img> */}
                 <div className={styles.popupImageSideRight}>
-                  {(() => {
-                    const popupBase = members[popupIdx].image ? members[popupIdx].image.split('/').pop().replace(/\.(jpg|jpeg|png)$/i, '') : ''
-                    return (
-                      <TeamImage base={popupBase} alt={members[popupIdx].name} style={{ objectFit: 'cover', objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center', width: '100%', height: '100%' }} />
-                    )
-                  })()}
+                  <TeamImage name={members[popupIdx].image} alt={members[popupIdx].name} style={{ objectPosition: members[popupIdx].name === 'SAMPANNA MISHRA' ? 'top' : 'center' }} />
                 </div>
               </>
             )}

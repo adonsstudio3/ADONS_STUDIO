@@ -43,7 +43,7 @@ export default function OptimizedImage({
         src={imageData.original} 
         alt={alt} 
         className={className}
-        style={{ width: '100%', height: 'auto', ...style }}
+        style={{ width: '100%', ...style }}
         {...props}
       />
     );
@@ -63,7 +63,7 @@ export default function OptimizedImage({
         src={imageData.original}
         alt={alt}
         className={className}
-        style={{ width: '100%', height: 'auto', ...style }}
+        style={{ width: '100%', ...style }}
         onError={() => setError(true)}
         {...props}
       />

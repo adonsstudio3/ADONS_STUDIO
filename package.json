@@ -6,11 +6,16 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",
-    "visual:qa": "node ./tools/visual-qa.js",
     "optimize-images": "node ./scripts/convert-all-images.js"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@supabase/supabase-js": "^2.58.0",
+  "jsonwebtoken": "^9.0.0",
+    "@upstash/ratelimit": "^2.0.6",
+    "@upstash/redis": "^1.35.4",
     "country-data-list": "^1.5.5",
+    "dotenv": "^17.2.3",
     "framer-motion": "10.12.9",
     "gsap": "3.12.2",
     "next": "^15.5.2",
@@ -18,14 +23,18 @@
     "react": "18.2.0",
     "react-circle-flags": "^0.0.23",
     "react-dom": "18.2.0",
-    "three": "0.160.0"
+    "three": "0.160.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@types/node": "24.6.0",
+    "@types/react": "19.1.16",
     "autoprefixer": "10.4.14",
     "playwright": "^1.55.0",
-    "postcss": "8.4.24",
+    "postcss": "^8.5.6",
     "sharp": "^0.32.4",
     "tailwindcss": "3.4.7",
-    "ttf2woff2": "^8.0.0"
+    "ttf2woff2": "^8.0.0",
+    "typescript": "5.9.2"
   }
 }
