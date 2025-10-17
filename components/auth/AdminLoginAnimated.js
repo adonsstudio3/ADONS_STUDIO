@@ -196,7 +196,7 @@ export default function AdminLoginAnimated() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} admin-root`}>
       <div className={styles.center}>
         {/* Character ears */}
         <div className={`${styles.ear} ${styles.earLeft}`}></div>
