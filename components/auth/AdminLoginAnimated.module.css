@@ -1,8 +1,4 @@
 /* Dark blue color variable */
-:root {
-  --dark-blue: #243946;
-}
-
 @keyframes breath {
   0%, 100% {
     transform: rotateX(0deg);
@@ -17,19 +13,18 @@
   100% { transform: rotate(360deg); }
 }
 
-* {
-  box-sizing: border-box;
-}
-
 .container {
-  width: 100vw;
-  height: 100vh;
-  background-color: #e0e0e0;
+  --dark-blue: #243946;
+  width: 100%;
+  min-height: 100vh;
+  /* make transparent so admin-root background can show through */
+  background-color: transparent;
   overflow: hidden;
   font-size: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 40px 0;
 }
 
 .center {
