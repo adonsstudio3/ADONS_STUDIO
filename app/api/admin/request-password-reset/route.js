@@ -68,29 +68,41 @@ export async function POST(request) {
       }, { status: 429 });
     }
 
-    // Check if user exists
-    let userData;
+    // Check if user exists by attempting to get user by email
+    let user;
     try {
-      console.log('🔍 Attempting to fetch users from Supabase...');
-      const { data, error: userError } = await supabaseAdmin.auth.admin.listUsers();
-      
-      if (userError) {
-        console.error('Error fetching users:', userError);
-        return Response.json({ 
-          success: true, 
-          message: 'If an account exists with this email, you will receive a password reset code.' 
-        });
-      }
-      userData = data;
-    } catch (err) {
-      console.error('Supabase auth error:', err);
-      return Response.json({ 
-        success: true, 
-        message: 'If an account exists with this email, you will receive a password reset code.' 
-      });
-    }
+      console.log('🔍 Attempting to fetch user from Supabase...');
 
-    const user = userData.users.find(u => u.email === email);
+      // Try to get user by email using admin API
+      const { data: { users }, error: userError } = await supabaseAdmin.auth.admin.listUsers();
+
+      if (userError) {
+        console.error('❌ Supabase error fetching users:', userError);
+        console.error('Error details:', {
+          status: userError.status,
+          message: userError.message,
+          code: userError.code
+        });
+        return Response.json({
+          error: 'Authentication service error. Please check admin credentials and try again.'
+        }, { status: 503 });
+      }
+
+      if (!users || !Array.isArray(users)) {
+        console.error('❌ Invalid response from Supabase - users not found');
+        return Response.json({
+          error: 'Service error. Please try again later.'
+        }, { status: 503 });
+      }
+
+      user = users.find(u => u.email === email);
+      console.log(`🔍 User lookup result: ${user ? 'found' : 'not found'}`);
+    } catch (err) {
+      console.error('❌ Supabase auth error:', err);
+      return Response.json({
+        error: 'Service error. Please try again later.'
+      }, { status: 503 });
+    }
 
     if (!user) {
       // Don't reveal if user exists or not for security
