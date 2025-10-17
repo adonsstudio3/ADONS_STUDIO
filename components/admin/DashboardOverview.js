@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { useRealtimeActivityLogs } from '../../hooks/useRealtimeActivityLogs';
-import { FilmIcon, PlayCircleIcon, FolderIcon, PhotoIcon, PlusIcon, PencilIcon, TrashIcon, KeyIcon, EyeIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
+import { FilmIcon, PlayCircleIcon, FolderIcon, PhotoIcon, PlusIcon, PencilIcon, TrashIcon, KeyIcon, EyeIcon, ArrowUpTrayIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 
 export default function DashboardOverview() {
@@ -59,8 +59,8 @@ export default function DashboardOverview() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white font-medium drop-shadow-lg">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -68,16 +68,16 @@ export default function DashboardOverview() {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div className="backdrop-blur-md bg-red-500/20 border border-red-300/30 rounded-lg p-4">
         <div className="flex">
           <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg className="h-5 w-5 text-red-200" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
             </svg>
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-red-800">Error loading dashboard</h3>
-            <p className="mt-1 text-sm text-red-700">{error}</p>
+            <h3 className="text-sm font-medium text-white drop-shadow">Error loading dashboard</h3>
+            <p className="mt-1 text-sm text-white/90 drop-shadow">{error}</p>
           </div>
         </div>
       </div>
@@ -88,72 +88,72 @@ export default function DashboardOverview() {
     <div className="space-y-6">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white overflow-hidden shadow-sm border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+        <div className="backdrop-blur-md bg-white/10 overflow-hidden shadow-lg border border-white/20 rounded-xl hover:bg-white/15 transition-all">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                  <FilmIcon className="h-5 w-5 text-white" aria-hidden="true" />
+                <div className="w-10 h-10 bg-blue-500/80 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                  <FilmIcon className="h-6 w-6 text-white" aria-hidden="true" />
                 </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Hero Sections</dt>
-                  <dd className="text-2xl font-bold text-gray-900">{stats?.hero_sections?.total || 0}</dd>
+                  <dt className="text-sm font-medium text-white/80 truncate drop-shadow">Hero Sections</dt>
+                  <dd className="text-3xl font-bold text-white drop-shadow-lg">{stats?.hero_sections?.total || 0}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow-sm border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+        <div className="backdrop-blur-md bg-white/10 overflow-hidden shadow-lg border border-white/20 rounded-xl hover:bg-white/15 transition-all">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                  <PlayCircleIcon className="h-5 w-5 text-white" aria-hidden="true" />
+                <div className="w-10 h-10 bg-purple-500/80 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                  <PlayCircleIcon className="h-6 w-6 text-white" aria-hidden="true" />
                 </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Showreels</dt>
-                  <dd className="text-2xl font-bold text-gray-900">{stats?.showreels?.total || 0}</dd>
+                  <dt className="text-sm font-medium text-white/80 truncate drop-shadow">Showreels</dt>
+                  <dd className="text-3xl font-bold text-white drop-shadow-lg">{stats?.showreels?.total || 0}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow-sm border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+        <div className="backdrop-blur-md bg-white/10 overflow-hidden shadow-lg border border-white/20 rounded-xl hover:bg-white/15 transition-all">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                  <FolderIcon className="h-5 w-5 text-white" aria-hidden="true" />
+                <div className="w-10 h-10 bg-green-500/80 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                  <FolderIcon className="h-6 w-6 text-white" aria-hidden="true" />
                 </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Projects</dt>
-                  <dd className="text-2xl font-bold text-gray-900">{stats?.projects?.total || 0}</dd>
+                  <dt className="text-sm font-medium text-white/80 truncate drop-shadow">Projects</dt>
+                  <dd className="text-3xl font-bold text-white drop-shadow-lg">{stats?.projects?.total || 0}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow-sm border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+        <div className="backdrop-blur-md bg-white/10 overflow-hidden shadow-lg border border-white/20 rounded-xl hover:bg-white/15 transition-all">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
-                  <PhotoIcon className="h-5 w-5 text-white" aria-hidden="true" />
+                <div className="w-10 h-10 bg-orange-500/80 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                  <PhotoIcon className="h-6 w-6 text-white" aria-hidden="true" />
                 </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Media Files</dt>
-                  <dd className="text-2xl font-bold text-gray-900">{stats?.media_files?.total || 0}</dd>
+                  <dt className="text-sm font-medium text-white/80 truncate drop-shadow">Media Files</dt>
+                  <dd className="text-3xl font-bold text-white drop-shadow-lg">{stats?.media_files?.total || 0}</dd>
                 </dl>
               </div>
             </div>
@@ -162,9 +162,9 @@ export default function DashboardOverview() {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Recent Activity</h3>
+      <div className="backdrop-blur-md bg-white/10 shadow-lg border border-white/20 rounded-xl">
+        <div className="px-6 py-4 border-b border-white/20">
+          <h3 className="text-lg font-medium text-white drop-shadow-lg">Recent Activity</h3>
         </div>
         <div className="p-6">
           {recentActivity && recentActivity.length > 0 ? (
@@ -175,13 +175,13 @@ export default function DashboardOverview() {
                     <div className="relative pb-8">
                       {activityIdx !== recentActivity.length - 1 ? (
                         <span
-                          className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                          className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-white/20"
                           aria-hidden="true"
                         />
                       ) : null}
                       <div className="relative flex space-x-3">
                         <div>
-                          <span className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center ring-8 ring-white">
+                          <span className="h-8 w-8 rounded-full bg-blue-500/80 backdrop-blur-sm flex items-center justify-center ring-8 ring-white/10">
                             {activity.action === 'create' && <PlusIcon className="h-5 w-5 text-white" aria-hidden="true" />}
                             {activity.action === 'update' && <PencilIcon className="h-5 w-5 text-white" aria-hidden="true" />}
                             {activity.action === 'delete' && <TrashIcon className="h-5 w-5 text-white" aria-hidden="true" />}
@@ -192,7 +192,7 @@ export default function DashboardOverview() {
                         </div>
                         <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
                           <div>
-                            <p className="text-sm text-gray-900">
+                            <p className="text-sm text-white drop-shadow">
                               {(() => {
                                 const action = activity.action;
                                 let actionText = '';
@@ -208,15 +208,15 @@ export default function DashboardOverview() {
                                 return actionText;
                               })()} {' '}
                               <span className="font-medium">{activity.entity_type}</span>
-                              {activity.entity_id && <span className="text-gray-500"> (ID: {activity.entity_id})</span>}
+                              {activity.entity_id && <span className="text-white/60"> (ID: {activity.entity_id})</span>}
                             </p>
                             {activity.details && (
-                              <p className="text-xs text-gray-500 mt-1">
+                              <p className="text-xs text-white/70 mt-1 drop-shadow">
                                 {typeof activity.details === 'string' ? activity.details : JSON.stringify(activity.details)}
                               </p>
                             )}
                           </div>
-                          <div className="text-right text-sm whitespace-nowrap text-gray-500">
+                          <div className="text-right text-sm whitespace-nowrap text-white/70 drop-shadow">
                             {(() => {
                               if (!activity.created_at) return 'Just now';
                               const d = new Date(activity.created_at);
@@ -242,71 +242,71 @@ export default function DashboardOverview() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <span className="text-gray-400 text-2xl">📋</span>
+              <div className="w-12 h-12 mx-auto bg-white/10 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
+                <ClipboardDocumentIcon className="h-6 w-6 text-white" aria-hidden="true" />
               </div>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No recent activity</h3>
-              <p className="mt-1 text-sm text-gray-500">Start managing your content to see activity here.</p>
+              <h3 className="mt-2 text-sm font-medium text-white drop-shadow">No recent activity</h3>
+              <p className="mt-1 text-sm text-white/70 drop-shadow">Start managing your content to see activity here.</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Quick Actions</h3>
+      <div className="backdrop-blur-md bg-white/10 shadow-lg border border-white/20 rounded-xl">
+        <div className="px-6 py-4 border-b border-white/20">
+          <h3 className="text-lg font-medium text-white drop-shadow-lg">Quick Actions</h3>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <button
               onClick={() => router.push('/admin/hero-sections')}
-              className="relative group bg-blue-50 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-lg hover:bg-blue-100 transition-colors"
+              className="relative group backdrop-blur-sm bg-blue-500/20 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-400 rounded-xl hover:bg-blue-500/30 transition-all border border-blue-400/30"
             >
               <div>
-                <span className="text-blue-600 text-2xl">🎬</span>
+                <FilmIcon className="h-8 w-8 text-white drop-shadow-lg mb-2" aria-hidden="true" />
                 <div className="mt-2">
-                  <h3 className="text-sm font-medium text-gray-900">Manage Hero Sections</h3>
-                  <p className="text-sm text-gray-500">Add or edit hero content</p>
+                  <h3 className="text-sm font-medium text-white drop-shadow">Manage Hero Sections</h3>
+                  <p className="text-sm text-white/80 drop-shadow">Add or edit hero content</p>
                 </div>
               </div>
             </button>
 
             <button
               onClick={() => router.push('/admin/showreels')}
-              className="relative group bg-purple-50 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 rounded-lg hover:bg-purple-100 transition-colors"
+              className="relative group backdrop-blur-sm bg-purple-500/20 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-400 rounded-xl hover:bg-purple-500/30 transition-all border border-purple-400/30"
             >
               <div>
-                <span className="text-purple-600 text-2xl">🎥</span>
+                <PlayCircleIcon className="h-8 w-8 text-white drop-shadow-lg mb-2" aria-hidden="true" />
                 <div className="mt-2">
-                  <h3 className="text-sm font-medium text-gray-900">Manage Showreels</h3>
-                  <p className="text-sm text-gray-500">Add YouTube showreels</p>
+                  <h3 className="text-sm font-medium text-white drop-shadow">Manage Showreels</h3>
+                  <p className="text-sm text-white/80 drop-shadow">Add YouTube showreels</p>
                 </div>
               </div>
             </button>
 
             <button
               onClick={() => router.push('/admin/projects')}
-              className="relative group bg-green-50 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500 rounded-lg hover:bg-green-100 transition-colors"
+              className="relative group backdrop-blur-sm bg-green-500/20 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-400 rounded-xl hover:bg-green-500/30 transition-all border border-green-400/30"
             >
               <div>
-                <span className="text-green-600 text-2xl">📁</span>
+                <FolderIcon className="h-8 w-8 text-white drop-shadow-lg mb-2" aria-hidden="true" />
                 <div className="mt-2">
-                  <h3 className="text-sm font-medium text-gray-900">Manage Projects</h3>
-                  <p className="text-sm text-gray-500">Add project cards</p>
+                  <h3 className="text-sm font-medium text-white drop-shadow">Manage Projects</h3>
+                  <p className="text-sm text-white/80 drop-shadow">Add project cards</p>
                 </div>
               </div>
             </button>
 
             <button
               onClick={() => router.push('/admin/media')}
-              className="relative group bg-orange-50 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500 rounded-lg hover:bg-orange-100 transition-colors"
+              className="relative group backdrop-blur-sm bg-orange-500/20 p-6 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-400 rounded-xl hover:bg-orange-500/30 transition-all border border-orange-400/30"
             >
               <div>
-                <span className="text-orange-600 text-2xl">🖼️</span>
+                <PhotoIcon className="h-8 w-8 text-white drop-shadow-lg mb-2" aria-hidden="true" />
                 <div className="mt-2">
-                  <h3 className="text-sm font-medium text-gray-900">Media Library</h3>
-                  <p className="text-sm text-gray-500">Manage files</p>
+                  <h3 className="text-sm font-medium text-white drop-shadow">Media Library</h3>
+                  <p className="text-sm text-white/80 drop-shadow">Manage files</p>
                 </div>
               </div>
             </button>

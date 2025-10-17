@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { useRouter } from 'next/navigation';
+import { PlayCircleIcon } from '@heroicons/react/24/outline';
 
 export default function ShowreelManager() {
   const [showreels, setShowreels] = useState([]);
@@ -162,8 +163,8 @@ export default function ShowreelManager() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading showreels...</p>
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white font-medium drop-shadow-lg">Loading showreels...</p>
         </div>
       </div>
     );
@@ -173,28 +174,22 @@ export default function ShowreelManager() {
     <div className="space-y-6">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Showreels</h1>
-          <p className="mt-2 text-sm text-gray-700">Manage your YouTube showreel collection</p>
+          <h1 className="text-xl font-semibold text-white drop-shadow-lg">Showreels</h1>
+          <p className="mt-2 text-sm text-white/90 drop-shadow">Manage your YouTube showreel collection</p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-2">
           <button
             onClick={() => setShowModal(true)}
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-md backdrop-blur-sm bg-purple-500/30 border border-purple-400/30 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-500/40 focus:outline-none focus:ring-2 focus:ring-purple-400 drop-shadow-lg"
           >
             Add Showreel
-          </button>
-          <button
-            onClick={() => { loadShowreels(); forceRefresh(); }}
-            className="inline-flex items-center justify-center rounded-md border border-green-300 bg-green-50 px-4 py-2 text-sm font-medium text-green-700 shadow-sm hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          >
-            🔄 Refresh
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="text-red-800">{error}</div>
+        <div className="backdrop-blur-md bg-red-500/20 border border-red-400/30 rounded-lg p-4">
+          <div className="text-white drop-shadow-lg">{error}</div>
         </div>
       )}
 
@@ -266,11 +261,11 @@ export default function ShowreelManager() {
 
       {showreels.length === 0 && !loading && (
         <div className="text-center py-12">
-          <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <span className="text-gray-400 text-2xl">🎥</span>
+          <div className="w-12 h-12 mx-auto backdrop-blur-sm bg-white/10 rounded-full flex items-center justify-center mb-4 border border-white/20">
+            <PlayCircleIcon className="h-6 w-6 text-white drop-shadow-lg" aria-hidden="true" />
           </div>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No showreels</h3>
-          <p className="mt-1 text-sm text-gray-500">Get started by adding a new showreel.</p>
+          <h3 className="mt-2 text-sm font-medium text-white drop-shadow-lg">No showreels</h3>
+          <p className="mt-1 text-sm text-white/80 drop-shadow">Get started by adding a new showreel.</p>
         </div>
       )}
 

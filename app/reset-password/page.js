@@ -1,4 +1,3 @@
-import { dynamic } from 'next/dynamic';
 import ResetPassword from '../../components/admin/ResetPassword';
 
 export const dynamic = 'force-dynamic';

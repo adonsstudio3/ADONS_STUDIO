@@ -6,6 +6,7 @@ import { useAdmin } from '../../../contexts/AdminContext';
 import AdminProtectedRoute from '../../../components/admin/AdminProtectedRoute';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import DashboardOverview from '../../../components/admin/DashboardOverview';
+import PageHeader from '../../../components/admin/PageHeader';
 
 export default function DashboardPage() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -18,13 +19,7 @@ export default function DashboardPage() {
     <AdminProtectedRoute>
       <AdminLayout>
         <div className="space-y-6">
-          {/* Header */}
-          <div className="bg-white shadow-sm border-b border-gray-200">
-            <div className="px-6 py-4">
-              <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-              <p className="mt-2 text-gray-600">Welcome to the admin panel. Use the sidebar to navigate between sections.</p>
-            </div>
-          </div>
+          <PageHeader title="Admin Dashboard" description="Welcome to the admin panel. Use the sidebar to navigate between sections." />
 
           {/* Dashboard Content */}
           <div className="px-6">

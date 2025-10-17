@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
+import { FilmIcon } from '@heroicons/react/24/outline';
 
 export default function HeroSectionManager() {
   const [heroSections, setHeroSections] = useState([]);
@@ -244,8 +245,8 @@ export default function HeroSectionManager() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading hero sections...</p>
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white font-medium drop-shadow-lg">Loading hero sections...</p>
         </div>
       </div>
     );
@@ -253,80 +254,55 @@ export default function HeroSectionManager() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Hero Sections</h1>
-          <p className="mt-2 text-sm text-gray-700">Manage your homepage hero sections with video or image content</p>
-        </div>
+        <div className="sm:flex-auto"></div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-2">
           <button
             onClick={() => setShowModal(true)}
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-md backdrop-blur-sm bg-blue-500/30 border border-blue-400/30 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-500/40 focus:outline-none focus:ring-2 focus:ring-blue-400 drop-shadow-lg"
           >
             Add Hero Section
-          </button>
-          <button
-            onClick={() => { loadHeroSections(); forceRefresh(); }}
-            className="inline-flex items-center justify-center rounded-md border border-green-300 bg-green-50 px-4 py-2 text-sm font-medium text-green-700 shadow-sm hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          >
-            🔄 Refresh
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="text-red-800">{error}</div>
+        <div className="backdrop-blur-md bg-red-500/20 border border-red-400/30 rounded-lg p-4">
+          <div className="text-white drop-shadow-lg">{error}</div>
         </div>
       )}
 
       {/* Hero Sections Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {heroSections.map((hero) => (
-          <div key={hero.id} className="bg-white overflow-hidden shadow-sm border border-gray-200 rounded-lg">
-            {hero.media_type === 'video' ? (
-              <video className="w-full h-48 object-cover" controls>
-                <source src={hero.media_url} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <img src={hero.media_url} alt={hero.title} className="w-full h-48 object-cover" />
-            )}
-            
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-medium text-gray-900">{hero.title}</h3>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  hero.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {hero.is_active ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-              
-              {hero.subtitle && (
-                <p className="text-sm text-gray-600 mb-4">{hero.subtitle}</p>
-              )}
-              
-              <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                <span>Type: {hero.media_type}</span>
-                <span>{new Date(hero.created_at).toLocaleDateString()}</span>
-              </div>
-              
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleEdit(hero)}
-                  className="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(hero)}
-                  className="flex-1 bg-red-50 text-red-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-red-100 transition-colors"
-                >
-                  Delete
-                </button>
-              </div>
+          <div key={hero.id} className="bg-white overflow-hidden shadow-sm border border-gray-200 rounded-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium text-gray-900">{hero.title}</h3>
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                hero.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+              }`}>
+                {hero.is_active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+
+            <div className="text-xs text-gray-500 mb-4">
+              <div>Type: {hero.media_type}</div>
+              <div>{new Date(hero.created_at).toLocaleDateString()}</div>
+            </div>
+
+            <div className="flex space-x-2">
+              <button
+                onClick={() => handleEdit(hero)}
+                className="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(hero)}
+                className="flex-1 bg-red-50 text-red-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-red-100 transition-colors"
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
@@ -334,11 +310,11 @@ export default function HeroSectionManager() {
 
       {heroSections.length === 0 && !loading && (
         <div className="text-center py-12">
-          <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <span className="text-gray-400 text-2xl">🎬</span>
+          <div className="w-12 h-12 mx-auto backdrop-blur-sm bg-white/10 rounded-full flex items-center justify-center mb-4 border border-white/20">
+            <FilmIcon className="h-6 w-6 text-white drop-shadow-lg" aria-hidden="true" />
           </div>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No hero sections</h3>
-          <p className="mt-1 text-sm text-gray-500">Get started by creating a new hero section.</p>
+          <h3 className="mt-2 text-sm font-medium text-white drop-shadow-lg">No hero sections</h3>
+          <p className="mt-1 text-sm text-white/80 drop-shadow">Get started by creating a new hero section.</p>
         </div>
       )}
 

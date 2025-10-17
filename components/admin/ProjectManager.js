@@ -342,14 +342,14 @@ export default function ProjectManager() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center h-64">
-        <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-600">Loading projects...</p>
-        <button 
+        <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-white font-medium drop-shadow-lg">Loading projects...</p>
+        <button
           onClick={() => {
             console.log('🔄 Retry button clicked');
             loadProjects();
           }}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="mt-4 px-4 py-2 backdrop-blur-sm bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all border border-white/30 drop-shadow-lg"
         >
           Retry Loading
         </button>
@@ -360,17 +360,17 @@ export default function ProjectManager() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Project Manager</h1>
+        <h1 className="text-3xl font-bold text-white drop-shadow-lg">Project Manager</h1>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="backdrop-blur-sm bg-blue-500/30 border border-blue-400/30 text-white px-4 py-2 rounded-lg hover:bg-blue-500/40 transition-all drop-shadow-lg"
         >
           Add New Project
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <div className="backdrop-blur-md bg-red-500/20 border border-red-400/30 text-white px-4 py-3 rounded drop-shadow-lg">
           {error}
         </div>
       )}

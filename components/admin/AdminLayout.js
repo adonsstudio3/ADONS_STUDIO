@@ -124,60 +124,38 @@ const AdminLayout = ({ children }) => {
               <span className="text-white" aria-hidden="true">✕</span>
             </button>
           </div>
-          <SidebarContent navigation={navigation} settingsNavigation={settingsNavigation} isActive={isActive} />
+          <SidebarContent navigation={navigation} settingsNavigation={settingsNavigation} isActive={isActive} admin={admin} isLoggingOut={isLoggingOut} handleLogout={handleLogout} />
         </div>
       </div>
 
-      {/* Static sidebar for desktop */}
+      {/* Static sidebar for desktop - Floating & Translucent */}
       <div className="hidden md:flex md:flex-shrink-0">
-        <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1 bg-gray-800">
-            <SidebarContent navigation={navigation} settingsNavigation={settingsNavigation} isActive={isActive} />
+        <div className="flex flex-col w-96 p-4">
+          <div className="flex flex-col flex-1 rounded-2xl backdrop-blur-lg bg-gray-900/40 border border-white/10 shadow-2xl">
+            <SidebarContent navigation={navigation} settingsNavigation={settingsNavigation} isActive={isActive} admin={admin} isLoggingOut={isLoggingOut} handleLogout={handleLogout} />
           </div>
         </div>
       </div>
 
       {/* Main content */}
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
-        {/* Top header */}
-        <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
-          <button
-            type="button"
-            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden"
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Open sidebar menu"
-            title="Open sidebar menu"
-            ref={menuBtnRef}
-          >
-            <span className="text-lg" aria-hidden="true">☰</span>
-          </button>
-
-          <div className="flex-1 px-4 flex justify-between items-center">
-            <div className="flex flex-1 justify-end items-center space-x-4">
-              <SessionTimer />
-              <span className="text-sm text-gray-700">
-                Welcome, {admin?.username || admin?.email}
-              </span>
+        {/* Page content - Transparent */}
+        <main className="flex-1 relative overflow-y-auto focus:outline-none">
+          <div className="sticky top-0 z-30">
+            {/* Mobile menu button in floating header */}
+            <div className="md:hidden relative z-10 flex-shrink-0 flex h-16 backdrop-blur-md bg-white/10 border-b border-white/10 shadow-lg">
               <button
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                className="bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+                type="button"
+                className="px-4 border-r border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                onClick={() => setSidebarOpen(true)}
+                aria-label="Open sidebar menu"
+                title="Open sidebar menu"
+                ref={menuBtnRef}
               >
-                {isLoggingOut ? (
-                  <>
-                    <span className="inline-block animate-spin mr-2">⏳</span>
-                    Signing out...
-                  </>
-                ) : (
-                  'Logout'
-                )}
+                <span className="text-lg" aria-hidden="true">☰</span>
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Page content */}
-        <main className="flex-1 relative overflow-y-auto focus:outline-none bg-gray-50">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {children}
@@ -189,11 +167,11 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-const SidebarContent = ({ navigation, settingsNavigation, isActive }) => {
+const SidebarContent = ({ navigation, settingsNavigation, isActive, admin, isLoggingOut, handleLogout }) => {
   return (
     <>
-      <div className="flex items-center flex-shrink-0 px-4 py-4">
-        <h2 className="text-xl font-bold text-white tracking-wide">ADONS Studio</h2>
+      <div className="flex items-center justify-center flex-shrink-0 px-4 py-4">
+        <h2 className="limelight-regular font-bold tracking-wide" style={{ fontSize: '30px', color: '#ffffff' }}>ADONS</h2>
       </div>
       <div className="mt-5 flex-1 flex flex-col overflow-y-auto">
         <nav className="flex-1 px-2 pb-4 space-y-1">
@@ -203,9 +181,9 @@ const SidebarContent = ({ navigation, settingsNavigation, isActive }) => {
               href={item.href}
               className={`${
                 isActive(item.href)
-                  ? 'bg-gray-900 text-white'
-                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-              } group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors duration-200`}
+                  ? 'bg-white/20 backdrop-blur-md text-white border border-white/30'
+                  : 'text-gray-300 border border-transparent hover:bg-white/15 hover:backdrop-blur-md hover:border-white/20 hover:text-white'
+              } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
             >
               <item.icon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
               {item.name}
@@ -224,9 +202,9 @@ const SidebarContent = ({ navigation, settingsNavigation, isActive }) => {
                   href={item.href}
                   className={`${
                     isActive(item.href)
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                  } group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors duration-200`}
+                      ? 'bg-white/20 backdrop-blur-md text-white border border-white/30'
+                      : 'text-gray-300 border border-transparent hover:bg-white/15 hover:backdrop-blur-md hover:border-white/20 hover:text-white'
+                  } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
                 >
                   <item.icon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
                   {item.name}
@@ -235,6 +213,35 @@ const SidebarContent = ({ navigation, settingsNavigation, isActive }) => {
             </div>
           </div>
         </nav>
+      </div>
+
+      {/* Session Card at Bottom */}
+      <div className="flex-shrink-0 px-2 pb-4 border-t border-gray-700 pt-4">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/30 rounded-lg p-4 space-y-3 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">Welcome <span style={{ color: '#ffd700' }}>ADONS Team</span></p>
+              <p className="text-xs text-gray-400 truncate">{admin?.email}</p>
+            </div>
+          </div>
+          <div className="flex justify-between items-center gap-2">
+            <SessionTimer />
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="flex-1 backdrop-blur-md bg-white/20 text-white px-3 py-2 rounded-md text-xs font-medium hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-70 disabled:cursor-not-allowed border border-white/20"
+            >
+              {isLoggingOut ? (
+                <>
+                  <span className="inline-block animate-spin mr-1">⏳</span>
+                  Signing out...
+                </>
+              ) : (
+                'Logout'
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

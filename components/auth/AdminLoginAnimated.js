@@ -5,6 +5,20 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabaseClient } from '@/lib/supabase';
 import styles from './AdminLoginAnimated.module.css';
+import '../../styles/admin.css';
+
+// Throttle function (from original code)
+function throttle(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 export default function AdminLoginAnimated() {
   const router = useRouter();
@@ -25,6 +39,8 @@ export default function AdminLoginAnimated() {
   const faceRef = useRef(null);
   const handsRef = useRef([]);
   const tongueRef = useRef(null);
+  const handLeftRef = useRef(null);
+  const handRightRef = useRef(null);
 
   // Check for error in URL params
   useEffect(() => {
@@ -47,47 +63,58 @@ export default function AdminLoginAnimated() {
     const emailInput = emailInputRef.current;
     const passwordInput = passwordInputRef.current;
     const face = faceRef.current;
-    const hands = handsRef.current;
     const tongue = tongueRef.current;
+    const handLeft = handLeftRef.current;
+    const handRight = handRightRef.current;
 
-    if (!emailInput || !passwordInput || !face || !hands.length || !tongue) return;
+    if (!emailInput || !passwordInput || !face || !tongue || !handLeft || !handRight) return;
+
+    // Populate handsRef array
+    handsRef.current = [handLeft, handRight];
+    const hands = handsRef.current;
 
     // Email input animation (head rotation)
-    const handleEmailFocus = () => {
+    const handleEmailFocus = (event) => {
+      let length = Math.min(emailInput.value.length - 16, 19);
       hands.forEach(hand => {
-        hand.classList.remove('hide', 'peek');
+        if (hand) {
+          hand.classList.remove(styles.hide);
+          hand.classList.remove(styles.peek);
+        }
       });
+      
+      face.style.setProperty('--rotate-head', `${-length}deg`);
     };
 
     const handleEmailBlur = () => {
-      if (face) {
-        face.style.setProperty('--rotate-head', '0deg');
-      }
+      face.style.setProperty('--rotate-head', '0deg');
     };
 
-    const handleEmailInput = (event) => {
-      if (face) {
-        const length = Math.min(event.target.value.length - 16, 19);
-        face.style.setProperty('--rotate-head', `${-length}deg`);
-      }
-    };
+    const handleEmailInput = throttle((event) => {
+      let length = Math.min(event.target.value.length - 16, 19);
+      face.style.setProperty('--rotate-head', `${-length}deg`);
+    }, 100);
 
     // Password input animation (hide hands)
     const handlePasswordFocus = () => {
       hands.forEach(hand => {
-        hand.classList.add('hide');
+        if (hand) {
+          hand.classList.add(styles.hide);
+        }
       });
       if (tongue) {
-        tongue.classList.remove('breath');
+        tongue.classList.remove(styles.breath);
       }
     };
 
     const handlePasswordBlur = () => {
       hands.forEach(hand => {
-        hand.classList.remove('hide', 'peek');
+        if (hand) {
+          hand.classList.remove(styles.hide, styles.peek);
+        }
       });
       if (tongue) {
-        tongue.classList.add('breath');
+        tongue.classList.add(styles.breath);
       }
     };
 
@@ -171,20 +198,31 @@ export default function AdminLoginAnimated() {
 
   const handleShowPassword = () => {
     const hands = handsRef.current;
-    
+
     if (showPassword) {
+      // Currently showing password, now hide it - hands near eyes (peek position)
       setShowPassword(false);
       hands.forEach(hand => {
-        hand.classList.remove('peek');
-        hand.classList.add('hide');
+        if (hand) {
+          hand.classList.remove(styles.hide);
+          hand.classList.add(styles.peek);
+        }
       });
     } else {
+      // Currently hiding password, now show it - dog covers eyes completely (hide position)
       setShowPassword(true);
       hands.forEach(hand => {
-        hand.classList.remove('hide');
-        hand.classList.add('peek');
+        if (hand) {
+          hand.classList.remove(styles.peek);
+          hand.classList.add(styles.hide);
+        }
       });
     }
+  };
+
+  const handleForgotPassword = () => {
+    // Navigate directly to the reset password form
+    router.push('/reset-password');
   };
 
   if (loading) {
@@ -235,7 +273,7 @@ export default function AdminLoginAnimated() {
 
         {/* Character hands */}
         <div className={styles.hands}>
-          <div className={`${styles.hand} ${styles.handLeft}`} ref={el => handsRef.current[0] = el}>
+          <div className={`${styles.hand} ${styles.handLeft}`} ref={handLeftRef}>
             <div className={styles.finger}>
               <div className={styles.bone}></div>
               <div className={styles.nail}></div>
@@ -250,7 +288,7 @@ export default function AdminLoginAnimated() {
             </div>
           </div>
 
-          <div className={`${styles.hand} ${styles.handRight}`} ref={el => handsRef.current[1] = el}>
+          <div className={`${styles.hand} ${styles.handRight}`} ref={handRightRef}>
             <div className={styles.finger}>
               <div className={styles.bone}></div>
               <div className={styles.nail}></div>
@@ -284,7 +322,7 @@ export default function AdminLoginAnimated() {
           </label>
 
           <label className={styles.inputLabel}>
-            <i className="fa fa-lock"></i>
+            <i className="fa fa-pen"></i>
             <input
               ref={passwordInputRef}
               className={styles.password}
@@ -296,14 +334,24 @@ export default function AdminLoginAnimated() {
               placeholder="Password"
               required
             />
-            <button 
+            <button
               type="button"
               className={styles.passwordButton}
               onClick={handleShowPassword}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              {showPassword ? 'Hide' : 'Show'}
+              <i className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
             </button>
           </label>
+
+          <div className={styles.forgotPassword}>
+            <a
+              className={styles.forgotPasswordLink}
+              onClick={handleForgotPassword}
+            >
+              Forgot Password?
+            </a>
+          </div>
 
           <button
             type="submit"
@@ -314,23 +362,22 @@ export default function AdminLoginAnimated() {
           </button>
         </form>
 
-        {/* Magic link and social buttons */}
-        <div className={styles.socialButtons}>
+        {/* Separator */}
+        <div className={styles.separator}>
+          <span className={styles.separatorText}>OR</span>
+        </div>
+
+        {/* Magic link button */}
+        <div className={styles.magicLinkContainer}>
           <button
             type="button"
             onClick={handleMagicLink}
             disabled={isLoading || magicLinkSent}
-            className={styles.social}
-            title="Send Magic Link"
+            className={styles.magicLinkButton}
           >
             <i className="fa fa-magic"></i>
+            Send Magic Link
           </button>
-          <div className={styles.social}>
-            <i className="fa fa-shield"></i>
-          </div>
-          <div className={styles.social}>
-            <i className="fa fa-lock"></i>
-          </div>
         </div>
 
         {/* Error/Success messages */}
@@ -341,14 +388,8 @@ export default function AdminLoginAnimated() {
         )}
 
         {magicLinkSent && (
-          <div className={styles.footer} style={{color: '#51cf66'}}>
+          <div className={styles.footer} style={{color: '#243946'}}>
             Magic link sent! Check your email.
-          </div>
-        )}
-
-        {!error && !magicLinkSent && (
-          <div className={styles.footer}>
-            ADONS Admin Portal
           </div>
         )}
       </div>

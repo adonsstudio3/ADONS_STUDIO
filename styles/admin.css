@@ -1,13 +1,20 @@
 /* Admin Pages Styling */
 /* Dedicated styles for admin layout and login pages */
 
+/* Limelight Font */
+.limelight-regular {
+  font-family: "Limelight", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 /* Admin root container - applies admin background to all admin pages */
 .admin-root,
 .admin-root html,
 .admin-root body,
 body.admin-root,
 html.admin-root {
-  background-image: url('/Images/admin/admin_bg.png') !important;
+  background-image: url('/Images/admin/admin.jpg') !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
   background-position: center center !important;

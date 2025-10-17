@@ -127,11 +127,13 @@ export async function POST(request) {
     // Send OTP via email
     try {
       const resendApiKey = process.env.RESEND_API_KEY;
-      
+
       if (!resendApiKey) {
-        console.error('RESEND_API_KEY not configured');
-        return Response.json({ error: 'Email service not configured' }, { status: 500 });
+        console.error('⚠️ Email Service Error: RESEND_API_KEY not configured');
+        return Response.json({ error: 'Email service not configured. Please contact administrator.' }, { status: 500 });
       }
+
+      console.log(`📧 Sending password reset OTP to ${email} for user ${user.id}`);
 
       const emailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -203,9 +205,15 @@ export async function POST(request) {
 
       if (!emailResponse.ok) {
         const errorData = await emailResponse.json();
-        console.error('Resend API error:', errorData);
-        return Response.json({ error: 'Failed to send reset email' }, { status: 500 });
+        console.error('❌ Resend API Error:', {
+          status: emailResponse.status,
+          statusText: emailResponse.statusText,
+          error: errorData
+        });
+        return Response.json({ error: 'Failed to send reset email. Please try again.' }, { status: 500 });
       }
+
+      console.log(`✅ Password reset OTP sent successfully to ${email}`);
 
       // Log activity
       await supabaseAdmin.from('activity_logs').insert({

@@ -87,7 +87,7 @@ Simple page wrapper with metadata for SEO.
 **File**: `components/admin/ResetPassword.module.css`
 
 **Design Features**:
-- Glassmorphic card design
+- Modern card design with animations
 - Gradient background (red theme for security)
 - Responsive design (mobile-first)
 - Step indicator with animations
@@ -97,13 +97,13 @@ Simple page wrapper with metadata for SEO.
 ---
 
 ### 6. **Login Page Integration**
-**File**: `components/auth/AdminLoginGlassmorphic.js`
+**File**: `components/auth/AdminLoginAnimated.js`
 
 **Added**:
 - "Forgot your password?" link below magic link button
 - Points to `/reset-password` page
 
-**File**: `components/auth/AdminLoginGlassmorphic.module.css`
+**File**: `components/auth/AdminLoginAnimated.module.css`
 
 **Added**:
 - `.forgotPassword` styles
@@ -419,8 +419,8 @@ Before deploying:
 - ✅ `components/admin/ResetPassword.js` (already existed)
 - ✅ `components/admin/ResetPassword.module.css` (already existed)
 - ✅ `app/reset-password/page.js`
-- ✅ `components/auth/AdminLoginGlassmorphic.js` (added forgot password link)
-- ✅ `components/auth/AdminLoginGlassmorphic.module.css` (added styles)
+- ✅ `components/auth/AdminLoginAnimated.js` (added forgot password link)
+- ✅ `components/auth/AdminLoginAnimated.module.css` (added styles)
 
 **Documentation**:
 - ✅ This file: `PASSWORD-RESET-IMPLEMENTATION.md`

@@ -53,6 +53,11 @@ export async function POST(request) {
       return Response.json({ error: 'Current password is required' }, { status: 400 });
     }
 
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail)) {
+      return Response.json({ error: 'Invalid email format' }, { status: 400 });
+    }
+
     // Rate limiting by user ID
     const rateLimit = checkRateLimit(userId, 5, 15 * 60 * 1000);
     if (!rateLimit.allowed) {
@@ -101,11 +106,13 @@ export async function POST(request) {
     // Send OTP via email
     try {
       const resendApiKey = process.env.RESEND_API_KEY;
-      
+
       if (!resendApiKey) {
-        console.error('RESEND_API_KEY not configured');
-        return Response.json({ error: 'Email service not configured' }, { status: 500 });
+        console.error('⚠️ Email Service Error: RESEND_API_KEY not configured');
+        return Response.json({ error: 'Email service not configured. Please contact administrator.' }, { status: 500 });
       }
+
+      console.log(`📧 Sending password change OTP to ${userEmail} for user ${userId}`);
 
       const emailResponse = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -174,12 +181,18 @@ export async function POST(request) {
 
       if (!emailResponse.ok) {
         const errorData = await emailResponse.json();
-        console.error('Resend API error:', errorData);
-        return Response.json({ error: 'Failed to send verification email' }, { status: 500 });
+        console.error('❌ Resend API Error:', {
+          status: emailResponse.status,
+          statusText: emailResponse.statusText,
+          error: errorData
+        });
+        return Response.json({ error: 'Failed to send verification email. Please try again.' }, { status: 500 });
       }
 
+      console.log(`✅ Password change OTP sent successfully to ${userEmail}`);
+
       // Log activity
-      await supabase.from('activity_logs').insert({
+      await supabaseAdmin.from('activity_logs').insert({
         user_id: userId,
         action: 'password_change_otp_sent',
         details: { email: userEmail }

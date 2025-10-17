@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
+import { PhotoIcon } from '@heroicons/react/24/outline';
 
 export default function MediaLibrary() {
   const [mediaFiles, setMediaFiles] = useState([]);
@@ -9,11 +10,8 @@ export default function MediaLibrary() {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingMedia, setEditingMedia] = useState(null);
-  const [filterType, setFilterType] = useState('all');
-  const [filterCategory, setFilterCategory] = useState('all');
   const { apiCall, logActivity } = useAdmin();
   const hasLoadedRef = useRef(false); // Track if we've already loaded data on mount
-  const isInitialFilterChange = useRef(true); // Track first filter change
 
   const [formData, setFormData] = useState({
     filename: '',
@@ -24,31 +22,19 @@ export default function MediaLibrary() {
     alt_text: ''
   });
 
-  // Load media files on mount, then on actual filter changes
+  // Load media files on mount only
   useEffect(() => {
     if (!hasLoadedRef.current) {
-      // First load: only on component mount
       console.log('📚 Loading media library on mount');
       loadMediaFiles();
       hasLoadedRef.current = true;
-    } else if (!isInitialFilterChange.current) {
-      // Subsequent loads: only when filters actually change (after first mount)
-      console.log('🔄 Reloading media due to filter change');
-      loadMediaFiles();
     }
-    isInitialFilterChange.current = false; // Mark that initial filter state is set
-  }, [filterType, filterCategory]);
+  }, []);
 
   const loadMediaFiles = async () => {
     try {
       setLoading(true);
-      let url = '/api/admin/media';
-      const params = new URLSearchParams();
-      if (filterType !== 'all') params.append('type', filterType);
-      if (filterCategory !== 'all') params.append('category', filterCategory);
-      if (params.toString()) url += `?${params.toString()}`;
-      
-      const data = await apiCall(url);
+      const data = await apiCall('/api/admin/media');
       setMediaFiles(data.media || []);
     } catch (error) {
       console.error('Media loading error:', error);
@@ -139,23 +125,13 @@ export default function MediaLibrary() {
     return '📁';
   };
 
-  const filteredMedia = mediaFiles.filter(media => {
-    const typeMatch = filterType === 'all' || 
-      (filterType === 'image' && media.file_type.startsWith('image/')) ||
-      (filterType === 'video' && media.file_type.startsWith('video/')) ||
-      (filterType === 'document' && (media.file_type.includes('pdf') || media.file_type.includes('document')));
-    
-    const categoryMatch = filterCategory === 'all' || media.category === filterCategory;
-    
-    return typeMatch && categoryMatch;
-  });
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading media files...</p>
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white font-medium drop-shadow-lg">Loading media files...</p>
         </div>
       </div>
     );
@@ -163,16 +139,12 @@ export default function MediaLibrary() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Media Library</h1>
-          <p className="mt-2 text-sm text-gray-700">Manage your images, videos, and documents</p>
-        </div>
+        <div className="sm:flex-auto"></div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
             onClick={() => setShowModal(true)}
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-md backdrop-blur-sm bg-orange-500/30 border border-orange-400/30 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-500/40 focus:outline-none focus:ring-2 focus:ring-orange-400 drop-shadow-lg"
           >
             Upload Media
           </button>
@@ -180,48 +152,14 @@ export default function MediaLibrary() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="text-red-800">{error}</div>
+        <div className="backdrop-blur-md bg-red-500/20 border border-red-400/30 rounded-lg p-4">
+          <div className="text-white drop-shadow-lg">{error}</div>
         </div>
       )}
 
-      {/* Filters */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200">
-        <div className="flex flex-wrap gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Type</label>
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="all">All Types</option>
-              <option value="image">Images</option>
-              <option value="video">Videos</option>
-              <option value="document">Documents</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Category</label>
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="all">All Categories</option>
-              <option value="hero">Hero</option>
-              <option value="projects">Projects</option>
-              <option value="showreels">Showreels</option>
-              <option value="general">General</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
       {/* Media Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredMedia.map((media) => (
+        {mediaFiles.map((media) => (
           <div key={media.id} className="bg-white overflow-hidden shadow-sm border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
             <div className="relative group">
               {media.file_type.startsWith('image/') ? (
@@ -295,13 +233,13 @@ export default function MediaLibrary() {
         ))}
       </div>
 
-      {filteredMedia.length === 0 && !loading && (
+      {mediaFiles.length === 0 && !loading && (
         <div className="text-center py-12">
-          <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <span className="text-gray-400 text-2xl">🖼️</span>
+          <div className="w-12 h-12 mx-auto backdrop-blur-sm bg-white/10 rounded-full flex items-center justify-center mb-4 border border-white/20">
+            <PhotoIcon className="h-6 w-6 text-white drop-shadow-lg" aria-hidden="true" />
           </div>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No media files</h3>
-          <p className="mt-1 text-sm text-gray-500">Upload some files to get started.</p>
+          <h3 className="mt-2 text-sm font-medium text-white drop-shadow-lg">No media files</h3>
+          <p className="mt-1 text-sm text-white/80 drop-shadow">Upload some files to get started.</p>
         </div>
       )}
 
