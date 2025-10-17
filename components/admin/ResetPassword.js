@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './ResetPassword.module.css';
+import '../../styles/admin.css';
 
 export default function ResetPassword() {
   const [step, setStep] = useState(1); // 1: Enter email, 2: Enter OTP and new password
@@ -92,12 +93,14 @@ export default function ResetPassword() {
           text: 'Verification code sent! Check your email inbox.'
         });
       } else {
+        console.error('Password reset error:', response.status, data);
         setMessage({
           type: 'error',
           text: data.error || 'Failed to send reset code'
         });
       }
     } catch (error) {
+      console.error('Password reset network error:', error);
       setMessage({
         type: 'error',
         text: 'Network error. Please try again.'
@@ -192,7 +195,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} admin-root`}>
       <div className={styles.resetBox}>
         <div className={styles.header}>
           <h1>🔓 Reset Password</h1>

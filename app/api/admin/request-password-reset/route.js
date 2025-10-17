@@ -58,17 +58,20 @@ export async function POST(request) {
       return Response.json({ error: 'Email is required' }, { status: 400 });
     }
 
+    console.log(`🔑 Password reset request for email: ${email}`);
+
     // Rate limiting by email
     const rateLimit = checkRateLimit(email.toLowerCase(), 5, 15 * 60 * 1000);
     if (!rateLimit.allowed) {
-      return Response.json({ 
-        error: `Too many password reset requests. Please try again in ${rateLimit.remainingTime} minutes.` 
+      return Response.json({
+        error: `Too many password reset requests. Please try again in ${rateLimit.remainingTime} minutes.`
       }, { status: 429 });
     }
 
     // Check if user exists
     let userData;
     try {
+      console.log('🔍 Attempting to fetch users from Supabase...');
       const { data, error: userError } = await supabaseAdmin.auth.admin.listUsers();
       
       if (userError) {
@@ -91,11 +94,14 @@ export async function POST(request) {
 
     if (!user) {
       // Don't reveal if user exists or not for security
-      return Response.json({ 
-        success: true, 
-        message: 'If an account exists with this email, you will receive a password reset code.' 
+      console.log(`ℹ️ Email not found in system: ${email}`);
+      return Response.json({
+        success: true,
+        message: 'If an account exists with this email, you will receive a password reset code.'
       });
     }
+
+    console.log(`✅ User found: ${email} (ID: ${user.id})`);
 
     // Generate 6-digit OTP
     const otp = crypto.randomInt(100000, 999999).toString();
