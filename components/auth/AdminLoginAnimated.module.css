@@ -486,3 +486,46 @@
   border-radius: 50%;
   animation: spinLoader 1s linear infinite;
 }
+
+/* Error and Success messages - positioned outside animated container */
+.errorMessage,
+.successMessage {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 30px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  animation: slideUp 0.3s ease-out;
+}
+
+.errorMessage {
+  background-color: rgba(255, 107, 107, 0.95);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.successMessage {
+  background-color: rgba(76, 175, 80, 0.95);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

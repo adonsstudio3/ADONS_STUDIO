@@ -1,7 +1,28 @@
-# Redirect rules for Netlify
+# ================================
+# Netlify Redirects for Next.js
+# ================================
+# These rules handle routing for Next.js deployed on Netlify
+# Note: Vercel handles this automatically - this file is only for Netlify deployments
 
-# Handle client-side routing for Next.js
-/*    /index.html   200
+# Redirect www to non-www (or vice versa - choose one)
+# https://www.your-domain.com/* https://your-domain.com/:splat 301!
 
-# Optional: redirect trailing slashes
-/*/ /:splat 301
+# Force HTTPS
+# http://your-domain.com/* https://your-domain.com/:splat 301!
+
+# Remove trailing slashes (SEO best practice)
+# This should be processed before other rules
+/*/ /:splat 301!
+
+# Admin login page redirect (if needed)
+/admin /admin/login 301
+
+# Legacy URL redirects (add your old URLs here)
+# /old-path /new-path 301
+
+# API routes - let Next.js handle them (no redirect)
+/api/* 200
+
+# Next.js pages - let the framework handle routing
+# The "!" ensures this is a forced redirect, not a rewrite
+/* 200

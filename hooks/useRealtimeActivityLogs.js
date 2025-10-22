@@ -7,23 +7,62 @@
  * Security: Uses RLS policies - only fetches logs user can access
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabaseClient } from '@/lib/supabase';
+
+// 🔄 Global subscription cache - persists across component mounts
+const activityLogsSubscriptionRef = {
+  subscription: null,
+  initialized: false,
+  isMountedRef: { current: false }
+};
 
 export const useRealtimeActivityLogs = (limit = 10) => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [subscription, setSubscription] = useState(null);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
-    let isMounted = true;
-    let sub = null;
+    // Only run on client-side where WebSocket is available
+    if (typeof window === 'undefined') return;
+
+    isMountedRef.current = true;
 
     const setupRealtime = async () => {
       try {
+        // If subscription already initialized, reuse it (just fetch data)
+        if (activityLogsSubscriptionRef.initialized) {
+          console.log('📚 Reusing existing activity logs subscription');
+          
+          // Fetch current data
+          const { data: initialData, error: fetchError } = await supabaseClient
+            .from('activity_logs')
+            .select(`
+              id,
+              user_id,
+              action,
+              resource_type,
+              resource_id,
+              resource_title,
+              details,
+              severity,
+              created_at,
+              ip_address,
+              user_agent
+            `)
+            .order('created_at', { ascending: false })
+            .limit(limit);
+
+          if (fetchError) throw fetchError;
+          if (isMountedRef.current) {
+            setLogs(initialData || []);
+            setLoading(false);
+          }
+          return;
+        }
+
         setLoading(true);
-        console.log('🔄 Setting up realtime subscription for activity logs...');
 
         // Initial fetch - respect RLS policies
         const { data: initialData, error: fetchError } = await supabaseClient
@@ -49,14 +88,13 @@ export const useRealtimeActivityLogs = (limit = 10) => {
           throw fetchError;
         }
 
-        if (isMounted) {
+        if (isMountedRef.current) {
           setLogs(initialData || []);
           setLoading(false);
         }
 
-        // Subscribe to realtime changes
-        console.log('📡 Subscribing to activity_logs realtime...');
-        sub = supabaseClient
+        // Subscribe to realtime changes (only first time)
+        const sub = supabaseClient
           .channel('activity-logs-changes')
           .on(
             'postgres_changes',
@@ -66,9 +104,8 @@ export const useRealtimeActivityLogs = (limit = 10) => {
               table: 'activity_logs'
             },
             (payload) => {
-              console.log('🔔 Activity log realtime event:', payload.eventType, payload);
-
-              if (isMounted) {
+              // Update logs in ALL mounted instances via component state
+              if (isMountedRef.current) {
                 if (payload.eventType === 'INSERT') {
                   // Add new log to the top
                   setLogs(prevLogs => {
@@ -93,16 +130,17 @@ export const useRealtimeActivityLogs = (limit = 10) => {
             }
           )
           .subscribe((status) => {
-            console.log('📡 Activity logs subscription status:', status);
             if (status === 'SUBSCRIBED') {
-              console.log('✅ Realtime subscription active for activity logs');
+              console.log('✅ Activity logs subscription active');
             }
           });
 
-        setSubscription(sub);
+        // Cache the subscription globally
+        activityLogsSubscriptionRef.subscription = sub;
+        activityLogsSubscriptionRef.initialized = true;
       } catch (err) {
         console.error('❌ Activity logs realtime setup error:', err);
-        if (isMounted) {
+        if (isMountedRef.current) {
           setError(err?.message || 'Failed to setup realtime activity logs');
           setLoading(false);
         }
@@ -112,13 +150,10 @@ export const useRealtimeActivityLogs = (limit = 10) => {
     setupRealtime();
 
     return () => {
-      isMounted = false;
-      if (sub) {
-        console.log('🔌 Unsubscribing from activity logs realtime...');
-        supabaseClient.removeChannel(sub);
-      }
+      isMountedRef.current = false;
+      // 🎯 DON'T unsubscribe - keep subscription alive for other components
     };
   }, [limit]);
 
-  return { logs, loading, error, subscription };
+  return { logs, loading, error };
 };

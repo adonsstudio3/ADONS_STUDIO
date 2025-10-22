@@ -1,54 +1,43 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { rateLimit, handleError } from '@/lib/api-security';
+import { handleError } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
+import { validateFileMagicNumber, getFileTypeName } from '@/lib/file-validation';
 
 const supabase = supabaseAdmin;
 
 // POST - Upload file to Supabase Storage
 export async function POST(request) {
   try {
-    console.log('🚀 Upload API endpoint hit');
-    
-    // Debug environment variables
-    console.log('🔍 Environment check in upload API:', {
-      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-      supabaseAdminExists: !!supabase
-    });
-
-    // Debug authentication headers
-    console.log('🔐 Request headers:', {
-      authorization: request.headers.get('authorization') ? 'Bearer token present' : 'No auth header',
-      contentType: request.headers.get('content-type'),
-      userAgent: request.headers.get('user-agent')
-    });
-
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-upload-${clientIP}`, 10, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🚀 Upload API endpoint hit');
     }
 
-    console.log('📋 Parsing FormData...');
+    // Apply rate limiting (Redis-based)
+    const rateLimitResult = await applyRateLimit(request, 'upload');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Too many upload requests. Please try again later.',
+          retryAfter: rateLimitResult.retryAfter
+        },
+        {
+          status: 429,
+          headers: rateLimitResult.headers
+        }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file');
-    const bucket = formData.get('bucket') || 'project-assets'; // Default bucket
-    const folder = formData.get('folder') || 'thumbnails'; // Default folder
-
-    console.log('📁 FormData parsed:', {
-      hasFile: !!file,
-      fileName: file?.name,
-      fileSize: file?.size,
-      fileType: file?.type,
-      bucket,
-      folder
-    });
+    const bucket = formData.get('bucket') || 'project-assets';
+    const folder = formData.get('folder') || 'thumbnails';
 
     if (!file) {
-      console.error('❌ No file provided in FormData');
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Validate file type
+    // Validate file type (MIME check)
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json({ 
@@ -63,53 +52,49 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    // Convert File to ArrayBuffer for magic number validation
+    const arrayBuffer = await file.arrayBuffer();
+
+    // 🔒 SECURITY: Validate file using magic number (file signature)
+    // This prevents malicious files disguised as images
+    const validationResult = validateFileMagicNumber(arrayBuffer, file.type);
+    if (!validationResult.valid) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('🚫 File validation failed:', validationResult);
+      }
+      return NextResponse.json({ 
+        error: validationResult.reason,
+        detectedType: validationResult.detectedType ? getFileTypeName(validationResult.detectedType) : 'Unknown'
+      }, { status: 400 });
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('✅ File signature validated:', validationResult.detectedType);
+    }
+
     // Generate unique filename
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
     const fileExt = file.name.split('.').pop();
     const fileName = `${folder}/${timestamp}-${randomString}.${fileExt}`;
 
-    console.log('📤 Uploading file to:', bucket, fileName);
-
-    // Convert File to ArrayBuffer for Supabase
-    console.log('🔄 Converting file to buffer...');
-    const arrayBuffer = await file.arrayBuffer();
+    // Convert to buffer for upload (reuse arrayBuffer from validation)
     const buffer = new Uint8Array(arrayBuffer);
-    console.log('✅ Buffer created, size:', buffer.length);
 
     // Upload to Supabase Storage
-    console.log('⬆️ Starting Supabase storage upload...');
-    console.log('🔧 Upload parameters:', {
-      bucket,
-      fileName,
-      bufferSize: buffer.length,
-      contentType: file.type
-    });
-
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(fileName, buffer, {
         contentType: file.type,
         cacheControl: '3600',
-        upsert: false // Don't overwrite existing files
+        upsert: false
       });
-
-    console.log('📊 Storage upload result:', { 
-      data, 
-      error,
-      bucket,
-      path: data?.path 
-    });
 
     if (error) {
-      console.error('❌ Storage upload error details:', {
-        message: error.message,
-        statusCode: error.statusCode,
-        error: error.error,
-        details: error
-      });
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('❌ Storage upload error:', error.message);
+      }
       
-      // More specific error messages
       if (error.statusCode === 409) {
         return NextResponse.json({ 
           error: 'File already exists. Please rename your file or try again.' 
@@ -138,7 +123,9 @@ export async function POST(request) {
       }, { status: 500 });
     }
 
-    console.log('✅ File uploaded successfully:', publicUrl);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('✅ File uploaded successfully');
+    }
 
     return NextResponse.json({
       success: true,
@@ -147,12 +134,15 @@ export async function POST(request) {
         fileName: fileName,
         originalName: file.name,
         size: file.size,
-        type: file.type
+        type: file.type,
+        validatedType: validationResult.detectedType
       }
     });
 
   } catch (error) {
-    console.error('Upload error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Upload error:', error);
+    }
     return handleError(error, 'File upload failed');
   }
 }

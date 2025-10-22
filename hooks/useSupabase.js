@@ -113,7 +113,6 @@ export const useSupabaseSubscription = (table, onUpdate, filter = {}) => {
               ...filter
             },
             (payload) => {
-              console.log(`${table} change detected:`, payload);
               if (onUpdate) {
                 onUpdate(payload);
               }
@@ -149,7 +148,6 @@ export const ProjectsList = () => {
 
   // Subscribe to realtime changes
   useSupabaseSubscription('projects', (payload) => {
-    console.log('Project updated:', payload);
     refetch(); // Refresh data when changes occur
   });
 

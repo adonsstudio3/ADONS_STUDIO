@@ -8,7 +8,10 @@ const supabaseAdmin = createClient(
 
 // Helper to hash OTP codes (must match request-password-reset)
 function hashCode(code) {
-  const secret = process.env.OTP_SECRET || process.env.JWT_SECRET || 'fallback-secret-change-in-production';
+  const secret = process.env.OTP_SECRET || process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('OTP_SECRET or JWT_SECRET environment variable is required for password reset');
+  }
   return crypto.createHmac('sha256', secret).update(code).digest('hex');
 }
 
@@ -132,7 +135,7 @@ export async function POST(request) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'ADONS Studio <noreply@adons.studio>',
+          from: 'ADONS Studio <onboarding@resend.dev>',
           to: email,
           subject: 'Password Reset Verification Code',
           html: `

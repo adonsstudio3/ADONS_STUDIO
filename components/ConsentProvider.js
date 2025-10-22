@@ -16,7 +16,6 @@ export const useConsent = () => {
 export const ConsentProvider = ({ children }) => {
   const [consent, setConsent] = useState({
     analytics: false,
-    marketing: false,
     functional: true, // Usually granted by default for essential functionality
     necessary: true   // Always true for necessary cookies
   });
@@ -50,15 +49,14 @@ export const ConsentProvider = ({ children }) => {
       return;
     }
     const toBool = (val) => typeof val === 'boolean' ? val : false;
-    const marketing = toBool(consentSettings.marketing);
     const analytics = toBool(consentSettings.analytics);
     const functional = toBool(consentSettings.functional);
 
     updateConsent({
-      ad_storage: marketing ? 'granted' : 'denied',
+      ad_storage: 'denied', // No marketing/advertising
       analytics_storage: analytics ? 'granted' : 'denied',
       functionality_storage: functional ? 'granted' : 'denied',
-      personalization_storage: marketing ? 'granted' : 'denied',
+      personalization_storage: 'denied', // No personalization
       security_storage: 'granted' // Always granted for security
     });
   };
@@ -66,42 +64,58 @@ export const ConsentProvider = ({ children }) => {
   const acceptAllConsent = () => {
     const newConsent = {
       analytics: true,
-      marketing: true,
       functional: true,
       necessary: true
     };
-    
+
     setConsent(newConsent);
     setConsentGiven(true);
     setShowConsentBanner(false);
     localStorage.setItem('adons-consent-preferences', JSON.stringify(newConsent));
     updateGTMConsent(newConsent);
-    
+
     gtmEvent('consent_given', {
       consent_type: 'accept_all',
-      analytics: true,
-      marketing: true
+      analytics: true
     });
   };
 
   const acceptNecessaryOnly = () => {
     const newConsent = {
       analytics: false,
-      marketing: false,
       functional: true,
       necessary: true
     };
-    
+
     setConsent(newConsent);
     setConsentGiven(true);
     setShowConsentBanner(false);
     localStorage.setItem('adons-consent-preferences', JSON.stringify(newConsent));
     updateGTMConsent(newConsent);
-    
+
     gtmEvent('consent_given', {
       consent_type: 'necessary_only',
+      analytics: false
+    });
+  };
+
+  const declineAllConsent = () => {
+    const newConsent = {
       analytics: false,
-      marketing: false
+      functional: false,
+      necessary: true // Only necessary cookies allowed
+    };
+
+    setConsent(newConsent);
+    setConsentGiven(true);
+    setShowConsentBanner(false);
+    localStorage.setItem('adons-consent-preferences', JSON.stringify(newConsent));
+    updateGTMConsent(newConsent);
+
+    gtmEvent('consent_given', {
+      consent_type: 'decline_all',
+      analytics: false,
+      functional: false
     });
   };
 
@@ -112,7 +126,6 @@ export const ConsentProvider = ({ children }) => {
     updateGTMConsent(newConsent);
     gtmEvent('consent_updated', {
       analytics: newConsent.analytics,
-      marketing: newConsent.marketing,
       functional: newConsent.functional
     });
   };
@@ -123,7 +136,6 @@ export const ConsentProvider = ({ children }) => {
     setShowConsentBanner(true);
     setConsent({
       analytics: false,
-      marketing: false,
       functional: true,
       necessary: true
     });
@@ -137,6 +149,7 @@ export const ConsentProvider = ({ children }) => {
       setShowConsentBanner,
       acceptAllConsent,
       acceptNecessaryOnly,
+      declineAllConsent,
       updateConsentPreferences,
       resetConsent
     }}>

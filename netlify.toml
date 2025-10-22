@@ -1,0 +1,263 @@
+# ================================
+# Netlify Configuration for Next.js
+# ================================
+# Official Netlify configuration for ADONS Studio website
+# For Vercel deployment, this file is not needed
+
+[build]
+  # Build command for Next.js
+  command = "npm run build"
+
+  # Output directory for Next.js
+  publish = ".next"
+
+  # Set Node.js version
+  environment = { NODE_VERSION = "18" }
+
+# ================================
+# Build Settings
+# ================================
+[build.processing]
+  # Skip Netlify's image optimization (Next.js handles this)
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true
+
+# ================================
+# Next.js Plugin (Essential!)
+# ================================
+[[plugins]]
+  # Official Next.js plugin for Netlify
+  # Enables SSR, ISR, API routes, and middleware
+  package = "@netlify/plugin-nextjs"
+
+# ================================
+# Environment Variables
+# ================================
+# Note: Set sensitive variables in Netlify UI (Site settings > Environment variables)
+# These are just examples/defaults
+
+[context.production.environment]
+  NODE_ENV = "production"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "production"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[context.branch-deploy.environment]
+  NODE_ENV = "production"
+
+# ================================
+# Redirects & Rewrites
+# ================================
+# These supplement the _redirects file
+
+# Force HTTPS (uncomment when ready)
+# [[redirects]]
+#   from = "http://your-domain.com/*"
+#   to = "https://your-domain.com/:splat"
+#   status = 301
+#   force = true
+
+# Redirect www to non-www (or vice versa)
+# [[redirects]]
+#   from = "https://www.your-domain.com/*"
+#   to = "https://your-domain.com/:splat"
+#   status = 301
+#   force = true
+
+# Admin redirect
+[[redirects]]
+  from = "/admin"
+  to = "/admin/login"
+  status = 301
+
+# Remove trailing slashes
+[[redirects]]
+  from = "/*/"
+  to = "/:splat"
+  status = 301
+
+# ================================
+# Headers
+# ================================
+# These supplement the _headers file
+
+# Security headers for all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# HSTS for production (uncomment when ready to force HTTPS permanently)
+# [[headers]]
+#   for = "/*"
+#   [headers.values]
+#     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# No caching for API routes
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    X-Robots-Tag = "noindex, nofollow"
+
+# Cache static assets
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache optimized images
+[[headers]]
+  for = "/Images/optimized/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ================================
+# Functions (API Routes)
+# ================================
+[functions]
+  # Directory for Netlify Functions (Next.js API routes)
+  directory = "netlify/functions"
+
+  # Increase timeout for heavy operations (max 26 seconds on free tier)
+  # For Pro tier, you can set up to 900 seconds
+  node_bundler = "esbuild"
+
+# ================================
+# Dev Server Settings
+# ================================
+[dev]
+  # Local development server settings
+  command = "npm run dev"
+  port = 3000
+  targetPort = 3000
+  autoLaunch = false
+
+# ================================
+# Deploy Contexts
+# ================================
+
+# Production deployments (main branch)
+[context.production]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+# Deploy previews (PRs)
+[context.deploy-preview]
+  command = "npm run build"
+
+# Branch deployments
+[context.branch-deploy]
+  command = "npm run build"
+
+# ================================
+# Edge Functions (Optional)
+# ================================
+# Uncomment if you want to use Netlify Edge Functions
+# [[edge_functions]]
+#   function = "geo-redirect"
+#   path = "/geo/*"
+
+# ================================
+# Forms (Contact Form - Optional)
+# ================================
+# If you want to use Netlify Forms instead of your API
+# [forms]
+#   spam_protection = true
+
+# ================================
+# Split Testing (Optional)
+# ================================
+# [[splits]]
+#   id = "hero-test"
+#   path = "/"
+#   branches = [
+#     { branch = "main", weight = 50 },
+#     { branch = "hero-v2", weight = 50 }
+#   ]
+
+# ================================
+# Performance & Optimization
+# ================================
+
+# Enable fine-grained cache control
+[build.environment]
+  # Optimize builds
+  NPM_FLAGS = "--legacy-peer-deps"
+
+  # Prevent out-of-memory errors during build
+  NODE_OPTIONS = "--max_old_space_size=4096"
+
+# ================================
+# Post Processing
+# ================================
+[build.processing]
+  skip_processing = false
+
+# ================================
+# Large Media (Git LFS - Optional)
+# ================================
+# Uncomment if using Netlify Large Media
+# [large_media]
+#   enabled = true
+
+# ================================
+# Additional Notes
+# ================================
+#
+# REQUIRED STEPS FOR DEPLOYMENT:
+#
+# 1. Install Next.js plugin:
+#    npm install -D @netlify/plugin-nextjs
+#
+# 2. Set environment variables in Netlify UI:
+#    - NEXT_PUBLIC_SUPABASE_URL
+#    - NEXT_PUBLIC_SUPABASE_ANON_KEY
+#    - SUPABASE_SERVICE_ROLE_KEY
+#    - SUPABASE_JWT_SECRET
+#    - JWT_SECRET
+#    - OTP_SECRET
+#    - RESEND_API_KEY
+#    - UPSTASH_REDIS_REST_URL
+#    - UPSTASH_REDIS_REST_TOKEN
+#    - NEXT_PUBLIC_GTM_ID
+#
+# 3. Connect your Git repository to Netlify
+#
+# 4. Set build settings:
+#    - Base directory: frontend
+#    - Build command: npm run build
+#    - Publish directory: .next
+#
+# 5. Deploy!
+#
+# TROUBLESHOOTING:
+# - If builds fail, check the build logs
+# - Ensure Node version is 18+
+# - Verify all environment variables are set
+# - Check that @netlify/plugin-nextjs is installed
+#
+# PERFORMANCE TIPS:
+# - Enable Netlify's CDN
+# - Use Netlify's image optimization (or keep Next.js's)
+# - Monitor Core Web Vitals in Netlify Analytics
+# - Consider upgrading to Pro for better build times

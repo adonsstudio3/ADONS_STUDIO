@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { ChartBarIcon, FilmIcon, PlayCircleIcon, FolderIcon, PhotoIcon, KeyIcon } from '@heroicons/react/24/outline';
+import { ChartBarIcon, FilmIcon, PlayCircleIcon, FolderIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { usePathname } from 'next/navigation';
 import { useAdmin } from '../../contexts/AdminContext';
 import SessionTimer from './SessionTimer';
@@ -14,7 +14,7 @@ const AdminLayout = ({ children }) => {
   const closeBtnRef = useRef(null);
   const menuBtnRef = useRef(null);
   const sidebarRef = useRef(null);
-  const { admin, logout } = useAdmin();
+  const { user, logout } = useAdmin();
   const pathname = usePathname();
 
   const navigation = [
@@ -25,9 +25,7 @@ const AdminLayout = ({ children }) => {
   { name: 'Media Library', href: '/admin/media', icon: PhotoIcon },
   ];
 
-  const settingsNavigation = [
-  { name: 'Change Password', href: '/admin/change-password', icon: KeyIcon },
-  ];
+  // Removed settingsNavigation - using Forgot Password on login page instead
 
   const isActive = (href) => pathname === href;
 
@@ -36,21 +34,12 @@ const AdminLayout = ({ children }) => {
     setIsLoggingOut(true);
     try {
       console.log('🔐 Logout button clicked');
-      const result = await logout();
-      
-      if (result?.error) {
-        console.error('Logout returned error:', result.error);
-        // Wait a bit longer for error case before giving up
-        setTimeout(() => {
-          setIsLoggingOut(false);
-        }, 2000);
-      } else {
-        console.log('✅ Logout function completed, waiting for redirect...');
-        // Don't reset loading state - let the redirect happen
-        // The onAuthStateChange listener will handle the redirect
-      }
+      await logout();
+      // Don't reset loading state - redirect will happen automatically
+      console.log('✅ Logout initiated, redirect will happen automatically');
     } catch (error) {
       console.error('❌ Logout error in handleLogout:', error);
+      // Reset loading state on error
       setIsLoggingOut(false);
     }
   };
@@ -124,7 +113,7 @@ const AdminLayout = ({ children }) => {
               <span className="text-white" aria-hidden="true">✕</span>
             </button>
           </div>
-          <SidebarContent navigation={navigation} settingsNavigation={settingsNavigation} isActive={isActive} admin={admin} isLoggingOut={isLoggingOut} handleLogout={handleLogout} />
+          <SidebarContent navigation={navigation} isActive={isActive} admin={user} isLoggingOut={isLoggingOut} handleLogout={handleLogout} />
         </div>
       </div>
 
@@ -132,7 +121,7 @@ const AdminLayout = ({ children }) => {
       <div className="hidden md:flex md:flex-shrink-0">
         <div className="flex flex-col w-96 p-4">
           <div className="flex flex-col flex-1 rounded-2xl backdrop-blur-lg bg-gray-900/40 border border-white/10 shadow-2xl">
-            <SidebarContent navigation={navigation} settingsNavigation={settingsNavigation} isActive={isActive} admin={admin} isLoggingOut={isLoggingOut} handleLogout={handleLogout} />
+            <SidebarContent navigation={navigation} isActive={isActive} admin={user} isLoggingOut={isLoggingOut} handleLogout={handleLogout} />
           </div>
         </div>
       </div>
@@ -167,7 +156,7 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-const SidebarContent = ({ navigation, settingsNavigation, isActive, admin, isLoggingOut, handleLogout }) => {
+const SidebarContent = ({ navigation, isActive, admin, isLoggingOut, handleLogout }) => {
   return (
     <>
       <div className="flex items-center justify-center flex-shrink-0 px-4 py-4">
@@ -189,29 +178,6 @@ const SidebarContent = ({ navigation, settingsNavigation, isActive, admin, isLog
               {item.name}
             </Link>
           ))}
-          
-          {/* Settings section */}
-          <div className="pt-4 mt-4 border-t border-gray-700">
-            <p className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Settings
-            </p>
-            <div className="mt-2 space-y-1">
-              {settingsNavigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`${
-                    isActive(item.href)
-                      ? 'bg-white/20 backdrop-blur-md text-white border border-white/30'
-                      : 'text-gray-300 border border-transparent hover:bg-white/15 hover:backdrop-blur-md hover:border-white/20 hover:text-white'
-                  } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
-                >
-                  <item.icon className="mr-3 h-5 w-5 text-white" aria-hidden="true" />
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
         </nav>
       </div>
 

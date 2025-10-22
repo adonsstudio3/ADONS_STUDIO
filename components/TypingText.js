@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react'
 export default function TypingText({ text = '', speed = 60, className = '', onComplete = null, showCaret = true }){
   const [display, setDisplay] = useState('')
   const [idx, setIdx] = useState(0)
+  const [completed, setCompleted] = useState(false)
 
   useEffect(()=>{
     setDisplay('')
     setIdx(0)
+    setCompleted(false)
     let mounted = true
     const tick = () => {
       setIdx(i => {
@@ -21,8 +23,7 @@ export default function TypingText({ text = '', speed = 60, className = '', onCo
       setIdx(i => {
         if (i >= text.length) {
           clearInterval(interval)
-          // notify completion
-          if (typeof onComplete === 'function') onComplete()
+          setCompleted(true)
           return i
         }
         const next = i + 1
@@ -35,6 +36,13 @@ export default function TypingText({ text = '', speed = 60, className = '', onCo
       clearInterval(interval)
     }
   }, [text, speed])
+
+  // Handle completion callback in separate effect to avoid render phase updates
+  useEffect(() => {
+    if (completed && typeof onComplete === 'function') {
+      onComplete()
+    }
+  }, [completed, onComplete])
 
   return (
     <span className={className} aria-label={text}>

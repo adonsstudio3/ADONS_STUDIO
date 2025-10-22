@@ -10,20 +10,38 @@ export async function middleware(request) {
 
   // Only run middleware for admin API routes
   if (pathname.startsWith('/api/admin')) {
-    try {
-      const authResult = await verifySupabaseAuth(request);
-      if (!authResult.valid) {
-        return NextResponse.json({ error: 'Authentication required', message: authResult.error }, { status: 401 });
-      }
+    // Exclude password reset endpoints from authentication requirement
+    const publicAdminEndpoints = [
+      '/api/admin/request-password-reset',
+      '/api/admin/verify-reset-code',
+      '/api/admin/confirm-reset-password',
+      '/api/admin/reset-password'
+    ];
 
-      // Attach minimal user info to headers for downstream handlers if needed
-      const res = NextResponse.next();
-      if (authResult.user?.id) res.headers.set('x-supabase-user-id', authResult.user.id);
-      if (authResult.user?.role) res.headers.set('x-supabase-user-role', authResult.user.role);
-      return res;
-    } catch (err) {
-      console.error('Middleware auth error:', err);
-      return NextResponse.json({ error: 'Authentication failed' }, { status: 401 });
+    const isPublicEndpoint = publicAdminEndpoints.some(endpoint => pathname.startsWith(endpoint));
+
+    if (!isPublicEndpoint) {
+      try {
+        const authResult = await verifySupabaseAuth(request);
+        if (!authResult.valid) {
+          return NextResponse.json({ error: 'Authentication required', message: authResult.error }, { status: 401 });
+        }
+
+        // Attach minimal user info to headers for downstream handlers if needed
+        const res = NextResponse.next();
+        if (authResult.user?.id) {
+          res.headers.set('x-supabase-user-id', authResult.user.id);
+          res.headers.set('x-user-id', authResult.user.id); // For compatibility
+        }
+        if (authResult.user?.email) {
+          res.headers.set('x-user-email', authResult.user.email);
+        }
+        if (authResult.user?.role) res.headers.set('x-supabase-user-role', authResult.user.role);
+        return res;
+      } catch (err) {
+        console.error('Middleware auth error:', err);
+        return NextResponse.json({ error: 'Authentication failed' }, { status: 401 });
+      }
     }
   }
 

@@ -1,5 +1,7 @@
+
 import { NextResponse } from 'next/server';
-import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 const supabase = supabaseAdmin;
@@ -7,9 +9,12 @@ const supabase = supabaseAdmin;
 // GET - Fetch activity logs
 export async function GET(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-logs-get-${clientIP}`, 60, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);

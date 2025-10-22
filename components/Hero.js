@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
+import { usePublicHeroSections } from '../hooks/usePublicHeroSections'
 
 export default function Hero(){
   const videoRef = useRef(null)
@@ -16,9 +17,8 @@ export default function Hero(){
   const typingTimerRef = useRef(null)
   const descTimerRef = useRef(null)
 
-  // Hero sections state - start empty, load from database
-  const [heroSections, setHeroSections] = useState([])
-  const [loading, setLoading] = useState(true)
+  // Use public hero sections hook - polls every 60 seconds, updates automatically!
+  const { heroSections: rawHeroSections, loading, error: heroError } = usePublicHeroSections()
 
   // swipe support refs
   const pointerDownRef = useRef(false)
@@ -93,68 +93,16 @@ export default function Hero(){
     scheduleHideArrows(600)
   }
 
-  // Fetch hero sections from API
-  const fetchHeroSections = async () => {
-    try {
-      setLoading(true)
-      console.log('🔍 Fetching hero sections...')
-      
-      const response = await fetch(`/api/hero-sections`, {
-        // Allow browser to cache for 30 seconds
-        cache: 'default',
-        headers: {
-          'Accept': 'application/json'
-        }
-      })
-      const data = await response.json()
-      console.log('📥 Hero sections response:', data)
-      
-      if (data.cached) {
-        console.log('✅ Loaded from cache');
-      }
-        
-        // Convert database hero sections to playlist format
-        const dbHeroSections = data.hero_sections && data.hero_sections.length > 0 
-          ? data.hero_sections
-              .filter(section => section.is_active)
-              .map(section => ({
-                id: section.id,
-                title: section.title,
-                src: section.background_value,
-                interval: 0, // Use video's natural duration
-                type: section.background_type || 'image'
-              }))
-          : [];
-        
-        console.log('🎬 Final playlist:', dbHeroSections)
-        setHeroSections(dbHeroSections)
-      } catch (error) {
-        console.error('Failed to fetch hero sections:', error)
-        // Show empty state on error
-        setHeroSections([])
-      } finally {
-        setLoading(false)
-      }
-    }
-  
-  useEffect(() => {
-    fetchHeroSections()
-    
-    // Listen for admin data refresh events
-    const handleAdminRefresh = () => {
-      console.log('🔄 Hero component refreshing due to admin changes...');
-      fetchHeroSections();
-    };
-    
-    window.addEventListener('admin-data-refresh', handleAdminRefresh);
-    
-    return () => {
-      window.removeEventListener('admin-data-refresh', handleAdminRefresh);
-    };
-  }, [])
-
-  // Use heroSections as playlist
-  const playlist = heroSections
+  // Transform hero sections into playlist format
+  const playlist = useMemo(() => {
+    return rawHeroSections.map(section => ({
+      id: section.id,
+      title: section.title,
+      src: section.background_value,
+      interval: 0, // Use video's natural duration
+      type: section.background_type || 'image'
+    }));
+  }, [rawHeroSections])
 
   // load current video src without touching muted to avoid reloads on mute toggle
   useEffect(()=>{
@@ -342,7 +290,7 @@ export default function Hero(){
     else { v.pause(); setPlaying(false) }
   }
 
-  if (loading && !heroSections.length) {
+  if (loading && !rawHeroSections.length) {
     return (
       <section id="hero" className="relative h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center">
         {/* Loading spinner - clean and simple like project cards */}

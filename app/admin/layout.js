@@ -1,13 +1,17 @@
-import '../../styles/admin.css';
+'use client';
 
-export const metadata = {
-  title: 'Admin'
-};
+import '../../styles/admin.css';
+import { AuthProvider } from '../../contexts/AuthContext';
+import { AdminProvider } from '../../contexts/AdminContext';
 
 export default function AdminLayout({ children }) {
   return (
-    <div className="admin-root">
-      {children}
-    </div>
+    <AuthProvider>
+      <AdminProvider>
+        <div className="admin-root">
+          {children}
+        </div>
+      </AdminProvider>
+    </AuthProvider>
   );
 }

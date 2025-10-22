@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 const supabase = supabaseAdmin;
@@ -33,8 +34,9 @@ export async function GET(request) {
     if (endDate) query = query.lte('created_at', endDate);
     
     if (search) {
-      // Search in name, email, company, and message
-      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%,message.ilike.%${search}%`);
+      // Escape special characters to prevent SQL injection in ILIKE pattern
+      const sanitizedSearch = search.replace(/[%_\\]/g, '\\$&');
+      query = query.or(`name.ilike.%${sanitizedSearch}%,email.ilike.%${sanitizedSearch}%,company.ilike.%${sanitizedSearch}%,message.ilike.%${sanitizedSearch}%`);
     }
 
     // Get total count for pagination

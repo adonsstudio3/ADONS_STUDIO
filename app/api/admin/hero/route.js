@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 const supabase = supabaseAdmin;
@@ -7,9 +8,12 @@ const supabase = supabaseAdmin;
 // GET - Fetch hero sections for admin
 export async function GET(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-hero-get-${clientIP}`, 60, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);
@@ -57,9 +61,12 @@ export async function GET(request) {
 // POST - Create new hero section
 export async function POST(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-hero-post-${clientIP}`, 10, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const body = await request.json();
@@ -145,9 +152,12 @@ export async function POST(request) {
 // PUT - Update existing hero section
 export async function PUT(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-hero-put-${clientIP}`, 20, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const body = await request.json();
@@ -209,9 +219,12 @@ export async function PUT(request) {
 // DELETE - Delete hero section
 export async function DELETE(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-hero-delete-${clientIP}`, 5, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);

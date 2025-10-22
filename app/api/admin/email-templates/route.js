@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 const supabase = supabaseAdmin;

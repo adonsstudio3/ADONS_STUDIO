@@ -13,14 +13,16 @@ import imageMapping from '../utils/imageMapping.json';
  *   style={{ objectFit: 'cover' }}
  * />
  */
-export default function OptimizedImage({ 
-  name, 
-  width = 640, 
-  alt = '', 
-  className = '', 
+export default function OptimizedImage({
+  name,
+  width = 640,
+  alt = '',
+  className = '',
   style = {},
   fallbackWidth = 640,
-  ...props 
+  priority, // Extract priority to prevent it from being spread to img
+  sizes, // Extract sizes as it's handled differently
+  ...props
 }) {
   const [error, setError] = useState(false);
   

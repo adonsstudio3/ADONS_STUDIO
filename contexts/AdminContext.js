@@ -19,6 +19,7 @@ export const AdminProvider = ({ children }) => {
   const { user, session, isAuthenticated, isAdmin, loading: authLoading, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const authListenerSetupRef = React.useRef(false);
   // Do not capture the token at mount-time. We'll fetch the freshest session/token
   // immediately before each request to avoid sending expired tokens.
 
@@ -27,84 +28,81 @@ export const AdminProvider = ({ children }) => {
     setLoading(authLoading);
   }, [authLoading]);
 
-  // Listen for auth state changes and handle magic link redirects
+  // 🔒 Listen for auth state changes and handle magic link redirects
+  // IMPORTANT: Only set up listener ONCE to prevent redundant subscriptions
+  // Track tab visibility to prevent redirects when tab is not visible
+  const isTabVisibleRef = React.useRef(true);
+
   useEffect(() => {
-    console.log('🔐 Setting up auth state listener...');
-    
+    const handleVisibilityChange = () => {
+      isTabVisibleRef.current = document.visibilityState === 'visible';
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (authListenerSetupRef.current) return; // Already set up
+    authListenerSetupRef.current = true;
+
     const { data: authListener } = supabaseClient.auth.onAuthStateChange(
       async (event, currentSession) => {
-        console.log('🔔 Auth event:', event, 'Session:', !!currentSession);
-        
+        // 🔒 CRITICAL: Don't redirect if tab is not visible (prevents unwanted navigation on tab focus)
+        if (!isTabVisibleRef.current) {
+          return;
+        }
+
         if (event === 'SIGNED_IN') {
-          console.log('✅ User signed in successfully');
-          // Small delay to ensure state is updated
-          setTimeout(() => {
-            try {
-              router.push('/admin/dashboard');
-              router.refresh();
-            } catch (error) {
-              console.warn('Navigation error on SIGNED_IN:', error);
-            }
-          }, 500);
+          // Only redirect if user is NOT already on an admin page
+          // Let AdminProtectedRoute handle the routing
+          if (!window.location.pathname.startsWith('/admin/')) {
+            router.push('/admin/dashboard');
+          }
         }
-        
+
         if (event === 'SIGNED_OUT') {
-          console.log('👋 User signed out, redirecting to login...');
-          // Delay to ensure state is cleared and prevent navigation conflicts
-          // Use requestAnimationFrame to wait for next render cycle
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              try {
-                router.push('/admin/login');
-                // Don't refresh after logout - can cause issues
-              } catch (error) {
-                console.warn('Navigation error on SIGNED_OUT:', error);
-              }
-            }, 100);
-          });
-        }
-        
-        if (event === 'TOKEN_REFRESHED') {
-          console.log('🔄 Token refreshed successfully');
+          // Use replace instead of push to prevent back navigation
+          router.replace('/admin/login');
         }
       }
     );
 
     return () => {
-      console.log('🔌 Cleaning up auth listener');
       authListener?.subscription.unsubscribe();
     };
-  }, [router]);
+  }, []); // ✅ EMPTY dependency array - run only once on mount
 
   // Login is handled by AuthContext - AdminContext only provides admin utilities
 
   const logout = async () => {
     try {
-      console.log('🚪 Logout initiated...');
+      // Clear local storage immediately
+      localStorage.removeItem('admin_login_time');
+
+      // Clear session storage for password change (if exists)
+      sessionStorage.removeItem('password_change_step');
+      sessionStorage.removeItem('password_change_data');
+      sessionStorage.removeItem('password_change_otp_expires');
+
+      // Sign out from Supabase FIRST (security critical)
       await signOut();
-      // ✅ Don't redirect here - let onAuthStateChange listener handle it
-      // The listener will receive SIGNED_OUT event and redirect
-      console.log('✅ Logout successful, waiting for onAuthStateChange to redirect...');
-      return { error: null };
+
+      // Use Next.js router for smooth redirect (no full page reload)
+      router.replace('/admin/login');
     } catch (error) {
-      console.error('❌ Logout error:', error);
-      // If signOut fails critically, still try to redirect
-      // But use a longer timeout to avoid conflicts with listener
-      setTimeout(() => {
-        try {
-          router.push('/admin/login');
-        } catch (navError) {
-          console.error('Failed to navigate on logout error:', navError);
-        }
-      }, 1000);
-      return { error };
+      console.error('Logout error:', error);
+      // On error, still redirect but user might still be logged in
+      // The login page will check auth and redirect back if still authenticated
+      router.replace('/admin/login');
     }
   };
 
   // Force refresh function to update all data
   const forceRefresh = () => {
     try {
-      console.log('🔄 Forcing app-wide refresh...');
       router.refresh();
       // Trigger a custom event for components to refresh their data
       window.dispatchEvent(new CustomEvent('admin-data-refresh'));
@@ -114,10 +112,6 @@ export const AdminProvider = ({ children }) => {
   };
 
   const apiCall = async (url, options = {}) => {
-    const requestId = Math.random().toString(36).substr(2, 9);
-    
-    console.log(`[${requestId}] API Call Started:`, { url, method: options.method || 'GET' });
-    
     try {
       // Build headers but do NOT rely on a token captured earlier. Get latest session.
       const headers = {
@@ -127,32 +121,30 @@ export const AdminProvider = ({ children }) => {
 
       // Get freshest token from supabase client just before request
       try {
-        const { data } = await supabaseClient.auth.getSession();
+        const { data, error: sessionError } = await supabaseClient.auth.getSession();
+
+        // If session retrieval failed, throw error to trigger re-login
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+          throw new Error('Session expired. Please login again.');
+        }
+
         const freshToken = data?.session?.access_token || null;
-        console.log(`[${requestId}] Session check:`, { 
-          hasSession: !!data?.session, 
-          hasToken: !!freshToken,
-          userEmail: data?.session?.user?.email 
-        });
-        
+
         if (!headers['Authorization'] && freshToken) {
           headers['Authorization'] = `Bearer ${freshToken}`;
-          console.log(`[${requestId}] Added auth header for ${options.body instanceof FormData ? 'FormData' : 'JSON'} request`);
         } else if (!freshToken) {
-          console.warn(`[${requestId}] No auth token available!`);
-        } else if (headers['Authorization']) {
-          console.log(`[${requestId}] Auth header already present`);
+          console.warn('No auth token available - session may have expired');
+          throw new Error('No valid session found. Please login again.');
         }
       } catch (err) {
-        console.warn(`[${requestId}] Could not read fresh session token:`, err?.message || err);
+        console.error('Session token error:', err?.message || err);
+        // If it's a session error, redirect to login
+        if (err?.message?.includes('session') || err?.message?.includes('Session')) {
+          window.location.href = '/admin/login';
+        }
+        throw err;
       }
-
-      console.log(`[${requestId}] Final headers being sent:`, {
-        hasAuth: !!headers['Authorization'],
-        authPrefix: headers['Authorization']?.substring(0, 20) + '...',
-        contentType: headers['Content-Type'],
-        isFormData: options.body instanceof FormData
-      });
 
       let response = await fetch(url, {
         ...options,
@@ -161,7 +153,7 @@ export const AdminProvider = ({ children }) => {
 
       // If token expired and server returned 401, try once to refresh/read session and retry.
       if (response.status === 401) {
-        console.warn(`[${requestId}] Received 401, attempting one re-check of session and retry`);
+        console.warn('Received 401, attempting session refresh and retry');
         try {
           const { data: refreshed } = await supabaseClient.auth.getSession();
           const freshToken2 = refreshed?.session?.access_token || null;
@@ -173,7 +165,7 @@ export const AdminProvider = ({ children }) => {
             });
           }
         } catch (retryErr) {
-          console.warn(`[${requestId}] Retry after 401 failed to get fresh token:`, retryErr?.message || retryErr);
+          console.warn('Retry after 401 failed to get fresh token:', retryErr?.message || retryErr);
         }
       }
 
@@ -184,27 +176,25 @@ export const AdminProvider = ({ children }) => {
           const errorData = await response.json();
           errorMessage = errorData.error || errorData.message || errorMessage;
           errorDetails = errorData.details;
-          console.log(`[${requestId}] Error response:`, errorData);
         } catch (e) {
-          console.log(`[${requestId}] Could not parse error response as JSON`);
+          // Could not parse error response
         }
-        
+
         const fullError = errorDetails ? `${errorMessage}: ${errorDetails}` : errorMessage;
         throw new Error(fullError);
       }
 
       const data = await response.json();
-      console.log(`[${requestId}] API Call Successful:`, data);
-      
+
       // NOTE: Removed auto-refresh after mutations!
       // Realtime subscriptions now handle live updates automatically
       // This prevents unnecessary page reloads and loading states when switching browser tabs
       // If you need to manually refresh, call forceRefresh() explicitly
-      
+
       return data;
 
     } catch (error) {
-      console.error(`[${requestId}] API Call Failed:`, error);
+      console.error('API Call Failed:', error);
       throw error;
     }
   };
@@ -248,8 +238,7 @@ export const AdminProvider = ({ children }) => {
   };
 
   const value = {
-    admin: user, // Use AuthContext user data
-    user: user, // Alias for consistency
+    user: user, // Single source of truth for user data from AuthContext
     session: session, // Current session object (includes access_token)
     loading: authLoading,
     isAuthenticated: isAuthenticated && isAdmin,

@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { useRealtimeProjects } from '../../hooks/useRealtimeProjects';
+import { supabaseClient } from '../../lib/supabase';
+import ModalPortal from '../ModalPortal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export default function ProjectManager() {
   // Use realtime hook for automatic updates
@@ -13,6 +16,9 @@ export default function ProjectManager() {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { apiCall, logActivity } = useAdmin();
 
   const [formData, setFormData] = useState({
@@ -29,7 +35,6 @@ export default function ProjectManager() {
 
   // Sync realtime projects to local state (no more manual loadProjects!)
   useEffect(() => {
-    console.log('🔄 Syncing realtime projects:', realtimeProjects.length);
     setProjects(realtimeProjects);
     setLoading(realtimeLoading);
     if (realtimeError) {
@@ -37,87 +42,71 @@ export default function ProjectManager() {
     }
   }, [realtimeProjects, realtimeLoading, realtimeError]);
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    };
+  }, [showModal]);
+
   // Remove old loadProjects function - not needed anymore!
   const loadProjects = async () => {
     try {
       setLoading(true);
-      console.log('🔄 Loading projects...');
       const response = await apiCall('/api/admin/projects', { method: 'GET' });
-      console.log('✅ Projects loaded:', response);
-      console.log('📊 Response structure:', {
-        hasData: !!response.data,
-        hasProjects: !!response.projects,
-        dataType: typeof response.data,
-        projectsType: typeof response.projects,
-        dataLength: response.data?.length,
-        projectsLength: response.projects?.length
-      });
-      
+
       // Handle both response.data and response.projects
       const projectsList = response.projects || response.data || [];
-      console.log('📋 Setting projects:', projectsList);
       setProjects(projectsList);
       setError('');
     } catch (error) {
-      console.error('❌ Error loading projects:', error);
+      console.error('Error loading projects:', error);
       setError('Failed to load projects: ' + error.message);
     } finally {
-      console.log('🏁 Setting loading to false');
       setLoading(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    console.log('🚀 Form submission started');
-    console.log('Form data:', formData);
-    
+
     // Basic validation
     if (!formData.title.trim()) {
       setError('Title is required');
       return;
     }
-    
+
     try {
       setError(''); // Clear any previous errors
       setUploading(true); // Show uploading state
-      
+
       // Step 1: Upload thumbnail if provided (new file selected)
       let thumbnailUrl = null;
       if (formData.thumbnail) {
-        console.log('📷 Step 1: Starting thumbnail upload...');
-        console.log('🔍 Thumbnail file check:', {
-          hasFile: !!formData.thumbnail,
-          fileName: formData.thumbnail?.name,
-          fileType: formData.thumbnail?.type,
-          fileSize: formData.thumbnail?.size
-        });
-        
         try {
-          console.log('🚀 About to call uploadThumbnail...');
           setError('Uploading thumbnail...'); // Show progress to user
           thumbnailUrl = await uploadThumbnail(formData.thumbnail);
-          console.log('✅ Thumbnail uploaded successfully:', thumbnailUrl);
           setError('Saving project data...'); // Update progress
-          console.log('🔄 Setting progress message: saving project...');
         } catch (uploadError) {
-          console.error('❌ Thumbnail upload failed:', uploadError);
+          console.error('Thumbnail upload failed:', uploadError);
           setError('Failed to upload thumbnail: ' + uploadError.message);
           setUploading(false); // Stop uploading state
           return;
         }
       } else if (editingProject && thumbnailPreview) {
         // When editing and no new file selected, keep existing thumbnail
-        console.log('ℹ️ No new thumbnail selected, keeping existing thumbnail');
         thumbnailUrl = editingProject.thumbnail_image_url || editingProject.thumbnail_url;
-        console.log('🔗 Using existing thumbnail URL:', thumbnailUrl);
-      } else {
-        console.log('ℹ️ No thumbnail selected, skipping upload step');
       }
-      
+
       // Step 2: Submit project data with thumbnail URL
-      console.log('📝 Step 2: Submitting project data...');
       const submitData = {
         title: formData.title,
         description: formData.subtitle || formData.title, // API expects description
@@ -136,12 +125,8 @@ export default function ProjectManager() {
       const url = '/api/admin/projects';
       const method = editingProject ? 'PUT' : 'POST';
 
-      console.log('🌐 Making API call to:', url, 'with method:', method);
-      console.log('📦 Sending data:', submitData);
-      console.log('🕐 About to call project API...');
-
       // Add timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Request timeout - API took too long to respond')), 30000)
       );
 
@@ -156,45 +141,27 @@ export default function ProjectManager() {
 
       const result = await Promise.race([apiPromise, timeoutPromise]);
 
-      console.log('✅ Project API call successful:', result);
-      
-      // Check if response has the expected data structure
-      if (!result || (!result.data && !result.project)) {
-        console.warn('⚠️ Unexpected API response structure:', result);
-      }
-
-      console.log('🔄 About to log activity...');
-
       // Log activity (with error handling)
       try {
         await logActivity(
-          editingProject ? 'update' : 'create', 
-          'project', 
+          editingProject ? 'update' : 'create',
+          'projects',
           editingProject ? editingProject.id : result.data?.id || result.project?.id,
           `Project "${formData.title}" ${editingProject ? 'updated' : 'created'}`
         );
       } catch (logError) {
-        console.warn('⚠️ Failed to log activity (non-critical):', logError);
+        console.warn('Failed to log activity (non-critical):', logError);
       }
 
-      console.log('🎉 Project saved successfully, refreshing form and list');
-      
       resetForm();
       setShowModal(false);
       setError(''); // Clear any error messages
       // Realtime will automatically update the list - no manual refresh needed!
-      console.log('✅ Project saved - realtime will update the list');
 
     } catch (error) {
-      console.error('❌ Error saving project:', error);
-      console.error('Error details:', {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      });
+      console.error('Error saving project:', error);
       setError('Failed to save project: ' + error.message);
     } finally {
-      console.log('🏁 Finished form submission, setting uploading to false');
       setUploading(false);
     }
   };
@@ -213,24 +180,33 @@ export default function ProjectManager() {
     setShowModal(true);
   };
 
-  const handleDelete = async (projectId) => {
-    if (!window.confirm('Are you sure you want to delete this project?')) return;
+  const handleDelete = (project) => {
+    setProjectToDelete(project);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!projectToDelete) return;
 
     try {
-      console.log('🗑️ Deleting project:', projectId);
-      const url = `/api/admin/projects?id=${projectId}`;
-      console.log('🔗 DELETE URL:', url);
-      
-      const response = await apiCall(url, { method: 'DELETE' });
-      console.log('📥 DELETE response:', response);
-      
-      await logActivity('delete', 'project', projectId, 'Project deleted');
+      setIsDeleting(true);
+      const url = `/api/admin/projects?id=${projectToDelete.id}`;
+      await apiCall(url, { method: 'DELETE' });
+      await logActivity('delete', 'projects', projectToDelete.id, 'Project deleted');
+      setDeleteConfirmOpen(false);
+      setProjectToDelete(null);
       // Realtime will automatically update the list!
-      console.log('✅ Project deleted successfully - realtime will update');
     } catch (error) {
-      console.error('❌ Delete failed:', error);
+      console.error('Delete failed:', error);
       setError('Failed to delete project: ' + error.message);
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setProjectToDelete(null);
   };
 
   const resetForm = () => {
@@ -280,56 +256,41 @@ export default function ProjectManager() {
   };
 
   const uploadThumbnail = async (file) => {
-    console.log('🔍 Starting thumbnail upload process...');
-    console.log('📁 File details:', {
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      lastModified: file.lastModified
-    });
-
     const uploadFormData = new FormData();
     uploadFormData.append('file', file);
     uploadFormData.append('bucket', 'project-assets');
     uploadFormData.append('folder', 'thumbnails');
 
-    console.log('📤 FormData created, making API call...');
-    console.log('🔗 Upload URL: /api/admin/upload');
-    console.log('⏱️ Starting API call at:', new Date().toISOString());
-    
     try {
-      console.log('🚀 About to execute apiCall...');
-      console.log('🔍 apiCall function exists?', typeof apiCall);
-      console.log('🔍 apiCall is:', apiCall);
-      console.log('🔍 FormData contents:', {
-        hasFile: uploadFormData.has('file'),
-        hasBucket: uploadFormData.has('bucket'),
-        hasFolder: uploadFormData.has('folder')
-      });
-      
-      console.log('🎯 Calling apiCall now...');
-      
-      const result = await apiCall('/api/admin/upload', {
+      // Get fresh auth token for upload
+      const { data, error: sessionError } = await supabaseClient.auth.getSession();
+      if (sessionError || !data?.session?.access_token) {
+        throw new Error('No valid session for upload');
+      }
+
+      // Direct fetch for FormData (don't use apiCall for multipart)
+      const response = await fetch('/api/admin/upload', {
         method: 'POST',
-        body: uploadFormData
+        body: uploadFormData,
+        headers: {
+          'Authorization': `Bearer ${data.session.access_token}`
+        }
       });
 
-      console.log('⏱️ API call completed at:', new Date().toISOString());
-      console.log('✅ Upload API response:', result);
-      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+
       if (!result || !result.data || !result.data.url) {
         throw new Error('Invalid upload response: ' + JSON.stringify(result));
       }
-      
-      console.log('🎯 Final thumbnail URL:', result.data.url);
+
       return result.data.url;
     } catch (error) {
-      console.error('💥 Upload thumbnail error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      });
+      console.error('Upload thumbnail error:', error);
       throw error;
     }
   };
@@ -344,23 +305,13 @@ export default function ProjectManager() {
       <div className="flex flex-col justify-center items-center h-64">
         <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-white font-medium drop-shadow-lg">Loading projects...</p>
-        <button
-          onClick={() => {
-            console.log('🔄 Retry button clicked');
-            loadProjects();
-          }}
-          className="mt-4 px-4 py-2 backdrop-blur-sm bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all border border-white/30 drop-shadow-lg"
-        >
-          Retry Loading
-        </button>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-white drop-shadow-lg">Project Manager</h1>
+      <div className="flex justify-end items-center">
         <button
           onClick={() => setShowModal(true)}
           className="backdrop-blur-sm bg-blue-500/30 border border-blue-400/30 text-white px-4 py-2 rounded-lg hover:bg-blue-500/40 transition-all drop-shadow-lg"
@@ -423,7 +374,7 @@ export default function ProjectManager() {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(project.id)}
+                    onClick={() => handleDelete(project)}
                     className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
                   >
                     Delete
@@ -436,8 +387,9 @@ export default function ProjectManager() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <ModalPortal>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 pointer-events-auto" onClick={() => setShowModal(false)}>
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-xl font-bold mb-4">
               {editingProject ? 'Edit Project' : 'Add New Project'}
             </h2>
@@ -565,7 +517,19 @@ export default function ProjectManager() {
             </form>
           </div>
         </div>
+        </ModalPortal>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={deleteConfirmOpen}
+        title="Delete Project?"
+        message="Are you sure you want to delete this project? This action cannot be undone."
+        itemName={projectToDelete?.title}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

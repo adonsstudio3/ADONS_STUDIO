@@ -1,18 +1,21 @@
 /**
- * 🔄 Realtime Projects Hook
- * 
- * Subscribes to Supabase realtime updates for projects table
- * Automatically updates UI when projects are created, updated, or deleted
+ * 🔄 Realtime Showreels Hook (ADMIN)
+ *
+ * Subscribes to Supabase realtime updates for showreels table
+ * Automatically updates admin UI when showreels are created, updated, or deleted
+ *
+ * Uses authenticated supabaseClient for admin operations
+ * Updates: INSTANT (< 1 second via WebSocket)
  */
 
 import { useState, useEffect, useRef } from 'react';
 import { supabaseClient } from '@/lib/supabase';
 
 // Global subscription cache to prevent re-subscribing on navigation
-const projectsSubscriptionRef = { subscription: null, initialized: false };
+const showreelsSubscriptionRef = { subscription: null, initialized: false };
 
-export const useRealtimeProjects = (initialProjects = []) => {
-  const [projects, setProjects] = useState(initialProjects);
+export const useRealtimeShowreels = (initialShowreels = []) => {
+  const [showreels, setShowreels] = useState(initialShowreels);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const isMountedRef = useRef(true);
@@ -31,61 +34,62 @@ export const useRealtimeProjects = (initialProjects = []) => {
     const setupRealtime = async () => {
       try {
         // If subscription already exists, just sync state and return
-        if (projectsSubscriptionRef.initialized) {
-          console.log('📚 Reusing existing projects subscription');
+        if (showreelsSubscriptionRef.initialized) {
+          console.log('📚 Reusing existing showreels subscription');
           // Just fetch current data
           const { data, error: fetchError } = await supabaseClient
-            .from('projects')
+            .from('showreels')
             .select('*')
-            .order('order_index', { ascending: true })
+            .order('is_featured', { ascending: false })
             .order('created_at', { ascending: false });
 
           if (fetchError) throw fetchError;
           if (isMountedRef.current) {
-            setProjects(data || []);
+            setShowreels(data || []);
             setLoading(false);
           }
           return;
         }
 
-        console.log('🎬 Setting up admin projects subscription...');
+        console.log('🎬 Setting up admin showreels subscription...');
 
         // Initial fetch
         const { data, error: fetchError } = await supabaseClient
-          .from('projects')
+          .from('showreels')
           .select('*')
-          .order('order_index', { ascending: true })
+          .order('is_featured', { ascending: false })
           .order('created_at', { ascending: false });
 
         if (fetchError) throw fetchError;
 
         if (!isMountedRef.current) return;
 
-        setProjects(data || []);
+        setShowreels(data || []);
         setLoading(false);
 
-        console.log('✅ Fetched admin projects:', data?.length || 0);
+        console.log('✅ Fetched admin showreels:', data?.length || 0);
 
         // Create realtime subscription with unique channel ID
-        const channelId = `admin-projects-${Date.now()}`;
-        projectsSubscriptionRef.subscription = supabaseClient
+        const channelId = `admin-showreels-${Date.now()}`;
+        showreelsSubscriptionRef.subscription = supabaseClient
           .channel(channelId)
           .on(
             'postgres_changes',
             {
               event: '*', // Listen to INSERT, UPDATE, DELETE
               schema: 'public',
-              table: 'projects'
+              table: 'showreels'
             },
             (payload) => {
+              console.log('⚡ Showreel realtime event:', payload.eventType);
 
               if (!isMountedRef.current) return;
 
               switch (payload.eventType) {
                 case 'INSERT':
-                  setProjects(prev => {
+                  setShowreels(prev => {
                     // Check if already exists (prevent duplicates)
-                    if (prev.some(p => p.id === payload.new.id)) {
+                    if (prev.some(s => s.id === payload.new.id)) {
                       return prev;
                     }
                     return [payload.new, ...prev];
@@ -93,14 +97,14 @@ export const useRealtimeProjects = (initialProjects = []) => {
                   break;
 
                 case 'UPDATE':
-                  setProjects(prev =>
-                    prev.map(p => p.id === payload.new.id ? payload.new : p)
+                  setShowreels(prev =>
+                    prev.map(s => s.id === payload.new.id ? payload.new : s)
                   );
                   break;
 
                 case 'DELETE':
-                  setProjects(prev =>
-                    prev.filter(p => p.id !== payload.old.id)
+                  setShowreels(prev =>
+                    prev.filter(s => s.id !== payload.old.id)
                   );
                   break;
 
@@ -110,14 +114,14 @@ export const useRealtimeProjects = (initialProjects = []) => {
           )
           .subscribe((status) => {
             if (status === 'SUBSCRIBED') {
-              console.log('✅ Admin projects subscription active');
+              console.log('✅ Admin showreels subscription active');
             }
           });
 
-        projectsSubscriptionRef.initialized = true;
+        showreelsSubscriptionRef.initialized = true;
 
       } catch (err) {
-        console.error('❌ Realtime setup error:', err);
+        console.error('❌ Showreels realtime setup error:', err);
         if (isMountedRef.current) {
           setError(err.message);
           setLoading(false);
@@ -134,5 +138,5 @@ export const useRealtimeProjects = (initialProjects = []) => {
     };
   }, []);
 
-  return { projects, loading, error };
+  return { showreels, loading, error };
 };

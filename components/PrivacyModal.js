@@ -114,9 +114,9 @@ const PrivacyModal = () => {
             {expanded[2] && (
               <div className="px-4 pb-3 text-gray-300 text-sm space-y-3">
                 <div>
-                  <p><strong>Your Control:</strong> You can withdraw consent for analytics tracking at any time using the consent banner when it appears on the website.</p>
+                  <p><strong>Your Control:</strong> You can withdraw consent for analytics tracking at any time using the consent banner.</p>
                   <p><strong>Data Retention:</strong> Analytics data is automatically deleted according to Google Analytics retention settings (26 months maximum).</p>
-                  <p><strong>No Cookies:</strong> We use Google Tag Manager's cookieless tracking methods where possible.</p>
+                  <p><strong>No Marketing:</strong> We do not use advertising pixels, remarketing, or any marketing tracking. Only Google Analytics for understanding site usage.</p>
                 </div>
                 
                 {/* Change Consent Button for Footer */}
@@ -124,9 +124,8 @@ const PrivacyModal = () => {
                   <p className="text-white font-semibold mb-2">Manage Your Consent:</p>
                   <button
                     onClick={() => {
-                      // Clear main consent storage used by ConsentProvider and legacy keys
+                      // Clear unified consent storage (all systems now use this key)
                       localStorage.removeItem('adons-consent-preferences');
-                      localStorage.removeItem('adons-analytics-consent');
                       localStorage.removeItem('adons-consent-timestamp');
                       setShowModal(false);
                       // Dispatch event to show consent banner (ConsentProvider will react)

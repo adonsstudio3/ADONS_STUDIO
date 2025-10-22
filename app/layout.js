@@ -6,6 +6,11 @@ import { AuthProvider } from '../contexts/AuthContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata = {
   title: 'ADONS Studio - Professional VFX & Animation Studio',
   description: 'Professional VFX, Animation & Post-Production studio dedicated to delivering high-quality visual effects, 3D animation, and creative solutions with on-time delivery and industry-standard excellence.',
@@ -63,7 +68,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -76,14 +81,10 @@ export default function RootLayout({ children }) {
           referrerPolicy="no-referrer"
         />
       </head>
-      <body className={inter.className}>
-        <AuthProvider>
-          <AdminProvider>
-            <ConsentProvider>
-              {children}
-            </ConsentProvider>
-          </AdminProvider>
-        </AuthProvider>
+      <body className={inter.className} suppressHydrationWarning>
+        <ConsentProvider>
+          {children}
+        </ConsentProvider>
       </body>
     </html>
   );

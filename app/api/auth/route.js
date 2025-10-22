@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 
 // ✅ SUPABASE AUTH - No custom JWT needed!
 // Supabase handles JWT creation, validation, and security automatically
@@ -8,11 +9,16 @@ import { rateLimit, handleError, createResponse } from '@/lib/api-security';
 // POST - Admin login with Supabase Auth
 export async function POST(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`auth-login-${clientIP}`, 5, 300000)) { // 5 attempts per 5 minutes
-      return NextResponse.json({ 
-        error: 'Too many login attempts. Please try again later.' 
-      }, { status: 429 });
+    // Apply hybrid rate limiting (Redis + in-memory fallback)
+    const rateLimitResult = await applyRateLimit(request, 'auth');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many login attempts. Please try again later.' },
+        { 
+          status: 429,
+          headers: rateLimitResult.headers
+        }
+      );
     }
 
     const { email, password } = await request.json();

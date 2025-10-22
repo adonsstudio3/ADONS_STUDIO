@@ -4,11 +4,12 @@ import { useConsent } from './ConsentProvider';
 import analytics, { init as analyticsInit } from '../lib/analytics';
 
 const ConsentBanner = () => {
-  const { 
-    showConsentBanner, 
-    acceptAllConsent, 
+  const {
+    showConsentBanner,
+    acceptAllConsent,
     acceptNecessaryOnly,
-    setShowConsentBanner 
+    declineAllConsent,
+    setShowConsentBanner
   } = useConsent();
   // Optionally get GTM ID from env
   const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || '';
@@ -87,9 +88,8 @@ const ConsentBanner = () => {
                   🍪 We respect your privacy
                 </h3>
                 <p className="text-gray-300 text-sm leading-relaxed max-w-2xl">
-                  We use cookies and similar technologies to enhance your experience, 
-                  analyze site usage, and provide personalized content. You can manage 
-                  your preferences or accept all cookies.{' '}
+                  We use cookies to enhance your experience and analyze site usage with Google Analytics.
+                  No marketing or advertising tracking. You can manage your preferences or accept analytics.{' '}
                   <button
                     className="inline underline text-yellow-300 hover:text-yellow-200 focus:outline-none bg-transparent border-0"
                     style={{ background: 'none', padding: 0, margin: 0, fontSize: 'inherit', fontWeight: 'inherit', textDecoration: 'underline', cursor: 'pointer', verticalAlign: 'baseline', lineHeight: 'inherit' }}
@@ -102,26 +102,26 @@ const ConsentBanner = () => {
               </div>
               <div className="flex flex-col sm:flex-row gap-3 min-w-fit">
                 <button
-                  onClick={acceptNecessaryOnly}
+                  onClick={declineAllConsent}
                   className="
-                    px-4 py-2 text-sm font-medium text-white 
-                    border border-white/20 rounded-lg
-                    hover:border-white/40 hover:bg-white/5
-                    transition-all duration-200
-                  "
-                >
-                  Necessary Only
-                </button>
-                <button
-                  onClick={acceptNecessaryOnly}
-                  className="
-                    px-4 py-2 text-sm font-medium text-white 
+                    px-4 py-2 text-sm font-medium text-white
                     border border-red-400/40 rounded-lg
                     hover:border-red-400/60 hover:bg-red-500/10
                     transition-all duration-200
                   "
                 >
                   Decline All
+                </button>
+                <button
+                  onClick={acceptNecessaryOnly}
+                  className="
+                    px-4 py-2 text-sm font-medium text-white
+                    border border-white/20 rounded-lg
+                    hover:border-white/40 hover:bg-white/5
+                    transition-all duration-200
+                  "
+                >
+                  Necessary Only
                 </button>
                 <button
                   onClick={() => {

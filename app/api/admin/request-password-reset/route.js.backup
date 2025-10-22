@@ -8,10 +8,7 @@ const supabaseAdmin = createClient(
 
 // Helper to hash OTP codes before storing
 function hashCode(code) {
-  const secret = process.env.OTP_SECRET || process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error('OTP_SECRET or JWT_SECRET environment variable is required for password reset');
-  }
+  const secret = process.env.OTP_SECRET || process.env.JWT_SECRET || 'fallback-secret-change-in-production';
   return crypto.createHmac('sha256', secret).update(code).digest('hex');
 }
 

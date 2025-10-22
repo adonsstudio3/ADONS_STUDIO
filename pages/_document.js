@@ -13,11 +13,11 @@ export default function Document(){
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
         
         {/* Favicon and Icons */}
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+        <link rel="manifest" href="/favicon/site.webmanifest" />
         
         {/* DNS Prefetch for External Resources */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -53,13 +53,8 @@ export default function Document(){
           />
         )}
         {/* Load Satoshi via Fontshare per ITF EULA (serves fonts from their servers) */}
-        {/* Load Satoshi via Fontshare (non-blocking preload pattern) */}
-        <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=satoshi@500,600,700&display=swap" as="style" onLoad="this.rel='stylesheet'" />
-        <noscript>
-          <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@500,600,700&display=swap" />
-        </noscript>
-        {/* Viewport meta for responsive mobile layout */}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@500,600,700&display=swap" />
         {/* Initial loading overlay: Black screen until preloader video shows */}
         <style dangerouslySetInnerHTML={{ __html: `
           /* Keep everything hidden and black until preloader is ready */

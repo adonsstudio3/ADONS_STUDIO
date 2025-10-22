@@ -8,7 +8,10 @@ const supabaseAdmin = createClient(
 
 // Helper to hash OTP codes (must match request-password-reset)
 function hashCode(code) {
-  const secret = process.env.OTP_SECRET || process.env.JWT_SECRET || 'fallback-secret-change-in-production';
+  const secret = process.env.OTP_SECRET || process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('OTP_SECRET or JWT_SECRET environment variable is required for password reset');
+  }
   return crypto.createHmac('sha256', secret).update(code).digest('hex');
 }
 
@@ -113,15 +116,12 @@ export async function POST(request) {
       return Response.json({ error: 'Invalid verification code or email' }, { status: 400 });
     }
 
-    // Hash the provided code for comparison
-    const hashedCode = hashCode(verificationCode);
-
-    // Verify OTP code (compare hashed version)
+    // Verify OTP code (plain text comparison)
     const { data: otpData, error: otpError } = await supabaseAdmin
       .from('password_verification_codes')
       .select('*')
       .eq('user_id', user.id)
-      .eq('code', hashedCode) // Compare hashed codes
+      .eq('code', verificationCode) // Compare plain codes
       .eq('used', false)
       .single();
 

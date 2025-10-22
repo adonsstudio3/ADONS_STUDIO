@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { PhotoIcon } from '@heroicons/react/24/outline';
+import ModalPortal from '../ModalPortal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export default function MediaLibrary() {
   const [mediaFiles, setMediaFiles] = useState([]);
@@ -10,6 +12,9 @@ export default function MediaLibrary() {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingMedia, setEditingMedia] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [mediaToDelete, setMediaToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { apiCall, logActivity } = useAdmin();
   const hasLoadedRef = useRef(false); // Track if we've already loaded data on mount
 
@@ -82,6 +87,21 @@ export default function MediaLibrary() {
     }
   };
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    };
+  }, [showModal]);
+
   const handleEdit = (media) => {
     setEditingMedia(media);
     setFormData({
@@ -95,18 +115,33 @@ export default function MediaLibrary() {
     setShowModal(true);
   };
 
-  const handleDelete = async (media) => {
-    if (!confirm('Are you sure you want to delete this media file?')) return;
+  const handleDelete = (media) => {
+    setMediaToDelete(media);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!mediaToDelete) return;
     
     try {
-      await apiCall(`/api/admin/media/${media.id}`, {
+      setIsDeleting(true);
+      await apiCall(`/api/admin/media/${mediaToDelete.id}`, {
         method: 'DELETE'
       });
-      logActivity('delete', 'media_files', media.id, { filename: media.filename });
+      logActivity('delete', 'media_files', mediaToDelete.id, { filename: mediaToDelete.filename });
+      setDeleteConfirmOpen(false);
+      setMediaToDelete(null);
       loadMediaFiles();
     } catch (error) {
       setError(error.message);
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setMediaToDelete(null);
   };
 
   const formatFileSize = (bytes) => {
@@ -244,9 +279,10 @@ export default function MediaLibrary() {
       )}
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+      <ModalPortal>
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 pointer-events-auto" onClick={() => setShowModal(false)}>
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-medium text-gray-900">
                 {editingMedia ? 'Edit Media File' : 'Upload Media File'}
@@ -352,7 +388,19 @@ export default function MediaLibrary() {
             </form>
           </div>
         </div>
-      )}
+        )}
+      </ModalPortal>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={deleteConfirmOpen}
+        title="Delete Media File?"
+        message="Are you sure you want to delete this media file? This action cannot be undone."
+        itemName={mediaToDelete?.filename}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import OptimizedImage from './OptimizedImage';
 export default function Footer() {
   const handleContactClick = (type) => {
     // Add visual feedback for contact links
-    console.log(`Opening ${type}...`);
   };
 
   return (
@@ -133,21 +132,19 @@ export default function Footer() {
         <div className={styles.container}>
           <div className={styles.footerBottomContent}>
             <div className={styles.footerCopyright}>
-              <p>&copy; {new Date().getFullYear()} ADONS Studio — All rights reserved</p>
+              <p>&copy; {new Date().getFullYear()} ADONS Studio. All rights reserved.</p>
             </div>
             <div className={styles.footerLegal}>
-              <a href="#terms" onClick={(e)=>{ 
-                e.preventDefault(); 
-                console.log('Terms and Conditions clicked - dispatching event'); 
-                window.dispatchEvent(new Event('openTermsModal')); 
-                document.dispatchEvent(new Event('openTermsModal')); 
+              <a href="#terms" onClick={(e)=>{
+                e.preventDefault();
+                window.dispatchEvent(new Event('openTermsModal'));
+                document.dispatchEvent(new Event('openTermsModal'));
               }} className={styles.footerLegalLink}>Terms and Conditions</a>
               <span className={styles.footerLegalSeparator}>|</span>
-              <a href="#privacy" onClick={(e)=>{ 
-                e.preventDefault(); 
-                console.log('Privacy Policy clicked - dispatching event'); 
-                window.dispatchEvent(new Event('openPrivacyModal')); 
-                document.dispatchEvent(new Event('openPrivacyModal')); 
+              <a href="#privacy" onClick={(e)=>{
+                e.preventDefault();
+                window.dispatchEvent(new Event('openPrivacyModal'));
+                document.dispatchEvent(new Event('openPrivacyModal'));
               }} className={styles.footerLegalLink}>Privacy Policy</a>
             </div>
           </div>

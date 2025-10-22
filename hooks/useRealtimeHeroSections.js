@@ -1,18 +1,21 @@
 /**
- * 🔄 Realtime Projects Hook
- * 
- * Subscribes to Supabase realtime updates for projects table
- * Automatically updates UI when projects are created, updated, or deleted
+ * 🔄 Realtime Hero Sections Hook (ADMIN)
+ *
+ * Subscribes to Supabase realtime updates for hero_sections table
+ * Automatically updates admin UI when hero sections are created, updated, or deleted
+ *
+ * Uses authenticated supabaseClient for admin operations
+ * Updates: INSTANT (< 1 second via WebSocket)
  */
 
 import { useState, useEffect, useRef } from 'react';
 import { supabaseClient } from '@/lib/supabase';
 
 // Global subscription cache to prevent re-subscribing on navigation
-const projectsSubscriptionRef = { subscription: null, initialized: false };
+const heroSectionsSubscriptionRef = { subscription: null, initialized: false };
 
-export const useRealtimeProjects = (initialProjects = []) => {
-  const [projects, setProjects] = useState(initialProjects);
+export const useRealtimeHeroSections = (initialHeroSections = []) => {
+  const [heroSections, setHeroSections] = useState(initialHeroSections);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const isMountedRef = useRef(true);
@@ -31,28 +34,28 @@ export const useRealtimeProjects = (initialProjects = []) => {
     const setupRealtime = async () => {
       try {
         // If subscription already exists, just sync state and return
-        if (projectsSubscriptionRef.initialized) {
-          console.log('📚 Reusing existing projects subscription');
+        if (heroSectionsSubscriptionRef.initialized) {
+          console.log('📚 Reusing existing hero sections subscription');
           // Just fetch current data
           const { data, error: fetchError } = await supabaseClient
-            .from('projects')
+            .from('hero_sections')
             .select('*')
             .order('order_index', { ascending: true })
             .order('created_at', { ascending: false });
 
           if (fetchError) throw fetchError;
           if (isMountedRef.current) {
-            setProjects(data || []);
+            setHeroSections(data || []);
             setLoading(false);
           }
           return;
         }
 
-        console.log('🎬 Setting up admin projects subscription...');
+        console.log('🎬 Setting up admin hero sections subscription...');
 
         // Initial fetch
         const { data, error: fetchError } = await supabaseClient
-          .from('projects')
+          .from('hero_sections')
           .select('*')
           .order('order_index', { ascending: true })
           .order('created_at', { ascending: false });
@@ -61,31 +64,32 @@ export const useRealtimeProjects = (initialProjects = []) => {
 
         if (!isMountedRef.current) return;
 
-        setProjects(data || []);
+        setHeroSections(data || []);
         setLoading(false);
 
-        console.log('✅ Fetched admin projects:', data?.length || 0);
+        console.log('✅ Fetched admin hero sections:', data?.length || 0);
 
-        // Create realtime subscription with unique channel ID
-        const channelId = `admin-projects-${Date.now()}`;
-        projectsSubscriptionRef.subscription = supabaseClient
+        // Subscribe to realtime changes with unique channel ID
+        const channelId = `admin-hero-sections-${Date.now()}`;
+        heroSectionsSubscriptionRef.subscription = supabaseClient
           .channel(channelId)
           .on(
             'postgres_changes',
             {
               event: '*', // Listen to INSERT, UPDATE, DELETE
               schema: 'public',
-              table: 'projects'
+              table: 'hero_sections'
             },
             (payload) => {
+              console.log('⚡ Hero section realtime event:', payload.eventType);
 
               if (!isMountedRef.current) return;
 
               switch (payload.eventType) {
                 case 'INSERT':
-                  setProjects(prev => {
+                  setHeroSections(prev => {
                     // Check if already exists (prevent duplicates)
-                    if (prev.some(p => p.id === payload.new.id)) {
+                    if (prev.some(h => h.id === payload.new.id)) {
                       return prev;
                     }
                     return [payload.new, ...prev];
@@ -93,14 +97,14 @@ export const useRealtimeProjects = (initialProjects = []) => {
                   break;
 
                 case 'UPDATE':
-                  setProjects(prev =>
-                    prev.map(p => p.id === payload.new.id ? payload.new : p)
+                  setHeroSections(prev =>
+                    prev.map(h => h.id === payload.new.id ? payload.new : h)
                   );
                   break;
 
                 case 'DELETE':
-                  setProjects(prev =>
-                    prev.filter(p => p.id !== payload.old.id)
+                  setHeroSections(prev =>
+                    prev.filter(h => h.id !== payload.old.id)
                   );
                   break;
 
@@ -110,14 +114,14 @@ export const useRealtimeProjects = (initialProjects = []) => {
           )
           .subscribe((status) => {
             if (status === 'SUBSCRIBED') {
-              console.log('✅ Admin projects subscription active');
+              console.log('✅ Admin hero sections subscription active');
             }
           });
 
-        projectsSubscriptionRef.initialized = true;
+        heroSectionsSubscriptionRef.initialized = true;
 
       } catch (err) {
-        console.error('❌ Realtime setup error:', err);
+        console.error('❌ Hero sections realtime setup error:', err);
         if (isMountedRef.current) {
           setError(err.message);
           setLoading(false);
@@ -134,5 +138,5 @@ export const useRealtimeProjects = (initialProjects = []) => {
     };
   }, []);
 
-  return { projects, loading, error };
+  return { heroSections, loading, error };
 };

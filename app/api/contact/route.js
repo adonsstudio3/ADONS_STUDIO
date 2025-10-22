@@ -1,14 +1,25 @@
 import { NextResponse } from 'next/server';
-import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 const supabase = supabaseAdmin;
 
 export async function POST(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`contact-post-${clientIP}`, 3, 300000)) { // 3 submissions per 5 minutes
-      return NextResponse.json({ error: 'Too many contact submissions. Please try again later.' }, { status: 429 });
+    // Apply rate limiting (hybrid: cache → Redis → fallback)
+    const rateLimitResult = await applyRateLimit(request, 'public');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Too many contact submissions. Please try again later.',
+          retryAfter: rateLimitResult.retryAfter
+        },
+        {
+          status: 429,
+          headers: rateLimitResult.headers
+        }
+      );
     }
 
     const body = await request.json();
@@ -28,6 +39,9 @@ export async function POST(request) {
     // Get request metadata
     const userAgent = request.headers.get('user-agent') || '';
     const referrer = request.headers.get('referer') || '';
+    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+                     request.headers.get('x-real-ip') ||
+                     'unknown';
 
     // Save to database
     const { data: submission, error: dbError } = await supabase
@@ -50,25 +64,29 @@ export async function POST(request) {
       .single();
 
     if (dbError) {
-      console.error('Database error:', dbError);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Database error:', dbError);
+      }
       return handleError(dbError, 'Failed to save contact submission');
     }
 
     // Send email notification
     try {
       await sendEmailNotification(submission);
-      
+
       // Update submission to mark email as sent
       await supabase
         .from('contact_submissions')
-        .update({ 
-          email_sent: true, 
-          email_sent_at: new Date().toISOString() 
+        .update({
+          email_sent: true,
+          email_sent_at: new Date().toISOString()
         })
         .eq('id', submission.id);
 
     } catch (emailError) {
-      console.error('Email sending failed:', emailError);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Email sending failed:', emailError);
+      }
       // Don't fail the request if email fails - submission is still saved
     }
 
@@ -78,7 +96,9 @@ export async function POST(request) {
     }, 201);
 
   } catch (error) {
-    console.error('Contact form error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Contact form error:', error);
+    }
     return handleError(error, 'Failed to process contact submission');
   }
 }
@@ -93,7 +113,9 @@ async function sendEmailNotification(submission) {
     .single();
 
   if (!template) {
-    console.warn('No email template found for contact_notification');
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('No email template found for contact_notification');
+    }
     return;
   }
 
@@ -156,27 +178,37 @@ async function sendEmailNotification(submission) {
       }
 
       const result = await response.json();
-      console.log('✅ Email sent successfully via Resend:', result.id);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('✅ Email sent successfully via Resend:', result.id);
+      }
     } catch (error) {
-      console.error('❌ Failed to send email:', error);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('❌ Failed to send email:', error);
+      }
       throw error;
     }
   } else {
-    console.warn('⚠️ RESEND_API_KEY not configured - email not sent');
-    console.log('📧 Email would be sent:', {
-      to: emailData.to,
-      subject: emailData.subject,
-      from: submission.email
-    });
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('⚠️ RESEND_API_KEY not configured - email not sent');
+      console.log('📧 Email would be sent:', {
+        to: emailData.to,
+        subject: emailData.subject,
+        from: submission.email
+      });
+    }
   }
 }
 
 // GET endpoint to fetch contact submissions (admin only)
 export async function GET(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`contact-get-${clientIP}`, 30, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    // Apply rate limiting (hybrid: cache → Redis → fallback)
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);
@@ -200,7 +232,7 @@ export async function GET(request) {
       return handleError(error, 'Failed to fetch contact submissions');
     }
 
-    return createResponse({ 
+    return createResponse({
       submissions: data,
       total: data.length,
       offset,

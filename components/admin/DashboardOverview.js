@@ -17,26 +17,36 @@ export default function DashboardOverview() {
   // Use realtime hook for activity logs - no more manual fetching!
   const { logs: recentActivity, loading: logsLoading, error: logsError } = useRealtimeActivityLogs(10);
 
-  const loadDashboardData = useCallback(async () => {
+  const loadDashboardData = useCallback(async (retryCount = 0) => {
     try {
       setLoading(true);
       setError(''); // Clear any previous errors
-      
-      console.log('📊 Loading dashboard stats...');
+
+      console.log('📊 Loading dashboard stats... (attempt', retryCount + 1, ')');
       const data = await apiCall('/api/admin/dashboard/stats');
       console.log('✅ Dashboard stats received:', data);
-      
+
       setStats(data.stats);
       // Activity logs now come from realtime hook - no need to set them here
     } catch (error) {
       console.error('❌ Dashboard loading error:', error);
+
+      // If it's an auth error and we haven't retried yet, try once more after a brief delay
+      if (error.message.includes('Authentication required') && retryCount === 0) {
+        console.log('🔄 Auth error detected, retrying in 1 second...');
+        setTimeout(() => {
+          loadDashboardData(1);
+        }, 1000);
+        return;
+      }
+
       // Provide more user-friendly error messages
       if (error.message.includes('backendUrl')) {
         setError('Configuration error: Backend URL not properly configured. Please check your environment variables.');
       } else if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
         setError('Unable to connect to the backend server. Please ensure the backend is running or try refreshing the page.');
-      } else if (error.message.includes('Session expired')) {
-        setError('Your session has expired. Please login again.');
+      } else if (error.message.includes('Session expired') || error.message.includes('Authentication required')) {
+        setError('Your session has expired. Please refresh the page or login again.');
       } else {
         setError(`Dashboard loading failed: ${error.message}`);
       }
@@ -75,9 +85,18 @@ export default function DashboardOverview() {
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
             </svg>
           </div>
-          <div className="ml-3">
+          <div className="ml-3 flex-1">
             <h3 className="text-sm font-medium text-white drop-shadow">Error loading dashboard</h3>
             <p className="mt-1 text-sm text-white/90 drop-shadow">{error}</p>
+            <button
+              onClick={() => {
+                hasLoadedRef.current = false;
+                loadDashboardData(0);
+              }}
+              className="mt-3 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              Retry Loading
+            </button>
           </div>
         </div>
       </div>

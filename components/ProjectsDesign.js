@@ -5,6 +5,7 @@ import styles from '../styles/ProjectsDesign.module.css';
 import OptimizedImage from './OptimizedImage';
 import analytics, { consentGiven } from '../lib/analytics';
 import { useRealtimePublicProjects } from '../hooks/useRealtimePublicProjects';
+import { usePublicShowreels } from '../hooks/usePublicShowreels';
 
 // Internal error boundary hook for catching and handling errors within the component
 const useErrorHandler = () => {
@@ -54,7 +55,11 @@ const ProjectsDesign = () => {
   // Use realtime projects hook - no more manual API fetching!
   const { projects, loading: projectsLoading, error: projectsError } = useRealtimePublicProjects();
 
+  // Use public showreels hook - polls every 60 seconds, updates automatically!
+  const { featuredShowreel, loading: showreelLoading } = usePublicShowreels();
+
   console.log('🔄 Projects from realtime:', projects.length);
+  console.log('🎥 Featured showreel from polling:', featuredShowreel?.title || 'None');
 
   // If there's an internal error, show error UI
   if (error) {
@@ -95,40 +100,31 @@ const ProjectsDesign = () => {
 
   // Realtime handles project fetching automatically - no manual fetch needed!
   // Projects are updated in real-time via useRealtimePublicProjects hook
-
-  // Fetch a lightweight public showreel payload (fast)
-  const [publicShowreel, setPublicShowreel] = useState(null);
-  useEffect(() => {
-    let mounted = true;
-    fetch('/api/public/showreel')
-      .then(res => res.json())
-      .then(data => {
-        if (!mounted) return;
-        setPublicShowreel(data?.showreel || null);
-      })
-      .catch(err => {
-        console.warn('Failed to load public showreel:', err);
-      });
-    return () => { mounted = false; };
-  }, []);
+  // Showreels are updated every 60s via usePublicShowreels hook
 
   // Handle project card click - opens project URL in new tab
-  const handleProjectClick = useCallback((project) => {
-    console.log('🖱️ Card clicked:', {
+  const handleProjectClick = useCallback((project, event) => {
+    console.log('Card clicked:', {
       title: project.title,
       hasUrl: !!project.project_url,
       url: project.project_url
     });
-    
+
     if (!project.project_url) {
-      console.warn('⚠️ Project has no URL:', project.title);
+      console.warn('Project has no URL:', project.title);
       return;
     }
 
     try {
-      console.log('🚀 Opening URL:', project.project_url);
+      console.log('Opening URL:', project.project_url);
       window.open(project.project_url, '_blank', 'noopener,noreferrer');
-      safeAnalyticsEvent('project_click', { 
+
+      // Remove focus from the card to prevent stuck hover state
+      if (event && event.currentTarget) {
+        event.currentTarget.blur();
+      }
+
+      safeAnalyticsEvent('project_click', {
         project_id: project.id,
         project_title: project.title,
         project_url: project.project_url,
@@ -136,7 +132,7 @@ const ProjectsDesign = () => {
         platform: project.platform
       });
     } catch (error) {
-      console.error('❌ Failed to open project URL:', error);
+      console.error('Failed to open project URL:', error);
     }
   }, []);
 
@@ -256,8 +252,8 @@ const ProjectsDesign = () => {
         </div>
         <div className={styles.heroContent}>
           <h2 className="heroTitle">Portfolio & Showreel</h2>
-          <p className="heroSubtitle" style={{ color: '#FFD700', fontSize: '1.25rem', fontWeight: '400', textAlign: 'center', marginBottom: '1.2rem' }}>
-            {typedSubtitle || "Bringing Imagination To Life"}
+          <p className="heroSubtitle" style={{ color: '#FFD700', fontSize: '1.25rem', fontWeight: '400', textAlign: 'center', marginBottom: '1.2rem', minHeight: '1.875rem' }}>
+            {typedSubtitle}
           </p>
           <p className={styles.heroDescription + ' ' + (descVisible ? styles.showDesc : '')}>
             {/* Removed hero description as requested */}
@@ -291,7 +287,7 @@ const ProjectsDesign = () => {
                   height="562"
                   src={(() => {
                     try {
-                      const active = publicShowreel;
+                      const active = featuredShowreel;
                       if (!active || !active.video_url) return 'about:blank';
                       const m = active.video_url.match(/(?:v=|youtu\.be\/)([^&\n?#]+)/);
                       const id = m ? m[1] : null;
@@ -339,11 +335,11 @@ const ProjectsDesign = () => {
             <article
               key={project.id}
               className={`${styles.projectCard} ${project.project_url ? styles.clickableCard : ''}`}
-              onClick={project.project_url ? () => handleProjectClick(project) : undefined}
+              onClick={project.project_url ? (e) => handleProjectClick(project, e) : undefined}
               onKeyDown={project.project_url ? (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  handleProjectClick(project);
+                  handleProjectClick(project, e);
                 }
               } : undefined}
               tabIndex={project.project_url ? 0 : -1}

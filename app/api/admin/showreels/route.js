@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { rateLimit, validateRequest, handleError, createResponse } from '@/lib/api-security';
+import { validateRequest, handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 // Use admin client for server-side operations (bypasses RLS)
@@ -20,9 +21,12 @@ const showreelSchema = z.object({
 
 export async function GET(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`showreels-get-${clientIP}`, 20, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);
@@ -56,9 +60,12 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`showreels-post-${clientIP}`, 5, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const body = await request.json();
@@ -120,9 +127,12 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`showreels-put-${clientIP}`, 10, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const body = await request.json();
@@ -160,17 +170,29 @@ export async function PUT(request) {
 
 export async function DELETE(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`showreels-delete-${clientIP}`, 5, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    // Apply Redis-based rate limiting
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
+    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
 
     if (!id) {
       return NextResponse.json({ error: 'Showreel ID is required' }, { status: 400 });
     }
+
+    // Get showreel details before deletion
+    const { data: showreel } = await supabase
+      .from('showreels')
+      .select('video_url')
+      .eq('id', id)
+      .single();
 
     const { error } = await supabase
       .from('showreels')
@@ -179,6 +201,24 @@ export async function DELETE(request) {
 
     if (error) {
       return handleError(error, 'Failed to delete showreel');
+    }
+
+    // Log the action (non-blocking - don't fail if logging fails)
+    try {
+      await supabase
+        .from('activity_logs')
+        .insert([{
+          action: 'delete',
+          entity_type: 'showreels',
+          entity_id: id,
+          details: { 
+            video_url: showreel?.video_url
+          },
+          ip_address: clientIP,
+          user_agent: request.headers.get('user-agent') || ''
+        }]);
+    } catch (logError) {
+      // Failed to log activity (non-critical)
     }
 
     return createResponse({ message: 'Showreel deleted successfully' });

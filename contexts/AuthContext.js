@@ -16,6 +16,10 @@ import { supabaseClient, supabaseAdmin } from '@/lib/supabase';
 
 const AuthContext = createContext({});
 
+// 🔐 Global auth readiness flag - persists across component remounts
+// Once auth is fully initialized, it stays true for the session
+let authReadyRef = { isReady: false };
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -30,6 +34,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userRole, setUserRole] = useState('user');
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Track if auth listener has been set up to prevent duplicate listeners
+  const authListenerSetupRef = React.useRef(false);
+  
+  // Track tab visibility to prevent state updates when tab is not visible
+  const isTabVisibleRef = React.useRef(true);
+
+  // 📱 Track tab visibility to prevent state updates when switching tabs
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      isTabVisibleRef.current = document.visibilityState === 'visible';
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -37,7 +60,6 @@ export const AuthProvider = ({ children }) => {
     // Set a timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       if (mounted) {
-        console.warn('Auth initialization timed out, setting loading to false');
         setLoading(false);
       }
     }, 5000); // 5 second timeout
@@ -66,9 +88,8 @@ export const AuthProvider = ({ children }) => {
                 .eq('email', session.user.email)
                 .eq('is_active', true)
                 .maybeSingle();
-              
+
               if (adminError) {
-                console.warn('Admin user check failed, granting admin by email:', adminError);
                 // If table doesn't exist or query fails, grant admin based on email alone
                 setUserRole('super_admin');
                 setIsAdmin(true);
@@ -88,14 +109,13 @@ export const AuthProvider = ({ children }) => {
                   }]);
                 
                 if (insertError) {
-                  console.warn('Could not create admin user record, granting admin anyway:', insertError);
+                  // Could not create admin user record, continue anyway
                 }
                 
                 setUserRole('super_admin');
                 setIsAdmin(true);
               }
             } catch (error) {
-              console.warn('Error checking admin status, granting admin by email:', error);
               // Grant admin access based on email even if database check fails
               setUserRole('super_admin');
               setIsAdmin(true);
@@ -117,103 +137,117 @@ export const AuthProvider = ({ children }) => {
         if (mounted) {
           clearTimeout(timeoutId);
           setLoading(false);
+          setIsInitialized(true);
         }
       }
     };
 
     getInitialSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
-        
-        setSession(session);
-        setUser(session?.user || null);
-        
-        if (session?.user) {
-          // Check if user is admin by looking in admin_users table
-          if (session.user.email === 'adonsstudio3@gmail.com') {
-            try {
-              const { data: adminUser, error: adminError } = await supabaseClient
-                .from('admin_users')
-                .select('role, is_active')
-                .eq('email', session.user.email)
-                .eq('is_active', true)
-                .maybeSingle();
-              
-              if (adminError) {
-                console.warn('Admin user check failed, granting admin by email:', adminError);
-                // If table doesn't exist or query fails, grant admin based on email alone
-                setUserRole('super_admin');
-                setIsAdmin(true);
-                
-                if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-                  localStorage.setItem('admin_login_time', Date.now().toString());
-                  console.log('Admin login via Supabase auth (table error, email-based), 24-hour session started');
-                }
-              } else if (adminUser) {
-                setUserRole(adminUser.role);
-                setIsAdmin(true);
-                
-                // Store login time for 24-hour session management
-                if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-                  localStorage.setItem('admin_login_time', Date.now().toString());
-                  console.log('Admin login via Supabase auth, 24-hour session started');
+    // ✅ IMPORTANT: Only set up ONE auth listener across the entire app lifecycle
+    // Prevent multiple listeners from accumulating which causes unnecessary re-renders
+    if (!authListenerSetupRef.current) {
+      authListenerSetupRef.current = true;
+
+      const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
+        async (event, session) => {
+          // 🔒 CRITICAL: Only update state on IMPORTANT auth events
+          // Ignore TOKEN_REFRESHED and other events that happen during navigation
+          // ALSO: Ignore ALL auth events when tab is not visible (prevents refresh on tab switch)
+          if (!isTabVisibleRef.current) {
+            return;
+          }
+
+          if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+            
+            setSession(session);
+            setUser(session?.user || null);
+            
+            if (session?.user) {
+              // Check if user is admin by looking in admin_users table
+              if (session.user.email === 'adonsstudio3@gmail.com') {
+                try {
+                  const { data: adminUser, error: adminError } = await supabaseClient
+                    .from('admin_users')
+                    .select('role, is_active')
+                    .eq('email', session.user.email)
+                    .eq('is_active', true)
+                    .maybeSingle();
+                  
+                  if (adminError) {
+                    // If table doesn't exist or query fails, grant admin based on email alone
+                    setUserRole('super_admin');
+                    setIsAdmin(true);
+
+                    if (event === 'SIGNED_IN') {
+                      localStorage.setItem('admin_login_time', Date.now().toString());
+                    }
+                  } else if (adminUser) {
+                    setUserRole(adminUser.role);
+                    setIsAdmin(true);
+                    
+                    // Store login time for 24-hour session management
+                    if (event === 'SIGNED_IN') {
+                      localStorage.setItem('admin_login_time', Date.now().toString());
+                    }
+                  } else {
+                    // Try to create admin user record if it doesn't exist
+                    const { error: insertError } = await supabaseClient
+                      .from('admin_users')
+                      .insert([{
+                        id: session.user.id,
+                        email: session.user.email,
+                        full_name: 'Adons Studio Admin',
+                        role: 'super_admin',
+                        is_active: true
+                      }]);
+                    
+                    if (insertError) {
+                      // Could not create admin user record, continue anyway
+                    }
+                    
+                    setUserRole('super_admin');
+                    setIsAdmin(true);
+                    
+                    // Store login time for 24-hour session management
+                    if (event === 'SIGNED_IN') {
+                      localStorage.setItem('admin_login_time', Date.now().toString());
+                    }
+                  }
+                } catch (error) {
+                  // Grant admin access based on email even if database check fails
+                  setUserRole('super_admin');
+                  setIsAdmin(true);
+
+                  if (event === 'SIGNED_IN') {
+                    localStorage.setItem('admin_login_time', Date.now().toString());
+                  }
                 }
               } else {
-                // Try to create admin user record if it doesn't exist
-                const { error: insertError } = await supabaseClient
-                  .from('admin_users')
-                  .insert([{
-                    id: session.user.id,
-                    email: session.user.email,
-                    full_name: 'Adons Studio Admin',
-                    role: 'super_admin',
-                    is_active: true
-                  }]);
-                
-                if (insertError) {
-                  console.warn('Could not create admin user record, granting admin anyway:', insertError);
-                }
-                
-                setUserRole('super_admin');
-                setIsAdmin(true);
-                
-                // Store login time for 24-hour session management
-                if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-                  localStorage.setItem('admin_login_time', Date.now().toString());
-                  console.log('Admin login via Supabase auth (new user), 24-hour session started');
-                }
+                setUserRole('user');
+                setIsAdmin(false);
               }
-            } catch (error) {
-              console.warn('Error checking admin status, granting admin by email:', error);
-              // Grant admin access based on email even if database check fails
-              setUserRole('super_admin');
-              setIsAdmin(true);
-              
-              if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-                localStorage.setItem('admin_login_time', Date.now().toString());
-                console.log('Admin login via Supabase auth (catch error, email-based), 24-hour session started');
-              }
+            } else {
+              setUserRole('user');
+              setIsAdmin(false);
             }
-          } else {
-            setUserRole('user');
-            setIsAdmin(false);
+            
+            setLoading(false);
           }
-        } else {
-          setUserRole('user');
-          setIsAdmin(false);
+          // Silently ignore TOKEN_REFRESHED and other events during navigation
         }
-        
-        setLoading(false);
-      }
-    );
+      );
+
+      return () => {
+        mounted = false;
+        clearTimeout(timeoutId);
+        subscription?.unsubscribe();
+      };
+    }
 
     return () => {
       mounted = false;
       clearTimeout(timeoutId);
-      subscription?.unsubscribe();
     };
   }, []);
 
@@ -282,7 +316,6 @@ export const AuthProvider = ({ children }) => {
       if (data?.session) {
         // Supabase will handle the session automatically via onAuthStateChange
         // Just return success - the session will be set by the auth listener
-        console.log('Admin login successful via Supabase');
         return { data: data.session, error: null };
       } else {
         throw new Error('No session returned from authentication');
@@ -361,10 +394,10 @@ export const AuthProvider = ({ children }) => {
       setSession(null);
       setIsAdmin(false);
       setUserRole('user');
-      
+
+
       // Clear admin session timer
       localStorage.removeItem('admin_login_time');
-      console.log('Admin logout completed, session cleared');
 
       return { error: null };
     } catch (error) {
@@ -464,33 +497,41 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAdmin,
     userRole,
-    
+    isInitialized,
+
     // Authentication methods
     signUpWithEmail,
     signInWithEmail,
     signInAsAdmin,
     signOut,
-    
+
     // OAuth methods
     signInWithGoogle,
     signInWithGitHub,
     signInWithDiscord,
     signInWithTwitter,
-    
+
     // Account management
     resetPassword,
     updatePassword,
     updateProfile,
-    
+
     // Utilities
     getUserClaims,
     hasPermission,
-    
+
     // Computed properties
     isAuthenticated: !!user,
     isLoading: loading,
+    authReadyRef, // 🔐 Global auth readiness flag
   };
 
+  // 🎯 Mark auth as ready once user is authenticated on first check
+  if (isInitialized && user && isAdmin) {
+    authReadyRef.isReady = true;
+  }
+
+  // Render children immediately without blocking - auth will update asynchronously
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

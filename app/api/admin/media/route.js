@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 // Use admin client for server-side operations (bypasses RLS)
@@ -7,9 +8,12 @@ const supabase = supabaseAdmin;
 
 export async function GET(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`media-get-${clientIP}`, 20, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);
@@ -41,9 +45,12 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`media-post-${clientIP}`, 10, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
     // Diagnostic: log incoming content-type to help debug multipart issues
     const incomingContentType = request.headers.get('content-type') || '(none)';
@@ -189,11 +196,16 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`media-delete-${clientIP}`, 5, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    // Apply Redis-based rate limiting
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
+    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
 
@@ -230,6 +242,25 @@ export async function DELETE(request) {
 
     if (deleteError) {
       return handleError(deleteError, 'Failed to delete media');
+    }
+
+    // Log the action (non-blocking - don't fail if logging fails)
+    try {
+      await supabase
+        .from('activity_logs')
+        .insert([{
+          action: 'delete',
+          entity_type: 'media_files',
+          entity_id: id,
+          details: { 
+            file_name: mediaData?.file_name,
+            bucket: bucketName
+          },
+          ip_address: clientIP,
+          user_agent: request.headers.get('user-agent') || ''
+        }]);
+    } catch (logError) {
+      // Failed to log activity (non-critical)
     }
 
     return createResponse({ message: 'Media deleted successfully' });

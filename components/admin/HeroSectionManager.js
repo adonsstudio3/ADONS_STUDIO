@@ -3,15 +3,23 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { FilmIcon } from '@heroicons/react/24/outline';
+import { useRealtimeHeroSections } from '../../hooks/useRealtimeHeroSections';
+import ModalPortal from '../ModalPortal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export default function HeroSectionManager() {
+  // Use realtime hook for automatic instant updates!
+  const { heroSections: realtimeHeroSections, loading: realtimeLoading, error: realtimeError } = useRealtimeHeroSections();
+
   const [heroSections, setHeroSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingHero, setEditingHero] = useState(null);
-  const { apiCall, logActivity, forceRefresh } = useAdmin();
-  const hasLoadedRef = useRef(false); // Track if data has been loaded
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [heroToDelete, setHeroToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { apiCall, logActivity } = useAdmin();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -23,28 +31,29 @@ export default function HeroSectionManager() {
 
   const [uploading, setUploading] = useState(false);
 
-  const loadHeroSections = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await apiCall('/api/admin/hero-sections');
-      setHeroSections(data.hero_sections || []);
-    } catch (error) {
-      console.error('Hero sections loading error:', error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [apiCall]);
-
-  // Load hero sections only once on mount - prevent reload on remounts
-  // This prevents loading state when switching between admin tabs
+  // Sync realtime hero sections to local state (no more manual loading!)
   useEffect(() => {
-    if (!hasLoadedRef.current) {
-      console.log('🚀 First mount - loading hero sections');
-      hasLoadedRef.current = true;
-      loadHeroSections();
+    setHeroSections(realtimeHeroSections);
+    setLoading(realtimeLoading);
+    if (realtimeError) {
+      setError(realtimeError);
     }
-  }, []);
+  }, [realtimeHeroSections, realtimeLoading, realtimeError]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    };
+  }, [showModal]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -191,7 +200,7 @@ export default function HeroSectionManager() {
       });
       setShowModal(false);
       setEditingHero(null);
-      loadHeroSections();
+      // Realtime will automatically update the list!
     } catch (error) {
       console.error('Hero section submission error:', error);
       console.error('Error details:', {
@@ -222,23 +231,60 @@ export default function HeroSectionManager() {
     setShowModal(true);
   };
 
-  const handleDelete = async (hero) => {
-    if (!confirm('Are you sure you want to delete this hero section?')) return;
-    
+  const handleDelete = (hero) => {
+    setHeroToDelete(hero);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleToggleActive = async (hero) => {
     try {
-      await apiCall(`/api/admin/hero-sections?id=${hero.id}`, {
-        method: 'DELETE'
+      const updatedHero = { id: hero.id, is_active: !hero.is_active };
+      console.log('🔄 Toggling hero active status:', updatedHero);
+      
+      const response = await apiCall('/api/admin/hero-sections', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedHero)
       });
-      logActivity('delete', 'hero_sections', hero.id, { title: hero.title });
       
-      // Immediately update the local state to remove the deleted item
-      setHeroSections(prev => prev.filter(item => item.id !== hero.id));
-      
-      // Small delay before reloading to ensure database consistency
-      setTimeout(() => loadHeroSections(), 500);
+      console.log('✅ Toggle response:', response);
+      logActivity('update', 'hero_sections', hero.id, { 
+        is_active: !hero.is_active
+      });
     } catch (error) {
+      console.error('❌ Toggle error:', error);
       setError(error.message);
     }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!heroToDelete) return;
+    
+    try {
+      setIsDeleting(true);
+      await apiCall(`/api/admin/hero-sections?id=${heroToDelete.id}`, {
+        method: 'DELETE'
+      });
+      logActivity('delete', 'hero_sections', heroToDelete.id, { title: heroToDelete.title });
+      
+      // Immediately update the local state to remove the deleted item
+      setHeroSections(prev => prev.filter(item => item.id !== heroToDelete.id));
+      
+      // Realtime will automatically update the list!
+      
+      setDeleteConfirmOpen(false);
+      setHeroToDelete(null);
+    } catch (error) {
+      setError(error.message);
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setHeroToDelete(null);
   };
 
   if (loading) {
@@ -292,6 +338,16 @@ export default function HeroSectionManager() {
 
             <div className="flex space-x-2">
               <button
+                onClick={() => handleToggleActive(hero)}
+                className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  hero.is_active 
+                    ? 'bg-green-50 text-green-600 hover:bg-green-100' 
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {hero.is_active ? 'Deactivate' : 'Activate'}
+              </button>
+              <button
                 onClick={() => handleEdit(hero)}
                 className="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
               >
@@ -320,15 +376,16 @@ export default function HeroSectionManager() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">
-                {editingHero ? 'Edit Hero Section' : 'Add Hero Section'}
-              </h3>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <ModalPortal>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 pointer-events-auto" onClick={() => setShowModal(false)}>
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">
+                  {editingHero ? 'Edit Hero Section' : 'Add Hero Section'}
+                </h3>
+              </div>
+              
+              <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
                 <input
@@ -458,7 +515,18 @@ export default function HeroSectionManager() {
             </form>
           </div>
         </div>
+        </ModalPortal>
       )}
+      
+      <DeleteConfirmationModal
+        isOpen={deleteConfirmOpen}
+        title="Delete Hero Section?"
+        message="Are you sure you want to delete this hero section? This action cannot be undone."
+        itemName={heroToDelete?.title}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

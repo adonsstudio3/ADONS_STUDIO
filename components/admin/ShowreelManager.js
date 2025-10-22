@@ -4,50 +4,52 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { useRouter } from 'next/navigation';
 import { PlayCircleIcon } from '@heroicons/react/24/outline';
+import { useRealtimeShowreels } from '../../hooks/useRealtimeShowreels';
+import ModalPortal from '../ModalPortal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export default function ShowreelManager() {
+  // Use realtime hook for automatic instant updates!
+  const { showreels: realtimeShowreels, loading: realtimeLoading, error: realtimeError } = useRealtimeShowreels();
+
   const [showreels, setShowreels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingShowreel, setEditingShowreel] = useState(null);
-  const { apiCall, logActivity, forceRefresh } = useAdmin();
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [showreelToDelete, setShowreelToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { apiCall, logActivity } = useAdmin();
   const router = useRouter();
-  const hasLoadedRef = useRef(false); // Track if we've already loaded data
 
   const [formData, setFormData] = useState({
     video_url: ''
   });
 
-  const loadShowreels = useCallback(async () => {
-    try {
-      setLoading(true);
-      console.log('Loading showreels...');
-      const response = await apiCall('/api/admin/showreels');
-      console.log('Showreels API response:', response);
-      
-      // Handle both old and new response formats
-      const showreelsData = response.showreels || response.data?.showreels || response.data || [];
-      setShowreels(Array.isArray(showreelsData) ? showreelsData : []);
-      setError('');
-      console.log('Showreels loaded successfully:', showreelsData.length, 'items');
-    } catch (error) {
-      console.error('Showreels loading error:', error);
-      setError(`Failed to load showreels: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  }, [apiCall]);
-
-  // Load showreels only once on mount - prevent remounts from reloading
-  // This prevents loading state when switching between admin tabs
+  // Sync realtime showreels to local state (no more manual loading!)
   useEffect(() => {
-    if (!hasLoadedRef.current) {
-      console.log('🚀 First mount - loading showreels');
-      hasLoadedRef.current = true;
-      loadShowreels();
+    setShowreels(realtimeShowreels);
+    setLoading(realtimeLoading);
+    if (realtimeError) {
+      setError(realtimeError);
     }
-  }, []);
+  }, [realtimeShowreels, realtimeLoading, realtimeError]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    };
+  }, [showModal]);
 
   const extractYouTubeId = (url) => {
     if (!url || typeof url !== 'string') return null;
@@ -112,7 +114,7 @@ export default function ShowreelManager() {
       setFormData({
         video_url: ''
       });
-      await loadShowreels();
+      // Realtime hook will automatically update showreels from Supabase
     } catch (error) {
       console.error('Detailed showreel creation error:', {
         error: error,
@@ -137,26 +139,39 @@ export default function ShowreelManager() {
     setShowModal(true);
   };
 
-  const handleDelete = async (showreel) => {
-    if (!window.confirm('Are you sure you want to delete this showreel?')) return;
+  const handleDelete = (showreel) => {
+    setShowreelToDelete(showreel);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!showreelToDelete) return;
     
     try {
+      setIsDeleting(true);
       // DELETE endpoint expects id query parameter
-      await apiCall(`/api/admin/showreels?id=${showreel.id}`, {
+      await apiCall(`/api/admin/showreels?id=${showreelToDelete.id}`, {
         method: 'DELETE'
       });
-      logActivity('delete', 'showreels', showreel.id, { video_url: showreel.video_url || '' });
+      logActivity('delete', 'showreels', showreelToDelete.id, { video_url: showreelToDelete.video_url || '' });
       
       // Immediately update the local state to remove the deleted item
-      setShowreels(prev => prev.filter(item => item.id !== showreel.id));
+      setShowreels(prev => prev.filter(item => item.id !== showreelToDelete.id));
       
-      // Refresh server-side data and reload admin list
+      // Refresh server-side data and realtime hook will handle the update
       try { router.refresh(); } catch (e) { console.warn('router.refresh failed', e); }
-      // Small delay before reloading to ensure database consistency
-      setTimeout(() => loadShowreels(), 500);
+      
+      setDeleteConfirmOpen(false);
+      setShowreelToDelete(null);
     } catch (error) {
       setError(error.message);
+      setIsDeleting(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setShowreelToDelete(null);
   };
 
   if (loading) {
@@ -172,12 +187,9 @@ export default function ShowreelManager() {
 
   return (
     <div className="space-y-6">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-white drop-shadow-lg">Showreels</h1>
-          <p className="mt-2 text-sm text-white/90 drop-shadow">Manage your YouTube showreel collection</p>
-        </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-2">
+      {/* Header removed - using PageHeader from parent page */}
+      <div className="sm:flex sm:items-center sm:justify-end">
+        <div className="mt-4 sm:mt-0 space-x-2">
           <button
             onClick={() => setShowModal(true)}
             className="inline-flex items-center justify-center rounded-md backdrop-blur-sm bg-purple-500/30 border border-purple-400/30 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-500/40 focus:outline-none focus:ring-2 focus:ring-purple-400 drop-shadow-lg"
@@ -270,15 +282,16 @@ export default function ShowreelManager() {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">
-                {editingShowreel ? 'Edit Showreel' : 'Add Showreel'}
-              </h3>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <ModalPortal>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 pointer-events-auto" onClick={() => setShowModal(false)}>
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">
+                  {editingShowreel ? 'Edit Showreel' : 'Add Showreel'}
+                </h3>
+              </div>
+              
+              <form onSubmit={handleSubmit} className="p-6 space-y-4">
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
                   {error}
@@ -322,7 +335,18 @@ export default function ShowreelManager() {
             </form>
           </div>
         </div>
+        </ModalPortal>
       )}
+      
+      <DeleteConfirmationModal
+        isOpen={deleteConfirmOpen}
+        title="Delete Showreel?"
+        message="Are you sure you want to delete this showreel? This action cannot be undone."
+        itemName={showreelToDelete?.video_url}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

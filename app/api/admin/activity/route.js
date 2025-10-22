@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { rateLimit, handleError } from '@/lib/api-security';
+import { handleError } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 
 export async function POST(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`activity-post-${clientIP}`, 30, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const body = await request.json();
@@ -26,8 +30,9 @@ export async function POST(request) {
       .from('activity_logs')
       .insert([{
         action,
-        entity_type,
-        entity_id,
+        resource_type: entity_type,
+        resource_id: entity_id,
+        resource_title: details?.title || null,
         details: details || {},
         ip_address: clientIP,
         user_agent: request.headers.get('user-agent') || '',
@@ -94,13 +99,13 @@ export async function GET(request) {
     const formattedActivities = data.map(activity => ({
       id: activity.id,
       action: activity.action,
-      entity_type: activity.entity_type,
-      entity_id: activity.entity_id,
+      entity_type: activity.resource_type,
+      entity_id: activity.resource_id,
       details: activity.details || {},
       timestamp: activity.created_at,
       admin_id: activity.admin_id,
       // Generate display text based on action and entity
-      title: formatActivityTitle(activity.action, activity.entity_type, activity.details),
+      title: formatActivityTitle(activity.action, activity.resource_type, activity.details),
       icon: getActivityIcon(activity.action)
     }));
 

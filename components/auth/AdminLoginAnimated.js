@@ -307,7 +307,7 @@ export default function AdminLoginAnimated() {
         {/* Login form */}
         <form onSubmit={handleAdminLogin} className={styles.login}>
           <label className={styles.inputLabel}>
-            <i className="fa fa-envelope"></i>
+            <i className="fa-solid fa-envelope"></i>
             <input
               ref={emailInputRef}
               className={styles.username}
@@ -322,7 +322,7 @@ export default function AdminLoginAnimated() {
           </label>
 
           <label className={styles.inputLabel}>
-            <i className="fa fa-pen"></i>
+            <i className="fa-solid fa-lock"></i>
             <input
               ref={passwordInputRef}
               className={styles.password}
@@ -340,7 +340,7 @@ export default function AdminLoginAnimated() {
               onClick={handleShowPassword}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              <i className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
             </button>
           </label>
 
@@ -375,24 +375,25 @@ export default function AdminLoginAnimated() {
             disabled={isLoading || magicLinkSent}
             className={styles.magicLinkButton}
           >
-            <i className="fa fa-magic"></i>
             Send Magic Link
           </button>
         </div>
-
-        {/* Error/Success messages */}
-        {error && (
-          <div className={styles.footer} style={{color: '#ff6b6b'}}>
-            {error}
-          </div>
-        )}
-
-        {magicLinkSent && (
-          <div className={styles.footer} style={{color: '#243946'}}>
-            Magic link sent! Check your email.
-          </div>
-        )}
       </div>
+
+      {/* Error/Success messages - Outside animated container */}
+      {error && (
+        <div className={styles.errorMessage}>
+          <i className="fa-solid fa-circle-exclamation" style={{marginRight: '8px'}}></i>
+          {error}
+        </div>
+      )}
+
+      {magicLinkSent && (
+        <div className={styles.successMessage}>
+          <i className="fa-solid fa-circle-check" style={{marginRight: '8px'}}></i>
+          Magic link sent! Check your email.
+        </div>
+      )}
     </div>
   );
 }

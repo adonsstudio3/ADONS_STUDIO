@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { rateLimit, handleError, createResponse } from '@/lib/api-security';
+import { handleError, createResponse } from '@/lib/api-security';
+import { applyRateLimit } from '@/lib/hybrid-rate-limiting';
 import { supabaseAdmin } from '@/lib/supabase';
 
 const supabase = supabaseAdmin;
@@ -7,9 +8,13 @@ const supabase = supabaseAdmin;
 // GET - Fetch all projects (including unpublished) for admin
 export async function GET(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-projects-get-${clientIP}`, 60, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    // Apply Redis-based rate limiting
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);
@@ -29,9 +34,13 @@ export async function GET(request) {
     if (category) query = query.eq('category', category);
     if (status === 'published') query = query.eq('is_published', true);
     if (status === 'draft') query = query.eq('is_published', false);
-    
+
     if (search) {
-      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,client_name.ilike.%${search}%`);
+      // Escape special characters to prevent SQL injection in ILIKE pattern
+      // The .or() method in Supabase requires the pattern in the string, not as a parameter
+      // So we must sanitize to prevent injection attacks
+      const sanitizedSearch = search.replace(/[%_\\]/g, '\\$&');
+      query = query.or(`title.ilike.%${sanitizedSearch}%,description.ilike.%${sanitizedSearch}%,client_name.ilike.%${sanitizedSearch}%`);
     }
 
     // Get total count
@@ -69,14 +78,19 @@ export async function GET(request) {
 // POST - Create new project
 export async function POST(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-projects-post-${clientIP}`, 10, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    // Apply Redis-based rate limiting
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
+    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
+
     const body = await request.json();
-    console.log('📝 Project POST request body:', body);
-    
+
     const {
       title,
       description,
@@ -94,13 +108,10 @@ export async function POST(request) {
 
     // Validation
     if (!title || !description) {
-      console.error('❌ Project validation failed: Missing title or description');
-      return NextResponse.json({ 
-        error: 'Title and description are required' 
+      return NextResponse.json({
+        error: 'Title and description are required'
       }, { status: 400 });
     }
-    
-    console.log('✅ Project validation passed');
 
     // Get the next order_index if not provided
     let finalOrderIndex = order_index;
@@ -153,7 +164,7 @@ export async function POST(request) {
           user_agent: request.headers.get('user-agent') || ''
         }]);
     } catch (logError) {
-      console.warn('⚠️ Failed to log activity (non-critical):', logError.message);
+      // Failed to log activity (non-critical)
     }
 
     return createResponse({
@@ -165,11 +176,9 @@ export async function POST(request) {
     }, 201);
 
   } catch (error) {
-    console.error('💥 Project creation error:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Project creation error:', error);
+    }
     return handleError(error, 'Failed to create project');
   }
 }
@@ -177,25 +186,22 @@ export async function POST(request) {
 // PUT - Update existing project
 export async function PUT(request) {
   try {
-    console.log('🔄 PUT /api/admin/projects - Update project request received');
-    
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-projects-put-${clientIP}`, 20, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    // Apply Redis-based rate limiting
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const body = await request.json();
-    console.log('📝 PUT request body:', body);
-    
+
     const { id, ...updateData } = body;
 
     if (!id) {
-      console.error('❌ No project ID provided');
       return NextResponse.json({ error: 'Project ID is required' }, { status: 400 });
     }
-
-    console.log('🔍 Updating project ID:', id);
-    console.log('📦 Update data:', updateData);
 
     // Clean up the update data
     const cleanedData = {};
@@ -210,8 +216,6 @@ export async function PUT(request) {
     });
 
     cleanedData.updated_at = new Date().toISOString();
-    
-    console.log('🧹 Cleaned data to update:', cleanedData);
 
     const { data, error } = await supabase
       .from('projects')
@@ -221,11 +225,11 @@ export async function PUT(request) {
       .single();
 
     if (error) {
-      console.error('❌ Supabase update error:', error);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Supabase update error:', error);
+      }
       return handleError(error, 'Failed to update project');
     }
-
-    console.log('✅ Project updated successfully:', data);
 
     // Log the action (non-blocking - don't fail if logging fails)
     try {
@@ -242,7 +246,7 @@ export async function PUT(request) {
           user_agent: request.headers.get('user-agent') || ''
         }]);
     } catch (logError) {
-      console.warn('⚠️ Failed to log activity (non-critical):', logError.message);
+      // Failed to log activity (non-critical)
     }
 
     return createResponse({
@@ -254,7 +258,9 @@ export async function PUT(request) {
     });
 
   } catch (error) {
-    console.error('💥 PUT /api/admin/projects error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('PUT /api/admin/projects error:', error);
+    }
     return handleError(error, 'Failed to update project');
   }
 }
@@ -262,9 +268,13 @@ export async function PUT(request) {
 // DELETE - Delete project
 export async function DELETE(request) {
   try {
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(`admin-projects-delete-${clientIP}`, 5, 60000)) {
-      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    // Apply Redis-based rate limiting
+    const rateLimitResult = await applyRateLimit(request, 'admin');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', retryAfter: rateLimitResult.retryAfter },
+        { status: 429, headers: rateLimitResult.headers }
+      );
     }
 
     const url = new URL(request.url);
@@ -273,6 +283,8 @@ export async function DELETE(request) {
     if (!id) {
       return NextResponse.json({ error: 'Project ID is required' }, { status: 400 });
     }
+
+    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
 
     // Get project details before deletion
     const { data: project } = await supabase
@@ -287,6 +299,7 @@ export async function DELETE(request) {
       .eq('id', id);
 
     if (error) {
+      console.error('Supabase delete error:', error);
       return handleError(error, 'Failed to delete project');
     }
 
@@ -298,16 +311,17 @@ export async function DELETE(request) {
       await supabase
         .from('activity_logs')
         .insert([{
-          action: 'project_deleted',
+          action: 'delete',
+          entity_type: 'projects',
+          entity_id: id,
           details: { 
-            project_id: id,
-            deleted_project: project
+            title: project?.title
           },
           ip_address: clientIP,
           user_agent: request.headers.get('user-agent') || ''
         }]);
     } catch (logError) {
-      console.warn('⚠️ Failed to log activity (non-critical):', logError.message);
+      // Failed to log activity (non-critical)
     }
 
     return createResponse({

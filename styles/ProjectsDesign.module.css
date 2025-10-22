@@ -255,9 +255,10 @@
 
 /* Projects Grid and Tall Card Styles */
 .projectsGrid {
-  /* Full-bleed masonry-like layout using CSS columns (no side padding) */
-  column-count: 3;
-  column-gap: 1.5rem;
+  /* Grid layout with cards side by side */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
   width: 100%;
   max-width: 100vw;
   padding: 0 2rem;
@@ -266,8 +267,8 @@
 }
 
 .projectCard {
-  /* Inline-block so it flows into columns for masonry effect */
-  display: inline-block;
+  /* Grid item - cards will be side by side */
+  display: block;
   width: 100%;
   position: relative;
   min-height: 600px; /* Much taller cards for dramatic vertical effect */
@@ -277,9 +278,7 @@
   background: transparent; /* No dark surface background */
   cursor: pointer;
   transition: transform 0.28s ease;
-  margin: 0 0 1.5rem 0; /* vertical spacing between items in a column */
-  -webkit-column-break-inside: avoid;
-  break-inside: avoid;
+  margin: 0; /* No margin needed with grid gap */
 }
 
 /* Add varied heights for masonry effect */
@@ -462,12 +461,15 @@
   transition: var(--vfx-transition), border-color 0.3s ease;
 }
 
-.clickableCard:hover {
-  border-color: var(--vfx-primary-gold);
-  box-shadow: var(--vfx-glow), 0 18px 36px rgba(0,0,0,0.45);
+/* Only apply hover effects on devices that support hover (not touch devices) */
+@media (hover: hover) and (pointer: fine) {
+  .clickableCard:hover {
+    border-color: var(--vfx-primary-gold);
+    box-shadow: var(--vfx-glow), 0 18px 36px rgba(0,0,0,0.45);
+  }
 }
 
-.clickableCard:focus {
+.clickableCard:focus-visible {
   outline: none;
   border-color: var(--vfx-primary-gold);
   box-shadow: var(--vfx-glow), 0 0 0 3px rgba(255, 215, 0, 0.3);
@@ -586,7 +588,7 @@
     padding: 0 1.5rem;
   }
   .projectsGrid {
-    column-count: 2;
+    grid-template-columns: repeat(2, 1fr);
     padding: 0 1.5rem;
   }
 }
@@ -607,7 +609,7 @@
   }
   
   .projectsGrid {
-    column-count: 1;
+    grid-template-columns: 1fr;
     gap: 1rem;
     padding: 0 1rem;
   }

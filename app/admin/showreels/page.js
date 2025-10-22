@@ -11,7 +11,7 @@ export default function ShowreelsPage() {
     <AdminProtectedRoute>
       <AdminLayout>
         <div className="space-y-6">
-          <PageHeader title="Showreels" description="Manage YouTube showreel videos and content" />
+          <PageHeader title="Showreels" description="Manage your YouTube showreel collection" />
 
           {/* Content */}
           <div className="px-6">

@@ -1,20 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useAdmin } from '../../../contexts/AdminContext';
 import AdminProtectedRoute from '../../../components/admin/AdminProtectedRoute';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import DashboardOverview from '../../../components/admin/DashboardOverview';
 import PageHeader from '../../../components/admin/PageHeader';
 
 export default function DashboardPage() {
-  const { isAuthenticated, isAdmin } = useAuth();
-
-  if (!isAuthenticated || !isAdmin) {
-    return null; // AdminProtectedRoute will handle redirect
-  }
-
   return (
     <AdminProtectedRoute>
       <AdminLayout>
