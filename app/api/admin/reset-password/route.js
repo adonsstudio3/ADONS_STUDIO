@@ -7,10 +7,12 @@ const supabaseAdmin = createClient(
 );
 
 // Helper to hash OTP codes (must match request-password-reset)
+// Note: OTP_SECRET is used for generating secure one-time password hashes
+// (JWT authentication is now handled by Supabase)
 function hashCode(code) {
-  const secret = process.env.OTP_SECRET || process.env.JWT_SECRET;
+  const secret = process.env.OTP_SECRET;
   if (!secret) {
-    throw new Error('OTP_SECRET or JWT_SECRET environment variable is required for password reset');
+    throw new Error('OTP_SECRET environment variable is required for password reset');
   }
   return crypto.createHmac('sha256', secret).update(code).digest('hex');
 }
