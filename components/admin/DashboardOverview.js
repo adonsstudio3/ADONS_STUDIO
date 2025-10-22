@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { useRealtimeActivityLogs } from '../../hooks/useRealtimeActivityLogs';
+import AdminLoadingSpinner from './AdminLoadingSpinner';
 import { FilmIcon, PlayCircleIcon, FolderIcon, PhotoIcon, PlusIcon, PencilIcon, TrashIcon, KeyIcon, EyeIcon, ArrowUpTrayIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 
@@ -66,14 +67,7 @@ export default function DashboardOverview() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white font-medium drop-shadow-lg">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <AdminLoadingSpinner message="Loading dashboard..." />;
   }
 
   if (error) {

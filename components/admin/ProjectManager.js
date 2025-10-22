@@ -6,6 +6,7 @@ import { useRealtimeProjects } from '../../hooks/useRealtimeProjects';
 import { supabaseClient } from '../../lib/supabase';
 import ModalPortal from '../ModalPortal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import AdminLoadingSpinner from './AdminLoadingSpinner';
 
 export default function ProjectManager() {
   // Use realtime hook for automatic updates
@@ -301,12 +302,7 @@ export default function ProjectManager() {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-64">
-        <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-white font-medium drop-shadow-lg">Loading projects...</p>
-      </div>
-    );
+    return <AdminLoadingSpinner message="Loading projects..." />;
   }
 
   return (

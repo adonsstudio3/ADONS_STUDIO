@@ -5,6 +5,7 @@ import { useAdmin } from '../../contexts/AdminContext';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import ModalPortal from '../ModalPortal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import AdminLoadingSpinner from './AdminLoadingSpinner';
 
 export default function MediaLibrary() {
   const [mediaFiles, setMediaFiles] = useState([]);
@@ -162,14 +163,7 @@ export default function MediaLibrary() {
 
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white font-medium drop-shadow-lg">Loading media files...</p>
-        </div>
-      </div>
-    );
+    return <AdminLoadingSpinner message="Loading media files..." />;
   }
 
   return (

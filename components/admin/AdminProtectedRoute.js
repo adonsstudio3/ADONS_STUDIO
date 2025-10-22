@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import AdminLoadingSpinner from './AdminLoadingSpinner';
 import '../../styles/admin.css';
 
 // 🔐 Global authentication marker - persists across component remounts
@@ -118,20 +119,7 @@ export default function AdminProtectedRoute({ children }) {
   // Don't show loading if we've already authenticated successfully (authReadyRef.isReady)
   // This prevents loading spinner when tab regains focus
   if ((loading || isChecking) && !isAuthenticatedGlobal && !authReadyRef?.isReady) {
-    return (
-      <div className="admin-root" style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        color: '#fff'
-      }}>
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white drop-shadow-lg">Loading admin panel...</p>
-        </div>
-      </div>
-    );
+    return <AdminLoadingSpinner message="Loading admin panel..." fullScreen={true} />;
   }
 
   // If not authenticated, don't render anything (redirect will happen)
@@ -141,6 +129,5 @@ export default function AdminProtectedRoute({ children }) {
   }
 
   // Render the protected content
-  console.log('✅ RENDERING PROTECTED CONTENT');
-  return <>{children}</>;
+  return children;
 }
