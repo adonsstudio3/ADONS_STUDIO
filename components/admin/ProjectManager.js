@@ -326,6 +326,18 @@ export default function ProjectManager() {
         </div>
       )}
 
+      {projects.length === 0 && !loading && (
+        <div className="text-center py-12">
+          <div className="w-12 h-12 mx-auto backdrop-blur-sm bg-white/10 rounded-full flex items-center justify-center mb-4 border border-white/20">
+            <svg className="h-6 w-6 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 className="mt-2 text-sm font-medium text-white drop-shadow-lg">No projects</h3>
+          <p className="mt-1 text-sm text-white/80 drop-shadow">Get started by adding a new project.</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project) => (
           <div key={project.id} className="bg-white rounded-lg shadow-md overflow-hidden">
