@@ -7,7 +7,7 @@ const supabase = supabaseAdmin;
 
 export async function PUT(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
     
     if (!rateLimit(`media-put-${clientIP}`, 20, 60000)) {
@@ -70,7 +70,7 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
     
     if (!rateLimit(`media-delete-${clientIP}`, 10, 60000)) {

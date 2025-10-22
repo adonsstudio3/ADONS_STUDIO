@@ -16,6 +16,11 @@ export async function POST(request) {
     const body = await request.json();
     const { action, entity_type, entity_id, details, admin_id } = body;
 
+    // Get client IP
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                    request.headers.get('x-real-ip') || 
+                    'unknown';
+
     // Validate required fields
     if (!action || !entity_type) {
       return NextResponse.json({ 

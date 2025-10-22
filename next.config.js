@@ -25,13 +25,6 @@ const nextConfig = {
   // Helpful when workspace has nested package locks
   outputFileTracingRoot: path.resolve(__dirname),
   
-  // Domain configuration for main site and admin subdomain
-  domains: {
-    main: 'adonsstudio.com',
-    www: 'www.adonsstudio.com',
-    admin: 'admin.adonsstudio.com'
-  },
-  
   // SEO-friendly redirects
   async redirects() {
     return [
