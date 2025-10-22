@@ -25,9 +25,29 @@ const nextConfig = {
   // Helpful when workspace has nested package locks
   outputFileTracingRoot: path.resolve(__dirname),
   
+  // Domain configuration for main site and admin subdomain
+  domains: {
+    main: 'adonsstudio.com',
+    www: 'www.adonsstudio.com',
+    admin: 'admin.adonsstudio.com'
+  },
+  
   // SEO-friendly redirects
   async redirects() {
     return [
+      // Remove www for SEO canonical URL
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.adonsstudio.com'
+          }
+        ],
+        destination: 'https://adonsstudio.com/:path*',
+        permanent: true
+      },
+      // Legacy URL redirects
       { source: '/portfolio', destination: '/projects', permanent: true },
       { source: '/showreel', destination: '/projects', permanent: true },
     ]
