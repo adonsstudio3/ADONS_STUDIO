@@ -46,17 +46,6 @@
 # Note: Set sensitive variables in Netlify UI (Site settings > Environment variables)
 # These are just examples/defaults
 
-[context.production.environment]
-  NODE_ENV = "production"
-  NEXT_TELEMETRY_DISABLED = "1"
-
-[context.deploy-preview.environment]
-  NODE_ENV = "production"
-  NEXT_TELEMETRY_DISABLED = "1"
-
-[context.branch-deploy.environment]
-  NODE_ENV = "production"
-
 # ================================
 # Redirects & Rewrites
 # ================================
