@@ -195,12 +195,14 @@
 # ================================
 
 # Enable fine-grained cache control
+
 [build.environment]
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
   NODE_OPTIONS = "--max_old_space_size=4096"
   NEXT_TELEMETRY_DISABLED = "1"
   CI = "true"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_GTM_ID"
 
 # ================================
 # Large Media (Git LFS - Optional)
@@ -212,8 +214,7 @@
 # ================================
 # Secrets Scanning Configuration
 # ================================
-[build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_GTM_ID"
+
 
 # ================================
 # Additional Notes
