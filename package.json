@@ -31,11 +31,11 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@types/node": "24.6.0",
-    "@types/react": "19.1.16",
+    "@types/node": "^24.6.0",
+    "@types/react": "^19.1.16",
     "playwright": "^1.55.0",
     "sharp": "^0.32.4",
     "ttf2woff2": "^8.0.0",
-    "typescript": "5.9.2"
+    "typescript": "^5.9.2"
   }
 }
