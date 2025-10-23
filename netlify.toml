@@ -11,9 +11,6 @@
   # Output directory for Next.js
   publish = ".next"
 
-  # Set Node.js version
-  environment = { NODE_VERSION = "18" }
-
 # ================================
 # Build Settings
 # ================================
@@ -159,15 +156,24 @@
 # Production deployments (main branch)
 [context.production]
   command = "npm run build"
-  environment = { NODE_ENV = "production" }
+
+[context.production.environment]
+  NODE_ENV = "production"
 
 # Deploy previews (PRs)
 [context.deploy-preview]
   command = "npm run build"
 
+[context.deploy-preview.environment]
+  NODE_ENV = "production"
+  NEXT_TELEMETRY_DISABLED = "1"
+
 # Branch deployments
 [context.branch-deploy]
   command = "npm run build"
+
+[context.branch-deploy.environment]
+  NODE_ENV = "production"
 
 # ================================
 # Edge Functions (Optional)
@@ -201,11 +207,10 @@
 
 # Enable fine-grained cache control
 [build.environment]
-  # Optimize builds
+  NODE_VERSION = "18"
   NPM_FLAGS = "--legacy-peer-deps"
-
-  # Prevent out-of-memory errors during build
   NODE_OPTIONS = "--max_old_space_size=4096"
+  NEXT_TELEMETRY_DISABLED = "1"
 
 # ================================
 # Post Processing
