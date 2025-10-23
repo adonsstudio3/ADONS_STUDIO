@@ -210,6 +210,12 @@
 #   enabled = true
 
 # ================================
+# Secrets Scanning Configuration
+# ================================
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_GTM_ID"
+
+# ================================
 # Additional Notes
 # ================================
 #
