@@ -202,12 +202,6 @@
   NEXT_TELEMETRY_DISABLED = "1"
 
 # ================================
-# Post Processing
-# ================================
-[build.processing]
-  skip_processing = false
-
-# ================================
 # Large Media (Git LFS - Optional)
 # ================================
 # Uncomment if using Netlify Large Media
