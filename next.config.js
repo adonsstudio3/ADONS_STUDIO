@@ -33,18 +33,6 @@ const nextConfig = {
   // SEO-friendly redirects
   async redirects() {
     return [
-      // Remove www for SEO canonical URL
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.adonsstudio.com'
-          }
-        ],
-        destination: 'https://adonsstudio.com/:path*',
-        permanent: true
-      },
       // Legacy URL redirects
       { source: '/portfolio', destination: '/projects', permanent: true },
       { source: '/showreel', destination: '/projects', permanent: true },
