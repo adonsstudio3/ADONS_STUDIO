@@ -1,11 +1,9 @@
 # ================================
 # Netlify Redirects for Next.js
 # ================================
-# These rules handle routing for Next.js deployed on Netlify
-# Note: Netlify automatically handles HTTP to HTTPS redirects
+# IMPORTANT: All redirects are handled by Cloudflare
+# Do NOT add redirects here as they will conflict with Cloudflare proxy
+# and cause ERR_TOO_MANY_REDIRECTS
 
-# Redirect www to non-www (SEO best practice)
-https://www.adonsstudio.com/* https://adonsstudio.com/:splat 301!
-
-# Next.js pages - let framework handle routing
+# Let Next.js handle all routing
 /* 200

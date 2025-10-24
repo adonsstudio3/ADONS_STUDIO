@@ -49,33 +49,34 @@
 # ================================
 # Redirects & Rewrites
 # ================================
-# These supplement the _redirects file
+# IMPORTANT: All redirects are DISABLED to prevent conflicts with Cloudflare proxy
+# Cloudflare handles HTTPS and www redirects at the DNS/proxy level
 
-# Force HTTPS (uncomment when ready)
+# Force HTTPS (DISABLED - Cloudflare handles this)
 # [[redirects]]
 #   from = "http://your-domain.com/*"
 #   to = "https://your-domain.com/:splat"
 #   status = 301
 #   force = true
 
-# Redirect www to non-www (or vice versa)
+# Redirect www to non-www (DISABLED - Cloudflare handles this)
 # [[redirects]]
 #   from = "https://www.your-domain.com/*"
 #   to = "https://your-domain.com/:splat"
 #   status = 301
 #   force = true
 
-# Admin redirect
-[[redirects]]
-  from = "/admin"
-  to = "/admin/login"
-  status = 301
+# Admin redirect (DISABLED - handle in Next.js if needed)
+# [[redirects]]
+#   from = "/admin"
+#   to = "/admin/login"
+#   status = 301
 
-# Remove trailing slashes
-[[redirects]]
-  from = "/*/"
-  to = "/:splat"
-  status = 301
+# Remove trailing slashes (DISABLED - can cause loops with Cloudflare)
+# [[redirects]]
+#   from = "/*/"
+#   to = "/:splat"
+#   status = 301
 
 # ================================
 # Headers
