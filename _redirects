@@ -2,19 +2,10 @@
 # Netlify Redirects for Next.js
 # ================================
 # These rules handle routing for Next.js deployed on Netlify
-
-# Force HTTPS (redirect HTTP to HTTPS)
-http://adonsstudio.com/* https://adonsstudio.com/:splat 301!
-http://www.adonsstudio.com/* https://adonsstudio.com/:splat 301!
+# Note: Netlify automatically handles HTTP to HTTPS redirects
 
 # Redirect www to non-www (SEO best practice)
 https://www.adonsstudio.com/* https://adonsstudio.com/:splat 301!
-
-# Admin subdomain - route to admin dashboard
-https://admin.adonsstudio.com/* https://adonsstudio.com/admin/:splat 200
-
-# API routes - let Next.js handle them
-/api/* 200
 
 # Next.js pages - let framework handle routing
 /* 200
