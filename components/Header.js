@@ -11,40 +11,37 @@ export default function Header(){
   useEffect(()=>{
     if (typeof window === 'undefined') return
 
-    // If we're on any route other than the homepage, apply the scrolled
-    // translucent navbar immediately so non-home pages show the same UI.
-    if (router && router.pathname && router.pathname !== '/') {
+    // Non-homepage routes: always show glassmorphic navbar
+    if (router?.pathname && router.pathname !== '/') {
       setScrolled(true)
       setIsOverHero(false)
-      // still attach a small scroll listener so the header can toggle if needed
-      const onScrollRoute = ()=> setScrolled(window.scrollY > 80)
-      window.addEventListener('scroll', onScrollRoute)
-      return ()=> window.removeEventListener('scroll', onScrollRoute)
+      return
     }
 
-    // On the homepage, prefer observing the hero section for precise control
-    const hero = document.querySelector('#hero')
-    if (hero && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const isCurrentlyOverHero = entry.isIntersecting
-          setIsOverHero(isCurrentlyOverHero)
-          setScrolled(!isCurrentlyOverHero)
-        })
-      }, { root: null, threshold: 0, rootMargin: '-10px 0px 0px 0px' })
+    // Homepage only: use IntersectionObserver for reliable hero section detection
+    if (router?.pathname === '/') {
+      const hero = document.querySelector('#hero')
+      
+      if (!hero) return
+      
+      // Monitor the hero section - when 50% scrolled away, activate glassmorphic
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          // If hero is NOT intersecting (scrolled away), navbar is GLASSMORPHIC
+          // If hero IS intersecting (visible), navbar is TRANSPARENT
+          setScrolled(!entry.isIntersecting)
+        },
+        {
+          root: null,
+          threshold: 0.5, // Trigger when 50% of hero is visible/hidden
+          rootMargin: '0px 0px 0px 0px'
+        }
+      )
+      
       observer.observe(hero)
       return () => observer.disconnect()
     }
-
-    // Fallback: simple scroll threshold on homepage if there's no hero
-    const onScroll = ()=> {
-      const shouldScroll = window.scrollY > 80
-      setScrolled(shouldScroll)
-      setIsOverHero(!shouldScroll)
-    }
-    window.addEventListener('scroll', onScroll)
-    return ()=> window.removeEventListener('scroll', onScroll)
-  }, [router && router.pathname])
+  }, [router?.pathname])
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -183,22 +180,14 @@ export default function Header(){
 
         {/* Desktop Navigation Links */}
         <div className="navbar-menu desktop-menu">
-          <Link href="/services" className={`navbar-item ${isLinkActive('/services') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/services') ? 'true' : undefined}>Services</Link>
           <Link href="/projects" className={`navbar-item ${isLinkActive('/projects') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/projects') ? 'true' : undefined}>Projects</Link>
-          <Link href="/team" className={`navbar-item ${isLinkActive('/team') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/team') ? 'true' : undefined}>Team</Link>
           <Link href="/contact" className={`navbar-item ${isLinkActive('/contact') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/contact') ? 'true' : undefined}>Contact</Link>
+          <Link href="/about" className={`navbar-item ${isLinkActive('/about') ? 'active' : ''}`} onClick={handleMobileNavClick} aria-current={isLinkActive('/about') ? 'true' : undefined}>About</Link>
         </div>
 
         {/* Full-Page Mobile Menu Overlay */}
         <div className="mobile-menu-overlay">
           <div className="mobile-menu-items">
-            <Link 
-              href="/services" 
-              className={`mobile-menu-item ${isLinkActive('/services') ? 'active' : ''}`} 
-              onClick={handleMobileNavClick}
-            >
-              Services
-            </Link>
             <Link 
               href="/projects" 
               className={`mobile-menu-item ${isLinkActive('/projects') ? 'active' : ''}`} 
@@ -207,18 +196,18 @@ export default function Header(){
               Projects
             </Link>
             <Link 
-              href="/team" 
-              className={`mobile-menu-item ${isLinkActive('/team') ? 'active' : ''}`} 
-              onClick={handleMobileNavClick}
-            >
-              Team
-            </Link>
-            <Link 
               href="/contact" 
               className={`mobile-menu-item ${isLinkActive('/contact') ? 'active' : ''}`} 
               onClick={handleMobileNavClick}
             >
               Contact
+            </Link>
+            <Link 
+              href="/about" 
+              className={`mobile-menu-item ${isLinkActive('/about') ? 'active' : ''}`} 
+              onClick={handleMobileNavClick}
+            >
+              About
             </Link>
           </div>
         </div>

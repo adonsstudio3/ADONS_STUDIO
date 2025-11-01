@@ -1,4 +1,5 @@
 import OptimizedImage from '../OptimizedImage';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 export default function AdditionalTab(){
   const blocks = [
@@ -8,9 +9,29 @@ export default function AdditionalTab(){
     { key: 'pod', title: 'Podcast Production', body: 'Concept to final podcast production.', img: 'additional/podcast-production-2' }
   ]
 
+  // Create scroll reveal refs for each card with staggered delays
+  const cardRefs = blocks.map((_, idx) => 
+    useScrollReveal({ 
+      duration: 0.7, 
+      delay: idx * 0.12,
+      rootMargin: '50px'
+    })
+  );
+
   return (
     <div className="grid-wrapper">
       <style jsx>{`
+        @keyframes slideInCard {
+          from {
+            opacity: 0;
+            transform: translateY(40px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         /* Mobile: single column stack */
         .grid-wrapper { 
           display: grid; 
@@ -41,7 +62,21 @@ export default function AdditionalTab(){
         .masonry-card { 
           width: 100%; 
           border-radius: 0.5rem; 
-          overflow: hidden; 
+          overflow: hidden;
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        
+        .masonry-card.reveal {
+          animation: slideInCard 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        .masonry-card.bg-white\/5 {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .masonry-card.bg-white\/5:hover {
+          box-shadow: 0 8px 32px 0 rgba(245,200,66,0.2) !important;
         }
         
         /* Mobile: full width cards */
@@ -58,9 +93,15 @@ export default function AdditionalTab(){
         }
       `}</style>
 
-    {blocks.map((b) => {
+    {blocks.map((b, idx) => {
   return (
-  <article key={b.key} className="masonry-card tile bg-white/5 backdrop-blur-sm shadow-sm transition-all duration-200 group overflow-hidden rounded hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1" role="article" aria-labelledby={`additional-${b.key}-title`}>
+  <article 
+    key={b.key}
+    ref={cardRefs[idx]}
+    className="masonry-card tile bg-white/5 backdrop-blur-sm shadow-sm transition-all duration-200 group overflow-hidden rounded hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1" 
+    role="article" 
+    aria-labelledby={`additional-${b.key}-title`}
+  >
 
           {b.img ? (
             <div className="relative h-[65%] p-3 flex items-stretch">

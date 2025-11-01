@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { usePublicHeroSections } from '../hooks/usePublicHeroSections'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function Hero(){
   const videoRef = useRef(null)
+  const titleRef = useScrollReveal({ duration: 0.8, delay: 0.3 })
   const [current, setCurrent] = useState(0)
   const [playing, setPlaying] = useState(true)
   const [muted, setMuted] = useState(true)
@@ -354,7 +356,8 @@ export default function Hero(){
             </div>
 
             <div className="carousel-caption mt-4 text-center text-gray-200">
-              <h5 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold typewriter px-4 leading-tight">{typedTitle}</h5>
+              {/* Title removed per client request */}
+              {/* <h5 ref={titleRef} className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold typewriter px-4 leading-tight">{typedTitle}</h5> */}
             </div>
 
             {/* moved indicators below caption/content - restored circular dots */}

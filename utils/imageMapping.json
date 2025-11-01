@@ -208,44 +208,6 @@
       "3387": "/Images/optimized/audio/voiceover-dubbing-3387.webp"
     }
   },
-  "background/nebula": {
-    "original": "/Images/background/nebula.jpg",
-    "avif": {
-      "400": "/Images/optimized/background/nebula-400.avif",
-      "800": "/Images/optimized/background/nebula-800.avif",
-      "1200": "/Images/optimized/background/nebula-1200.avif",
-      "1600": "/Images/optimized/background/nebula-1600.avif",
-      "2400": "/Images/optimized/background/nebula-2400.avif",
-      "3387": "/Images/optimized/background/nebula-3387.avif"
-    },
-    "webp": {
-      "400": "/Images/optimized/background/nebula-400.webp",
-      "800": "/Images/optimized/background/nebula-800.webp",
-      "1200": "/Images/optimized/background/nebula-1200.webp",
-      "1600": "/Images/optimized/background/nebula-1600.webp",
-      "2400": "/Images/optimized/background/nebula-2400.webp",
-      "3387": "/Images/optimized/background/nebula-3387.webp"
-    }
-  },
-  "bw-banner/bw-banner": {
-    "original": "/Images/bw-banner/bw-banner.png",
-    "avif": {
-      "400": "/Images/optimized/bw-banner/bw-banner-400.avif",
-      "800": "/Images/optimized/bw-banner/bw-banner-800.avif",
-      "1200": "/Images/optimized/bw-banner/bw-banner-1200.avif",
-      "1600": "/Images/optimized/bw-banner/bw-banner-1600.avif",
-      "2400": "/Images/optimized/bw-banner/bw-banner-2400.avif",
-      "3387": "/Images/optimized/bw-banner/bw-banner-3387.avif"
-    },
-    "webp": {
-      "400": "/Images/optimized/bw-banner/bw-banner-400.webp",
-      "800": "/Images/optimized/bw-banner/bw-banner-800.webp",
-      "1200": "/Images/optimized/bw-banner/bw-banner-1200.webp",
-      "1600": "/Images/optimized/bw-banner/bw-banner-1600.webp",
-      "2400": "/Images/optimized/bw-banner/bw-banner-2400.webp",
-      "3387": "/Images/optimized/bw-banner/bw-banner-3387.webp"
-    }
-  },
   "hero/contact": {
     "original": "/Images/hero/contact.jpg",
     "avif": {
@@ -434,25 +396,6 @@
       "1600": "/Images/optimized/team/siddhant-1600.webp",
       "2400": "/Images/optimized/team/siddhant-2400.webp",
       "3387": "/Images/optimized/team/siddhant-3387.webp"
-    }
-  },
-  "team/suman": {
-    "original": "/Images/team/suman.jpg",
-    "avif": {
-      "400": "/Images/optimized/team/suman-400.avif",
-      "800": "/Images/optimized/team/suman-800.avif",
-      "1200": "/Images/optimized/team/suman-1200.avif",
-      "1600": "/Images/optimized/team/suman-1600.avif",
-      "2400": "/Images/optimized/team/suman-2400.avif",
-      "3387": "/Images/optimized/team/suman-3387.avif"
-    },
-    "webp": {
-      "400": "/Images/optimized/team/suman-400.webp",
-      "800": "/Images/optimized/team/suman-800.webp",
-      "1200": "/Images/optimized/team/suman-1200.webp",
-      "1600": "/Images/optimized/team/suman-1600.webp",
-      "2400": "/Images/optimized/team/suman-2400.webp",
-      "3387": "/Images/optimized/team/suman-3387.webp"
     }
   },
   "team/swapneel": {

@@ -37,10 +37,10 @@ export default function Footer() {
               <nav className={styles.footerNav}>
                 <ul className={styles.footerNavList}>
                   <li><a href="/" className={styles.footerNavLink}>Home</a></li>
-                  <li><a href="/services" className={styles.footerNavLink}>Services</a></li>
+                  <li><a href="#services" className={styles.footerNavLink}>Services</a></li>
                   <li><a href="/projects" className={styles.footerNavLink}>Projects</a></li>
-                  <li><a href="/team" className={styles.footerNavLink}>Team</a></li>
                   <li><a href="/contact" className={styles.footerNavLink}>Contact</a></li>
+                  <li><a href="/about" className={styles.footerNavLink}>About</a></li>
                 </ul>
               </nav>
             </div>

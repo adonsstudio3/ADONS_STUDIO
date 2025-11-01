@@ -100,13 +100,14 @@
 /* Apply globally */
 html, body {
   height: 100%;
-  /* Host the static nebula background on the document so it remains fixed while content scrolls */
-  background-color: #000; /* fallback color while image loads */
-  background-image: url('/Images/background/nebula.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
+  /* Solid dark background with noise texture */
+  background-color: #1A141A;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 400px 400px;
   background-position: center center;
-  background-attachment: fixed; /* keep background static while content scrolls */
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Satoshi', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
@@ -122,52 +123,30 @@ html, body {
   }
 }
 
-/* Fixed background element (composited) - used to provide a pinned background effect
-   while avoiding `background-attachment: fixed` browser issues on mobile. We still
-   use the document-level background as a fallback. */
+/* Fixed background element (composited) - used to provide a pinned background effect */
 
+/* Desktop: use solid black background */
 
-/* Desktop: use large nebula; mobile media query will override. */
-
-
-
-/* Use a lower-resolution nebula background on mobile to reduce bandwidth */
-
+/* Mobile: solid black background */
 
 /*
-  Strong site-wide background rule to ensure the nebula image is shown once,
+  Strong site-wide background rule to ensure texture background is used,
   remains fixed while content scrolls, and covers the entire viewport.
   Use high-specificity + !important to override any compiled or component styles.
 */
 html, body {
-  background-image: url('/Images/background/nebula.jpg') !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E") !important;
+  background-color: #1A141A !important;
+  background-repeat: repeat !important;
+  background-size: 400px 400px !important;
   background-position: center center !important;
   background-attachment: fixed !important;
-  background-color: #000 !important;
 }
 
 /* Override background-attachment for mobile devices to prevent janky scrolling */
 @media (max-width: 767px) {
   html, body {
     background-attachment: scroll !important;
-  }
-
-  html::after {
-    content: '';
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: -1;
-    background-image: url('/Images/background/nebula.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    opacity: 1;
   }
 }
 
@@ -176,8 +155,8 @@ html > body > #__next, #__next {
   background: transparent !important;
 }
 
-/* Keep page sections transparent by default so the nebula shows through */
-section, .section, .page, main, header, footer {
+/* Keep some page elements transparent by default */
+.section, .page, header, footer {
   background: transparent !important;
 }
 
@@ -210,15 +189,22 @@ header {
      measured `--scrollbar-width` plus a conservative 14px fallback instead. */
 }
 
-/* Ensure the nebula background (set on html/body/#__next) is visible on every page.
-   Neutralize page-level dark backgrounds that would otherwise block it.
+/* Ensure the dark background is visible on every page.
+   Neutralize page-level backgrounds that would otherwise block it.
    Keep card and component-level backgrounds (like .service-card) so content remains readable. */
 section, .section, #about, #services, #team, #contact, .about, .services, .team {
   background: transparent !important;
 }
 
-/* Remove the hero-bg wrapper's solid dark fallback so the nebula shows through.
-   If you prefer to keep subtle radial accents on top of the nebula, we can instead reduce opacity. */
+/* Exception: About, Contact, Services, and Team sections need dark background for sticky hero scroll-over effect */
+/* Section IDs inherit body background */
+#about, #contact, #services, #team {
+  position: relative;
+  z-index: 10;
+}
+
+/* Remove the hero-bg wrapper's solid dark fallback.
+   If you prefer to keep subtle radial accents, adjust the background opacity instead. */
 .hero-bg {
   background: none !important;
 }
@@ -255,6 +241,15 @@ h1,h2,h3,h4,h5,h6 {
 .loading-screen { background: #000; }
 .loading-content { text-align: center; color: #fff; }
 .loading-title { font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; display: inline-flex; gap: 0.08em; }
+
+/* Textured section background - applies noise texture to any element */
+.textured-bg {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E") !important;
+  background-repeat: repeat !important;
+  background-size: 400px 400px !important;
+  background-position: center center !important;
+}
+
 .loading-title .logo-letter { position: relative; display: inline-block; color: transparent; text-shadow: none; }
 /* Fill effect using background-clip */
 .loading-title .logo-letter {
@@ -286,6 +281,19 @@ h1,h2,h3,h4,h5,h6 {
 .hero-bg-canvas { position: absolute; inset: 0; z-index: 0; }
 .hero-content-wrapper { position: relative; z-index: 10; }
 
+/* Sticky Hero Section - stays fixed while content scrolls over */
+#hero {
+  position: relative;
+  height: 100vh;
+}
+
+/* Main content container - ensures all children stay above sticky hero */
+main {
+  position: relative;
+  z-index: 10;
+  /* Inherit background color from body (#313131) */
+}
+
 /* portfolio/showreel styles removed — no longer used */
 
 /* Tailwind custom colors fallback (map some semantic names) */
@@ -302,8 +310,10 @@ h1,h2,h3,h4,h5,h6 {
 .bg-brand { background-color: #FFD700 }
 .bg-brand-600 { background-color: #FFCF33 }
 
+/* Separator divs between sections inherit body background */
+
 /* Dark-themed custom scrollbar for the site (WebKit + Firefox) */
-/* Keeps the scrollbar subtle but visible on the dark nebula background */
+/* Keeps the scrollbar subtle but visible on the dark background */
 /* WebKit/Blink scrollbar styling */
 ::-webkit-scrollbar {
   width: 12px;
@@ -425,7 +435,7 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 .navbar-menu {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
 }
 
 .navbar-item {
@@ -628,21 +638,21 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 .desktop-menu {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
 }
 
 /* Mobile Responsive */
 @media (min-width: 1200px) {
   .floating-navbar {
-    min-width: 600px;
-    max-width: 800px;
+    min-width: 520px;
+    max-width: 700px;
   }
 }
 
 @media (max-width: 1199px) {
   .floating-navbar {
-    min-width: min(500px, calc(100vw - 40px));
-    max-width: min(700px, calc(100vw - 40px));
+    min-width: min(450px, calc(100vw - 40px));
+    max-width: min(650px, calc(100vw - 40px));
   }
 }
 
@@ -1155,4 +1165,45 @@ section#hero, .hero {
   .logo-sub { font-size: 0.85rem }
   .video-dot-list { margin-top: 8px; }
   .carousel-indicators { margin-top: 0px !important; transform: translateY(-8px); }
+}
+
+/* ============================================================
+   HERO & CONTENT SEPARATION STYLES
+   Ensures proper z-index stacking and background consistency
+   for sticky scroll and scroll reveal animations
+   ============================================================ */
+
+/* Hero sections: full-height with no stickiness */
+#hero {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  flex-shrink: 0; /* Prevent collapse in flex containers */
+}
+
+/* Content sections: clear separation from hero */
+main,
+#contact-content,
+main > section {
+  position: relative;
+  z-index: 0;
+  background-color: inherit; /* Inherit parent background */
+  width: 100%;
+}
+
+/* Ensure nested sections have proper stacking */
+section#hero + main,
+section#hero + section {
+  margin-top: 0; /* No gap between hero and content */
+}
+
+/* For components using Layout wrapper */
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-wrapper > * {
+  position: relative;
+  z-index: 0;
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import styles from '../styles/ProjectsDesign.module.css';
 import OptimizedImage from './OptimizedImage';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 import analytics, { consentGiven } from '../lib/analytics';
 import { useRealtimePublicProjects } from '../hooks/useRealtimePublicProjects';
 import { usePublicShowreels } from '../hooks/usePublicShowreels';
@@ -46,11 +47,18 @@ const safeAnalyticsEvent = (name, props) => {
 const ProjectsDesign = () => {
   const { error, resetError, handleError } = useErrorHandler();
   
+  // Scroll reveal animations
+  const titleRef = useScrollReveal({ duration: 0.8, delay: 0 })
+  const subtitleRef = useScrollReveal({ duration: 0.8, delay: 0.2 })
+  const heroButtonRef = useScrollReveal({ duration: 0.8, delay: 0.4 })
+  
+  // Project card refs for scroll reveal (max 20 cards, enough for most portfolios)
+  const projectCardRefs = useRef([]);
+  
   // Typing animation state
   const [typedSubtitle, setTypedSubtitle] = useState('');
   const [descVisible, setDescVisible] = useState(false);
-  const [showShowreel, setShowShowreel] = useState(false);
-  const subtitleFull = "Bringing Imagination To Life";
+  const subtitleFull = "Transforming Ideas Into Reality";
 
   // Use realtime projects hook - no more manual API fetching!
   const { projects, loading: projectsLoading, error: projectsError } = useRealtimePublicProjects();
@@ -139,17 +147,7 @@ const ProjectsDesign = () => {
   // Display only real projects from database - no demo fallback
   const displayProjects = projects || [];
 
-  // No modal state: expanded project modals removed per client request
-
-  const playShowreel = useCallback(() => {
-    setShowShowreel(true);
-    safeAnalyticsEvent('showreel_play', { method: 'hero_button' });
-  }, []);
-
-  const closeShowreel = useCallback(() => {
-    setShowShowreel(false);
-    safeAnalyticsEvent('showreel_close', { method: 'overlay' });
-  }, []);
+  // Showreel functions removed - showreel moved to homepage
 
   // Close the showreel when clicking the backdrop (only when clicking the overlay itself)
   const handleShowreelOverlayClick = useCallback((e) => {
@@ -161,14 +159,7 @@ const ProjectsDesign = () => {
   }, []);
 
   // Close showreel on Escape key for accessibility
-  useEffect(() => {
-    if (!showShowreel) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape' || e.key === 'Esc') setShowShowreel(false);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [showShowreel]);
+  // Removed - showreel moved to homepage
 
   // openModal/closeModal removed — cards do not expand into modals
 
@@ -221,19 +212,43 @@ const ProjectsDesign = () => {
   }, []); // Remove dependencies to prevent re-runs
 
   // Body overflow handling only for showreel (modal removed)
+  // Body overflow management removed - showreel moved to homepage
+
+  // Apply scroll reveal to all project cards dynamically
   useEffect(() => {
-    const originalOverflow = document.body.style.overflow || '';
-    if (showShowreel) document.body.style.overflow = 'hidden';
+    if (!projectCardRefs.current || projectCardRefs.current.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Trigger animation by setting opacity and transform to visible state
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    projectCardRefs.current.forEach((card, idx) => {
+      if (card) {
+        const staggerDelay = (idx % 4) * 0.1; // Stagger every 4 cards
+        // Set initial hidden state
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = `opacity 0.8s ease-out ${staggerDelay}s, transform 0.8s ease-out ${staggerDelay}s`;
+        observer.observe(card);
+      }
+    });
 
     return () => {
-      try {
-        document.body.style.overflow = originalOverflow;
-      } catch (error) {
-        console.warn('Failed to restore body overflow:', error);
-        document.body.style.removeProperty('overflow');
-      }
+      projectCardRefs.current.forEach((card) => {
+        if (card) observer.unobserve(card);
+      });
     };
-  }, [showShowreel]);
+  }, [displayProjects]);
 
   return (
     <div className={styles.vfxContainer}>
@@ -251,64 +266,15 @@ const ProjectsDesign = () => {
           <div className={styles.heroOverlay}></div>
         </div>
         <div className={styles.heroContent}>
-          <h2 className="heroTitle">Portfolio & Showreel</h2>
-          <p className="heroSubtitle" style={{ color: '#FFD700', fontSize: '1.25rem', fontWeight: '400', textAlign: 'center', marginBottom: '1.2rem', minHeight: '1.875rem' }}>
+          <h2 ref={titleRef} className="heroTitle">Our Work</h2>
+          <p ref={subtitleRef} className="heroSubtitle" style={{ color: '#FFD700', fontSize: '1.25rem', fontWeight: '400', textAlign: 'center', marginBottom: '1.2rem', minHeight: '1.875rem' }}>
             {typedSubtitle}
           </p>
           <p className={styles.heroDescription + ' ' + (descVisible ? styles.showDesc : '')}>
             {/* Removed hero description as requested */}
           </p>
-          <button className={styles.playButton} onClick={playShowreel} aria-label="Play Main Showreel">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <circle cx="30" cy="30" r="30" fill="#FFD700"/>
-              <polygon points="25,20 25,40 40,30" fill="#000"/>
-            </svg>
-            <span>Play Showreel</span>
-          </button>
 
-          {showShowreel && (
-            <div className={styles.showreelOverlay} onClick={handleShowreelOverlayClick}>
-              <button
-                onClick={closeShowreel}
-                className={styles.showreelCloseBtn}
-                aria-label="Close showreel"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD700" strokeWidth="3" strokeLinecap="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-              <div style={{ maxWidth: '98vw', maxHeight: '90vh', background: 'transparent', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {
-                  // Choose the top active showreel (featured first, then latest)
-                }
-                <iframe
-                  width="1000"
-                  height="562"
-                  src={(() => {
-                    try {
-                      const active = featuredShowreel;
-                      if (!active || !active.video_url) return 'about:blank';
-                      const m = active.video_url.match(/(?:v=|youtu\.be\/)([^&\n?#]+)/);
-                      const id = m ? m[1] : null;
-                      return id ? `https://www.youtube.com/embed/${id}?autoplay=1` : 'about:blank';
-                    } catch (e) {
-                      console.error('Error building showreel embed URL', e);
-                      return 'about:blank';
-                    }
-                  })()}
-                  title="Adons Studio Showreel"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  className={styles.showreelIframe}
-                  onError={(e) => {
-                    console.error('Showreel iframe failed to load');
-                    handleError(new Error('Showreel load failed'), { componentStack: 'showreel iframe' });
-                  }}
-                ></iframe>
-              </div>
-            </div>
-          )}
+          {/* Play Showreel button removed - showreel moved to homepage */}
         </div>
       </section>
 
@@ -331,9 +297,12 @@ const ProjectsDesign = () => {
         )}
 
         <div className={styles.projectsGrid}>
-          {displayProjects.map((project) => (
+          {displayProjects.map((project, idx) => (
             <article
               key={project.id}
+              ref={(el) => {
+                if (el) projectCardRefs.current[idx] = el;
+              }}
               className={`${styles.projectCard} ${project.project_url ? styles.clickableCard : ''}`}
               onClick={project.project_url ? (e) => handleProjectClick(project, e) : undefined}
               onKeyDown={project.project_url ? (e) => {

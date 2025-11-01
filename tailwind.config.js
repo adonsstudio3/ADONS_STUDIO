@@ -14,7 +14,7 @@ module.exports = {
           DEFAULT: '#ffd700', /* gold/yellow */
           600: '#ffcf33'
         },
-        pagebg: '#000000'
+        pagebg: '#1A141A'
       }
     }
   },

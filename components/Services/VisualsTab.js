@@ -1,5 +1,9 @@
+'use client';
+
+import { useRef } from 'react';
 import ImageCompareSlider from '../ImageCompareSlider';
 import OptimizedImage from '../OptimizedImage';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 export default function VisualsTab() {
   // Keyed before/after images for cards that support comparison
@@ -16,23 +20,53 @@ export default function VisualsTab() {
     { key: 'rot', title: 'Rotoscope & Keying', body: `Rotoscoping and keying isolate subjects from backgrounds, enabling seamless compositing and integration of live-action footage with digital elements.`, mediaType: 'compare' },
     { key: 'paint', title: 'Paint & Cleanup', body: `Paint and cleanup remove unwanted objects, fix imperfections, and restore footage for seamless, polished visual effects and final compositions.`, mediaType: 'compare' },
     { key: 'anim', title: '3D & 2D Animation', body: `Producing animated content for ads, explainer videos, and films.`, mediaType: 'compare' },
-  { key: 'edit', title: 'Video Editing', body: `Cutting, color grading, and post-production for videos and films.`, mediaType: 'image', img: 'visuals/video-editing' },
-  { key: 'matte', title: 'Matte Painting', body: `We specialize in creating high-quality matte paints for films, ads, and digital media. From set extensions to photorealistic environments, our matte painting service blends artistry and technology to craft immersive worlds that seamlessly integrate with live-action or CGI.`, mediaType: 'image', img: 'visuals/matte-painting' },
-  { key: 'motion', title: 'Motion Graphics', body: `Designing animated graphics for branding, social media, and videos.`, mediaType: 'video', videoSrc: '/Images/visuals/Cookies_motion_graphics.mp4' }
+    { key: 'edit', title: 'Video Editing', body: `Cutting, color grading, and post-production for videos and films.`, mediaType: 'image', img: 'visuals/video-editing' },
+    { key: 'matte', title: 'Matte Painting', body: `We specialize in creating high-quality matte paints for films, ads, and digital media. From set extensions to photorealistic environments, our matte painting service blends artistry and technology to craft immersive worlds that seamlessly integrate with live-action or CGI.`, mediaType: 'image', img: 'visuals/matte-painting' },
+    { key: 'motion', title: 'Motion Graphics', body: `Designing animated graphics for branding, social media, and videos.`, mediaType: 'video', videoSrc: '/Images/visuals/Cookies_motion_graphics.mp4' }
   ];
 
+  const containerRef = useRef(null);
+  
+  // Create scroll reveal refs for each card with staggered delays
+  const cardRefs = cards.map((_, idx) => 
+    useScrollReveal({ 
+      duration: 0.8, 
+      delay: idx * 0.12,
+      rootMargin: '100px'
+    })
+  );
+
   return (
-    <div className="visuals-horizontal-list">
+    <div className="visuals-horizontal-layout" ref={containerRef}>
       <style jsx>{`
-        .visuals-horizontal-list {
+        .visuals-horizontal-layout {
+          position: relative;
+          width: 100%;
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: 0;
+          padding: 2rem 1rem;
+          align-items: center;
+          margin-bottom: 0;
         }
+
+        @keyframes unstackCard {
+          from {
+            opacity: 0;
+            transform: translateY(-80px) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
         .visuals-horizontal-card {
           display: flex;
           flex-direction: row;
-          min-height: 380px;
+          width: 100%;
+          max-width: 1200px;
+          height: 380px;
           background: rgba(255,255,255,0.08);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
@@ -41,11 +75,24 @@ export default function VisualsTab() {
           box-shadow: 0 2px 16px 0 rgba(0,0,0,0.18);
           transition: box-shadow 0.2s, transform 0.15s;
           cursor: pointer;
+          margin: 0 auto;
+          position: relative;
+          opacity: 0;
+          transform: translateY(-80px) scale(0.9);
+          margin-bottom: -340px;
+          z-index: var(--card-index);
         }
+
+        .visuals-horizontal-card.reveal {
+          animation: unstackCard 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          margin-bottom: 3rem;
+        }
+
         .visuals-horizontal-card:hover {
           box-shadow: 0 4px 32px 0 rgba(245,200,66,0.12);
           transform: scale(1.02);
         }
+
         .visuals-horizontal-card-image {
           flex: 1.4 1 0;
           min-width: 0;
@@ -53,6 +100,7 @@ export default function VisualsTab() {
           display: flex;
           align-items: stretch;
         }
+
         .visuals-horizontal-card-image img {
           width: 100%;
           height: 100%;
@@ -60,6 +108,7 @@ export default function VisualsTab() {
           object-position: center;
           display: block;
         }
+
         .visuals-horizontal-card-content {
           flex: 1 1 0;
           min-width: 0;
@@ -68,26 +117,42 @@ export default function VisualsTab() {
           justify-content: center;
           padding: 3.2rem 2.5rem;
         }
+
         .visuals-horizontal-card-title {
           color: #F5C842;
           font-size: 1.5rem;
           font-weight: 600;
           margin-bottom: 1rem;
         }
+
         .visuals-horizontal-card-body {
           color: #e5e5e5;
           font-size: 1.05rem;
           line-height: 1.6;
         }
+
         @media (max-width: 900px) {
           .visuals-horizontal-card-content { padding: 1.5rem 1rem; }
           .visuals-horizontal-card-title { font-size: 1.1rem; }
         }
+
         @media (max-width: 768px) {
+          .visuals-horizontal-layout { 
+            gap: 2rem;
+            margin-bottom: 0;
+          }
+
           .visuals-horizontal-card { 
             flex-direction: column !important; 
-            min-height: 0; 
+            height: auto;
+            width: 100%;
+            margin-bottom: -300px;
           }
+
+          .visuals-horizontal-card.reveal {
+            margin-bottom: 2rem;
+          }
+
           .visuals-horizontal-card-image, .visuals-horizontal-card-content { 
             flex: unset; 
             min-width: unset; 
@@ -102,43 +167,53 @@ export default function VisualsTab() {
           }
         }
       `}</style>
+
       {cards.map((c, idx) => {
         const isReversed = idx % 2 !== 0;
+
         return (
-          <div key={c.key} className="visuals-horizontal-card" style={{ flexDirection: isReversed ? 'row-reverse' : 'row' }}>
-            <div className="visuals-horizontal-card-image">
-              {c.mediaType === 'compare' ? (
-                <ImageCompareSlider
-                  leftImg={compareImages[c.key]?.before}
-                  rightImg={compareImages[c.key]?.after}
-                  alt={c.title}
-                  height={"100%"}
-                />
-              ) : c.mediaType === 'video' ? (
-                <video
-                  src={c.videoSrc}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
-                />
-              ) : c.img ? (
-                <OptimizedImage name={c.img} alt={c.title} width={800} className="w-full h-full object-cover block" />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-black/6 to-black/12 flex items-center justify-center">
-                  <div className="w-full h-full border border-white/8 rounded-md" />
+          <div
+            key={c.key}
+            ref={cardRefs[idx]}
+            className="visuals-horizontal-card"
+            style={{ 
+              flexDirection: isReversed ? 'row-reverse' : 'row',
+              '--card-index': cards.length - idx
+            }}
+          >
+              <div className="visuals-horizontal-card-image">
+                {c.mediaType === 'compare' ? (
+                  <ImageCompareSlider
+                    leftImg={compareImages[c.key]?.before}
+                    rightImg={compareImages[c.key]?.after}
+                    alt={c.title}
+                    height={"100%"}
+                  />
+                ) : c.mediaType === 'video' ? (
+                  <video
+                    src={c.videoSrc}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                  />
+                ) : c.img ? (
+                  <OptimizedImage name={c.img} alt={c.title} width={800} className="w-full h-full object-cover block" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-black/6 to-black/12 flex items-center justify-center">
+                    <div className="w-full h-full border border-white/8 rounded-md" />
+                  </div>
+                )}
+              </div>
+              <div className="visuals-horizontal-card-content">
+                <div>
+                  <div className="visuals-horizontal-card-title">{c.title}</div>
+                  <div className="visuals-horizontal-card-body">{c.body}</div>
                 </div>
-              )}
-            </div>
-            <div className="visuals-horizontal-card-content">
-              <div>
-                <div className="visuals-horizontal-card-title">{c.title}</div>
-                <div className="visuals-horizontal-card-body">{c.body}</div>
               </div>
             </div>
-          </div>
-        )
+        );
       })}
     </div>
   );

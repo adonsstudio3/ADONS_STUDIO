@@ -145,7 +145,7 @@ export default function ImageCompareSlider({ leftImg, rightImg, alt, altBefore, 
              height: 40px;
              width: 40px;
              border-radius: 50%;
-             background: #000;
+             background: #1A141A;
              border: 2px solid #666;
              display: flex;
              align-items: center;

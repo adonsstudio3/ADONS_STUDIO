@@ -46,11 +46,13 @@ export default function OptimizedImage({
         alt={alt} 
         className={className}
         style={{ width: '100%', ...style }}
+        decoding="async"
+        loading={priority ? "eager" : "lazy"}
         {...props}
       />
     );
   }
-  
+
   return (
     <picture>
       <source 
@@ -67,6 +69,8 @@ export default function OptimizedImage({
         className={className}
         style={{ width: '100%', ...style }}
         onError={() => setError(true)}
+        decoding={priority ? "sync" : "async"}
+        loading={priority ? "eager" : "lazy"}
         {...props}
       />
     </picture>

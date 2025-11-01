@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router'
 import styles from './ContactForm.module.css';
 import CountryDropdown from './CountryDropdown';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 // Country codes list (flag emoji, name, dial code). This is a compact but broad
 // list; feel free to extend or replace with a curated dataset if you prefer.
@@ -68,6 +69,10 @@ const COUNTRY_CODES = [
 
 export default function Contact() {
   const router = useRouter()
+  const formTitleRef = useScrollReveal({ duration: 0.8, delay: 0 })
+  const formSubtitleRef = useScrollReveal({ duration: 0.8, delay: 0.2 })
+  const formRef = useScrollReveal({ duration: 0.8, delay: 0.4 })
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -188,18 +193,18 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className={`${styles.contactFormContainer} ${router && router.pathname === '/contact' ? styles.contactPageOffset : ''}`}>
+  <section id="contact" className={`${styles.contactFormContainer} ${router && router.pathname === '/contact' ? styles.contactPageOffset : ''}`} style={{ position: 'relative', zIndex: 20, background: '#fff' }}>
       <div className={styles.inner}>
         <div className={styles.intro}>
           {router && router.pathname === '/contact' ? null : (
             <>
-              <h2 className={`${styles.formTitle} ${styles.formTitleGold}`}><strong>Have a project in mind ?</strong></h2>
-              <p className={styles.formSubtitle}>We are ready to talk.</p>
+              <h2 ref={formTitleRef} className={`${styles.formTitle} ${styles.formTitleGold}`}><strong>Have a project in mind ?</strong></h2>
+              <p ref={formSubtitleRef} className={styles.formSubtitle}>We are ready to talk.</p>
             </>
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.contactForm} noValidate>
+        <form ref={formRef} onSubmit={handleSubmit} className={styles.contactForm} noValidate>
           {/* First and Last name side-by-side */}
           <div className={styles.row}>
             <div className={styles.inputGroup}>

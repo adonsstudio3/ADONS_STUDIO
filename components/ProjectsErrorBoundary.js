@@ -20,7 +20,7 @@ class ProjectsErrorBoundary extends React.Component {
         <div style={{
           padding: '4rem 2rem',
           textAlign: 'center',
-          background: '#0a0a0a',
+          background: '#1A141A',
           color: '#ffffff',
           minHeight: '60vh',
           display: 'flex',

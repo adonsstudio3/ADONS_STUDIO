@@ -2,6 +2,7 @@
 
 import React from 'react';
 import OptimizedImage from '../OptimizedImage';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 export default function AudioTab(){
   const tracks = [
@@ -12,9 +13,29 @@ export default function AudioTab(){
     { key: 'ar', title: 'Audio Restoration', body: 'Cleaning and remastering audio', h: 400, img: 'audio/audio-restoration' }
   ]
 
+  // Create scroll reveal refs for each card with staggered delays
+  const cardRefs = tracks.map((_, idx) => 
+    useScrollReveal({ 
+      duration: 0.7, 
+      delay: idx * 0.12,
+      rootMargin: '50px'
+    })
+  );
+
   return (
     <div className="masonry-wrapper">
       <style jsx>{`
+        @keyframes slideInCard {
+          from {
+            opacity: 0;
+            transform: translateY(40px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         /* Mobile-first default: stack vertically on mobile */
         .masonry-wrapper {
           -webkit-column-count: 2;
@@ -60,12 +81,34 @@ export default function AudioTab(){
             }
         }
 
-        .masonry-card { display: inline-block; width: 100%; margin: 0 0 0.75rem; break-inside: avoid; border-radius: 0.5rem; overflow: hidden; }
+        .masonry-card { 
+          display: inline-block; 
+          width: 100%; 
+          margin: 0 0 0.75rem; 
+          break-inside: avoid; 
+          border-radius: 0.5rem; 
+          overflow: hidden;
+          opacity: 0;
+          transform: translateY(40px);
+        }
+
+        .masonry-card.reveal {
+          animation: slideInCard 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .masonry-card.bg-white\/5 {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .masonry-card.bg-white\/5:hover {
+          box-shadow: 0 8px 32px 0 rgba(245,200,66,0.2) !important;
+        }
       `}</style>
 
-      {tracks.map((t) => (
+      {tracks.map((t, idx) => (
         <article
           key={t.key}
+          ref={cardRefs[idx]}
           className="masonry-card bg-white/5 backdrop-blur-sm shadow-sm transition-all duration-200 group overflow-hidden rounded hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 focus-visible:shadow-lg focus-visible:scale-[1.03] focus-visible:-translate-y-1"
           style={{height: `${t.h}px`}}
           tabIndex={0}
@@ -73,8 +116,6 @@ export default function AudioTab(){
           onKeyDown={e => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              // If these cards are meant to be interactive, trigger the intended action here
-              // For now, just visually indicate focus/activation
             }
           }}
         >

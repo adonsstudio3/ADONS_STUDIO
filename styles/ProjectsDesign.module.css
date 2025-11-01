@@ -99,7 +99,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .heroOverlay {
@@ -108,6 +108,7 @@
   left: 0;
   width: 100%;
   height: 100%;
+  background: transparent;
 }
 
 .heroContent {
@@ -464,7 +465,6 @@
 /* Only apply hover effects on devices that support hover (not touch devices) */
 @media (hover: hover) and (pointer: fine) {
   .clickableCard:hover {
-    border-color: var(--vfx-primary-gold);
     box-shadow: var(--vfx-glow), 0 18px 36px rgba(0,0,0,0.45);
   }
 }
