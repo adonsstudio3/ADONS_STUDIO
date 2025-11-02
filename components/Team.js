@@ -150,16 +150,16 @@ export default function Team(){
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(50%);
           }
         }
 
         @keyframes textScrollReverse {
           0% {
-            transform: translateX(-50%);
+            transform: translateX(0);
           }
           100% {
-            transform: translateX(0);
+            transform: translateX(-50%);
           }
         }
 
@@ -243,6 +243,7 @@ export default function Team(){
           .team-border-text {
             font-size: 1.2rem;
             letter-spacing: 4px;
+            animation: textScroll 40s linear infinite;
           }
 
           .team-border-top,
@@ -267,6 +268,10 @@ export default function Team(){
             margin: 0 auto 2rem auto;
           }
 
+          .team-carousel-item:nth-child(n+5) {
+            display: none;
+          }
+
           .team-card {
             width: 100% !important;
             max-width: 300px !important;
@@ -275,10 +280,6 @@ export default function Team(){
 
           .team-card-image {
             width: 100% !important;
-          }
-
-          .team-border-text {
-            animation: none;
           }
         }
       `}</style>

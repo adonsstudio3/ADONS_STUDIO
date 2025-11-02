@@ -47,9 +47,9 @@ export default function Home() {
               We Keep Our Word
             </h2>
             
-            <div className="grid grid-cols-3 gap-0 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 w-full">
               {/* On Time */}
-              <div className="p-8 rounded-none bg-black/40 backdrop-blur-sm border-r border-white/10">
+              <div className="p-8 rounded-none bg-black/40 backdrop-blur-sm border-b md:border-b-0 border-r border-white/10">
                 <h3 className="text-2xl font-bold text-yellow-400 mb-4">
                   WE ARE ON TIME
                 </h3>
@@ -59,7 +59,7 @@ export default function Home() {
               </div>
               
               {/* Satisfactory */}
-              <div className="p-8 rounded-none bg-black/40 backdrop-blur-sm border-r border-white/10">
+              <div className="p-8 rounded-none bg-black/40 backdrop-blur-sm border-b md:border-b-0 border-r border-white/10">
                 <h3 className="text-2xl font-bold text-yellow-400 mb-4">
                   WE ARE SATISFACTORY
                 </h3>

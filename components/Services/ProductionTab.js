@@ -86,7 +86,7 @@ export default function ProductionTab(){
   );
 
   return (
-    <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-3 gap-4 px-4">
+    <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 md:grid-cols-3 gap-4 px-4">
       <style jsx>{`
         @keyframes slideInCard {
           from {
@@ -109,7 +109,6 @@ export default function ProductionTab(){
           overflow: hidden;
           opacity: 0;
           transform: translateY(40px);
-          border-right: none;
         }
 
         .production-card.reveal {
@@ -121,6 +120,8 @@ export default function ProductionTab(){
           transform: translateY(-4px) scale(1.02);
           background: rgba(255,255,255,0.15);
         }
+
+
       `}</style>
       {cards.map((card, idx) => (
         <div

@@ -38,17 +38,16 @@
     text-align: center !important;
   }
 
-  /* AudioTab - Remove Masonry, Stack Cards Vertically */
-  .audio-cards-container {
-    column-count: 1 !important;
+  /* AudioTab - Stack Cards Vertically on Mobile */
+  .audio-grid-wrapper {
     display: flex !important;
     flex-direction: column !important;
-    gap: 1.5rem !important;
+    gap: 2rem !important;
   }
   
   .audio-card {
-    break-inside: auto !important;
     width: 100% !important;
+    height: auto !important;
     margin-bottom: 0 !important;
   }
 

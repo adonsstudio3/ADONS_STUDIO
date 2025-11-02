@@ -98,14 +98,42 @@ export default function AboutPage(){
       {/* Main Content - separated from hero */}
       <main ref={contentRef} className="relative z-0">
         {/* About Section */}
-        <section className="py-20 px-1 md:px-2 max-w-6xl mx-auto">
+        <section className="py-20 px-4 md:px-8 max-w-6xl mx-auto">
+          <style jsx>{`
+            @media (max-width: 768px) {
+              .about-image-left picture,
+              .about-image-right picture {
+                float: none !important;
+                margin: 0 auto 2rem !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                text-align: center;
+                display: block !important;
+              }
+
+              .about-image-left picture img,
+              .about-image-right picture img {
+                width: 100% !important;
+                height: auto !important;
+                max-width: none !important;
+              }
+
+              .about-text-content {
+                clear: both;
+              }
+
+              .about-paragraph-with-image {
+                clear: both;
+              }
+            }
+          `}</style>
           <div className="space-y-10 text-lg leading-relaxed" style={{ color: '#FFFFFF' }}>
             <p ref={section1Ref}><span style={{ color: '#FFFFFF', fontSize: '2.5em', lineHeight: '0.7', verticalAlign: 'bottom', display: 'inline-block', fontWeight: 'bold', fontFamily: 'inherit', marginRight: '2px' }}>O</span>ur story began in the most unexpected way, sometimes the best ideas come when you least expect them. Through a simple conversation between five friends from different cities, each with unique skills and expertise, what started as an informal discussion quickly transformed into a shared vision: to build something meaningful, innovative, and lasting. From that moment, ADONS was born - a creative studio built on passion, collaboration, and the relentless pursuit of excellence.</p>
 
             <p ref={section1Ref}>Each member of our founding team brings a distinctive set of skills, experiences, and ideas, creating a diverse foundation that fuels our creativity and sets us apart. We believe that our differences are not only our greatest asset but also the key to delivering exceptional work that pushes boundaries and inspires others.</p>
             
-            <p ref={section2Ref} style={{ marginTop: '2.5em' }}>
-              <picture style={{ float: 'left', marginRight: '44px', marginTop: '-12px', marginBottom: '12px', zIndex: 1, position: 'relative' }}>
+            <p ref={section2Ref} className="about-paragraph-with-image" style={{ marginTop: '2.5em' }}>
+              <picture className="about-image-left" style={{ float: 'left', marginRight: '44px', marginTop: '0', marginBottom: '12px', zIndex: 1, position: 'relative' }}>
                 <OptimizedImage
                   name="about/studio_1"
                   alt="ADONS Studio - Team Collaboration"
@@ -133,8 +161,8 @@ export default function AboutPage(){
 
             <p ref={section3Ref}>As a full-service production house, ADONS specializes in every aspect of filmmaking, from pre-production and planning to on-set production and post-production. Whether it's developing compelling concepts, executing seamless shoots, or delivering stunning visual effects and finishing touches, our team is dedicated to bringing each project to life with precision and passion. Alongside this, ADONS brings stories to life with immersive sound design, original music compositions, voice-over recording, and precise mixing &amp; mastering. We work closely with our clients, understanding their vision and translating it into high-end, impactful film and video content that resonates and inspires. Innovation is at the heart of everything we do, and we are constantly exploring new techniques, technologies, and creative approaches to elevate each project.</p>
 
-            <p ref={section3Ref} style={{ marginTop: '2.5em' }}>
-              <picture style={{ float: 'right', marginLeft: '44px', marginTop: '-12px', marginBottom: '12px', zIndex: 1, position: 'relative' }}>
+            <p ref={section3Ref} className="about-paragraph-with-image" style={{ marginTop: '2.5em' }}>
+              <picture className="about-image-right" style={{ float: 'right', marginLeft: '44px', marginTop: '0', marginBottom: '12px', zIndex: 1, position: 'relative' }}>
                 <OptimizedImage
                   name="about/studio_2"
                   alt="ADONS Studio - Creative Hub"

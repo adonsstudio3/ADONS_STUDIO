@@ -23,7 +23,7 @@ export default function AudioTab(){
   );
 
   return (
-    <div className="masonry-wrapper">
+    <div className="audio-grid-wrapper">
       <style jsx>{`
         @keyframes slideInCard {
           from {
@@ -36,72 +36,134 @@ export default function AudioTab(){
           }
         }
 
-        /* Mobile-first default: stack vertically on mobile */
-        .masonry-wrapper {
-          -webkit-column-count: 2;
-          -moz-column-count: 2;
-          column-count: 2;
-          -webkit-column-gap: 0.75rem;
-          -moz-column-gap: 0.75rem;
-          column-gap: 0.75rem;
+        /* Grid layout: 3 cards top, 2 cards bottom */
+        .audio-grid-wrapper {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 3.5rem;
+          width: 100%;
         }
 
-        /* Mobile: single column vertical stack */
+        /* Mobile: single column */
         @media (max-width: 768px) {
-          .masonry-wrapper {
-            -webkit-column-count: 1;
-            -moz-column-count: 1;
-            column-count: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-          }
-          
-          .masonry-card {
-            width: 100% !important;
-            height: auto !important;
-            min-height: 400px;
-            break-inside: auto;
-            margin: 0;
+          .audio-grid-wrapper {
+            grid-template-columns: 1fr;
+            gap: 3.5rem;
           }
         }
 
-        /* Larger screens: increase to 3 columns */
+        /* Tablet: 2 columns */
+        @media (min-width: 769px) and (max-width: 1023px) {
+          .audio-grid-wrapper {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3.5rem;
+          }
+        }
+
+        /* Large screens: 3 columns with centered bottom row */
         @media (min-width: 1024px) {
-          .masonry-wrapper {
-            -webkit-column-count: 3;
-            -moz-column-count: 3;
-            column-count: 3;
-            -webkit-column-gap: 1rem;
-            -moz-column-gap: 1rem;
-            column-gap: 1rem;
+          .audio-grid-wrapper {
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3.5rem;
           }
-            .masonry-card p {
-              font-size: 1.15rem;
-            }
+
+          /* Top 3 cards span 2 columns each */
+          .audio-card:nth-child(1) {
+            grid-column: 1 / 3;
+          }
+
+          .audio-card:nth-child(2) {
+            grid-column: 3 / 5;
+          }
+
+          .audio-card:nth-child(3) {
+            grid-column: 5 / 7;
+          }
+
+          /* Bottom 2 cards centered and span 2 columns each */
+          .audio-card:nth-child(4) {
+            grid-column: 2 / 4;
+          }
+
+          .audio-card:nth-child(5) {
+            grid-column: 4 / 6;
+          }
         }
 
-        .masonry-card { 
-          display: inline-block; 
+        .audio-card { 
+          display: flex;
+          flex-direction: column;
           width: 100%; 
-          margin: 0 0 0.75rem; 
-          break-inside: avoid; 
+          height: 500px;
           border-radius: 0.5rem; 
           overflow: hidden;
           opacity: 0;
           transform: translateY(40px);
-        }
-
-        .masonry-card.reveal {
-          animation: slideInCard 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        .masonry-card.bg-white\/5 {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(8px);
+          box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.18);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .masonry-card.bg-white\/5:hover {
-          box-shadow: 0 8px 32px 0 rgba(245,200,66,0.2) !important;
+        .audio-card.reveal {
+          animation: slideInCard 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .audio-card:hover {
+          box-shadow: 0 8px 32px 0 rgba(245, 200, 66, 0.2) !important;
+          transform: translateY(-4px) scale(1.02);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Image section - 65% of card height */
+        .audio-card-image {
+          height: 65%;
+          position: relative;
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+
+        .audio-card-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .audio-card-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.25);
+          transition: background-color 0.3s;
+        }
+
+        .audio-card:hover .audio-card-overlay {
+          background: rgba(0, 0, 0, 0.35);
+        }
+
+        /* Content section - 35% of card height */
+        .audio-card-content {
+          height: 35%;
+          padding: 1.25rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          background: transparent;
+        }
+
+        .audio-card-content h4 {
+          color: #FFD700;
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin: 0;
+          margin-bottom: 0.5rem;
+        }
+
+        .audio-card-content p {
+          color: #d1d5db;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          margin: 0;
         }
       `}</style>
 
@@ -109,8 +171,7 @@ export default function AudioTab(){
         <article
           key={t.key}
           ref={cardRefs[idx]}
-          className="masonry-card bg-white/5 backdrop-blur-sm shadow-sm transition-all duration-200 group overflow-hidden rounded hover:shadow-lg hover:scale-[1.03] hover:-translate-y-1 focus-visible:shadow-lg focus-visible:scale-[1.03] focus-visible:-translate-y-1"
-          style={{height: `${t.h}px`}}
+          className="audio-card"
           tabIndex={0}
           role="button"
           onKeyDown={e => {
@@ -119,40 +180,28 @@ export default function AudioTab(){
             }
           }}
         >
-
-          {/* Image-dominant top area (approx 68% height) with visible border */}
-          {t.img ? (
-            <div className="relative h-[68%] p-3 flex items-stretch">
-              <div className="relative w-full h-full border border-white/10 rounded-md overflow-hidden">
+          {/* Image section */}
+          <div className="audio-card-image">
+            {t.img ? (
+              <>
                 <OptimizedImage
                   name={t.img}
                   loading="lazy"
-                  alt={
-                    t.title && t.description
-                      ? `${t.title} - ${t.description}`
-                      : t.title
-                        ? `${t.title} image`
-                        : 'Service image'
-                  }
-                  className="object-cover w-full h-full block"
-                  style={{ width: '100%', height: '100%' }}
+                  alt={t.title}
+                  className="w-full h-full object-cover block"
                   width={400}
                 />
-                <div className="absolute inset-0 bg-black/25 group-hover:bg-black/30 transition-colors" />
-              </div>
-            </div>
-          ) : (
-            <div className="h-[68%] bg-gradient-to-br from-black/6 to-black/12 p-6 flex items-center justify-center" aria-hidden="true">
-              <div className="w-full h-full border border-white/8 rounded-md" />
-            </div>
-          )}
+                <div className="audio-card-overlay" />
+              </>
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-black/6 to-black/12" aria-hidden="true" />
+            )}
+          </div>
 
-          {/* Small content area at bottom */}
-          <div className="h-[32%] p-5 flex items-start bg-transparent">
-            <div>
-              <h4 className="text-yellow-400 text-xl font-semibold">{t.title}</h4>
-              <p className="text-gray-300 text-sm leading-relaxed mt-1">{t.body}</p>
-            </div>
+          {/* Content section */}
+          <div className="audio-card-content">
+            <h4>{t.title}</h4>
+            <p>{t.body}</p>
           </div>
         </article>
       ))}
