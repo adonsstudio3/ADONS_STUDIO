@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { FilmIcon } from '@heroicons/react/24/outline';
 import { useRealtimeHeroSections } from '../../hooks/useRealtimeHeroSections';
+import { supabaseClient } from '../../lib/supabase';
 import AdminLoadingSpinner from './AdminLoadingSpinner';
 import ModalPortal from '../ModalPortal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
@@ -123,17 +124,36 @@ export default function HeroSectionManager() {
         mediaFormData.append('alt_text', formData.title);
         
         try {
-          const mediaResponse = await apiCall('/api/admin/media', {
+          // Get fresh auth token for direct fetch (FormData bypass apiCall)
+          const { data: sessionData } = await supabaseClient.auth.getSession();
+          const token = sessionData?.session?.access_token;
+          
+          if (!token) {
+            throw new Error('No valid session - please login again');
+          }
+          
+          const mediaResponse = await fetch('/api/admin/media', {
             method: 'POST',
-            body: mediaFormData
+            body: mediaFormData,
+            headers: {
+              'Authorization': `Bearer ${token}`
+              // DO NOT set Content-Type - let browser handle multipart/form-data
+            }
           });
           
-          console.log('📤 Media upload response:', mediaResponse);
+          if (!mediaResponse.ok) {
+            const errorData = await mediaResponse.json().catch(() => ({}));
+            console.error('❌ Media upload HTTP error:', mediaResponse.status, errorData);
+            throw new Error(`Upload failed: ${errorData.error || mediaResponse.statusText}`);
+          }
           
-          backgroundValue = mediaResponse.url;
+          const responseData = await mediaResponse.json();
+          console.log('📤 Media upload response:', responseData);
+          
+          backgroundValue = responseData.url;
           
           if (!backgroundValue) {
-            console.error('❌ No URL in media response:', mediaResponse);
+            console.error('❌ No URL in media response:', responseData);
             throw new Error('Failed to get media URL from upload response');
           }
           
