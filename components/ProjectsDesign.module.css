@@ -1,9 +1,9 @@
 .showreelOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  /* Use inset: 0 instead of width/height: 100vw/100vh.
+     On iOS Safari, 100vw can cover the native scroll indicator track (right edge).
+     inset: 0 is equivalent but does not cause that issue. */
+  inset: 0;
   background: #000;
   z-index: 1000;
   display: flex;

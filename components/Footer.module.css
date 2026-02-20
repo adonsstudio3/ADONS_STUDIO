@@ -191,7 +191,8 @@
   transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  pointer-events: auto; /* ensure clickable even if parent has altered events */
+  pointer-events: auto;
+  /* ensure clickable even if parent has altered events */
   z-index: 10;
 }
 
@@ -265,29 +266,29 @@
     gap: 1.5rem;
     text-align: center;
   }
-  
+
   .footerColumnCompany {
     max-width: none;
   }
-  
+
   .footerNavLink {
     padding-left: 0;
     justify-content: center;
   }
-  
+
   .footerNavLink::before {
     display: none;
   }
-  
+
   .footerContactItem {
     justify-content: center;
     text-align: left;
   }
-  
+
   .footerSocial {
     justify-content: center;
   }
-  
+
   .footerBottomContent {
     flex-direction: column;
     text-align: center;
@@ -298,30 +299,30 @@
   .footerMain {
     padding: 1.5rem 0;
   }
-  
+
   .footerContent {
     gap: 1.25rem;
   }
-  
+
   .footerBrandName {
     font-size: 1.25rem;
   }
-  
+
   .footerLogoImg {
     width: 80px;
     height: 80px;
   }
-  
+
   .footerSocial {
     gap: 0.75rem;
   }
-  
+
   .footerSocialLink {
     width: 40px;
     height: 40px;
     font-size: 0.875rem;
   }
-  
+
   .container {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
@@ -334,6 +335,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

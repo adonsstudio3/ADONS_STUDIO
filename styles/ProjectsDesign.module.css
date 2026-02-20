@@ -1,11 +1,12 @@
 /* Showreel Modal Overlay */
 .showreelOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(30,30,40,0.32);
+  /* Use inset: 0 instead of width/height: 100vw/100vh.
+     On iOS Safari, 100vw can extend to cover the native scroll indicator track
+     on the right edge of the viewport. inset: 0 is functionally identical but
+     does not cause that layout issue. */
+  inset: 0;
+  background: rgba(30, 30, 40, 0.32);
   z-index: 3000;
   display: flex;
   align-items: center;
@@ -24,14 +25,14 @@
   font-size: 32px;
   font-weight: bold;
   color: #fff;
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 24px #0006;
   cursor: pointer;
   z-index: 3100;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-color: rgba(255,255,255,0.25);
+  border-color: rgba(255, 255, 255, 0.25);
   border-width: 1.5px;
   border-style: solid;
   transition: background 0.2s;
@@ -49,7 +50,7 @@
     height: 40px;
     font-size: 24px;
   }
-  
+
   .showreelIframe {
     width: 90vw !important;
     height: 50.625vw !important;
@@ -59,8 +60,9 @@
 }
 
 .showreelCloseBtn:hover {
-  background: rgba(255,255,255,0.22);
+  background: rgba(255, 255, 255, 0.22);
 }
+
 /* Custom VFX Studio Dark Theme */
 .vfxContainer {
   --vfx-primary-gold: #FFD700;
@@ -142,7 +144,7 @@
   text-transform: uppercase;
 }
 
- .heroTitle {
+.heroTitle {
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 550;
   margin-bottom: 1.5rem;
@@ -160,7 +162,7 @@
   margin-right: auto;
   margin-top: -1.2rem;
   opacity: 0;
-  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .showDesc {
@@ -188,8 +190,16 @@
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .playButton {
@@ -272,14 +282,17 @@
   display: block;
   width: 100%;
   position: relative;
-  min-height: 600px; /* Much taller cards for dramatic vertical effect */
+  min-height: 600px;
+  /* Much taller cards for dramatic vertical effect */
   height: auto;
   border-radius: 16px;
   overflow: hidden;
-  background: transparent; /* No dark surface background */
+  background: transparent;
+  /* No dark surface background */
   cursor: pointer;
   transition: transform 0.28s ease;
-  margin: 0; /* No margin needed with grid gap */
+  margin: 0;
+  /* No margin needed with grid gap */
 }
 
 /* Add varied heights for masonry effect */
@@ -316,7 +329,7 @@
   display: flex;
   align-items: flex-end;
   padding: 1rem 1.25rem;
-  background: linear-gradient(0deg, rgba(0,0,0,0.75), rgba(0,0,0,0));
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
   opacity: 0;
   transition: opacity 0.22s ease;
 }
@@ -355,22 +368,24 @@
   opacity: 0;
   transform: translateY(-6px) scale(0.98);
   transition: opacity 220ms ease, transform 220ms ease;
-  pointer-events: none; /* hidden by default */
+  pointer-events: none;
+  /* hidden by default */
 }
 
 .projectTag {
   /* Glass-style translucent pill */
-  background: rgba(10,10,10,0.78); /* darker glass base */
+  background: rgba(10, 10, 10, 0.78);
+  /* darker glass base */
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
   font-size: 0.95rem;
   font-weight: 600;
   text-transform: lowercase;
   letter-spacing: 0.02em;
-  border: 1px solid rgba(255,255,255,0.04);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
   color: var(--vfx-primary-gold);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
   -webkit-backdrop-filter: blur(6px) saturate(120%);
   backdrop-filter: blur(6px) saturate(120%);
 }
@@ -379,10 +394,10 @@
 @supports ((-webkit-backdrop-filter: blur(6px)) or (backdrop-filter: blur(6px))) {
   .projectTag {
     /* Keep glass effect but use dark tint so tags remain dark-themed */
-    background: rgba(10,10,10,0.6);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     color: var(--vfx-primary-gold);
-    text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
   }
 }
 
@@ -421,7 +436,7 @@
   min-height: 40vh;
   width: 100%;
   padding: 4rem 1rem;
-  background: linear-gradient(180deg, rgba(10,10,10,0.9), rgba(20,20,20,0.95));
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.95));
   color: var(--vfx-text-primary);
 }
 
@@ -440,6 +455,7 @@
   color: var(--vfx-text-secondary);
   font-size: 1.125rem;
 }
+
 /* project card styles removed */
 
 /* modal styles removed */
@@ -455,6 +471,7 @@
   font-size: 1.5rem;
   margin-bottom: 2rem;
 }
+
 /* Clickable Card Styles */
 .clickableCard {
   cursor: pointer;
@@ -465,7 +482,7 @@
 /* Only apply hover effects on devices that support hover (not touch devices) */
 @media (hover: hover) and (pointer: fine) {
   .clickableCard:hover {
-    box-shadow: var(--vfx-glow), 0 18px 36px rgba(0,0,0,0.45);
+    box-shadow: var(--vfx-glow), 0 18px 36px rgba(0, 0, 0, 0.45);
   }
 }
 
@@ -544,8 +561,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error State */
@@ -575,6 +597,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -587,6 +610,7 @@
     max-width: 700px;
     padding: 0 1.5rem;
   }
+
   .projectsGrid {
     grid-template-columns: repeat(2, 1fr);
     padding: 0 1.5rem;
@@ -599,31 +623,31 @@
     padding: 0 1rem;
     max-width: 90%;
   }
-  
+
   .studioName {
     font-size: clamp(2rem, 10vw, 4rem);
   }
-  
+
   .heroTitle {
     font-size: clamp(1.5rem, 8vw, 2.5rem);
   }
-  
+
   .projectsGrid {
     grid-template-columns: 1fr;
     gap: 1rem;
     padding: 0 1rem;
   }
-  
+
   .projectCard {
     min-height: 500px !important;
   }
-  
+
   .projectCard:nth-child(3n+1),
   .projectCard:nth-child(3n+2),
   .projectCard:nth-child(3n) {
     min-height: 500px !important;
   }
-  
+
   .projectOverlay {
     opacity: 1;
     background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 70%);
@@ -666,29 +690,29 @@
     font-size: 0.8rem;
     padding: 0.25rem 0.6rem;
   }
-  
+
   .modalContent {
     max-width: 95vw;
     max-height: 95vh;
   }
-  
+
   .modalBody {
     flex-direction: column;
   }
-  
+
   .modalMedia {
     height: 250px;
   }
-  
+
   .modalInfo {
     padding: 1.5rem;
   }
-  
+
   .modalHeader {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .modalProjectTitle {
     font-size: 1.25rem;
   }
@@ -697,7 +721,7 @@
   .projectTitle {
     font-size: 1.4rem;
   }
-  
+
   .modalMeta {
     grid-template-columns: 1fr;
   }

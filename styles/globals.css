@@ -21,7 +21,7 @@
     overflow-wrap: break-word;
     white-space: normal;
   }
-  
+
   /* Hero video title styling */
   .carousel-caption h5 {
     font-size: clamp(0.9rem, 4vw, 1.2rem) !important;
@@ -32,7 +32,7 @@
     overflow-wrap: break-word !important;
     white-space: normal !important;
   }
-  
+
   /* Typewriter text specific styling */
   .typewriter {
     min-height: 1.4em;
@@ -40,13 +40,16 @@
     width: 100% !important;
   }
 }
-.heroSubtitle, .heroDescription {
+
+.heroSubtitle,
+.heroDescription {
   font-size: 1.25rem;
   font-weight: 400;
   text-align: center;
   color: #FFD700;
   margin-bottom: 1.2rem;
 }
+
 /* Prevent FOUC (Flash of Unstyled Content) - Enhanced version */
 /* Initial body state is set in _document.js inline styles */
 
@@ -54,6 +57,7 @@
 .text-gold {
   color: #FFD700;
 }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -81,7 +85,7 @@
 @font-face {
   font-family: 'Playfair Display';
   src: url('/fonts/PlayfairDisplay-SemiBold.woff2') format('woff2'),
-       url('/fonts/PlayfairDisplay-SemiBold.ttf') format('truetype');
+    url('/fonts/PlayfairDisplay-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -91,18 +95,19 @@
 @font-face {
   font-family: 'Saira Regular';
   src: url('/fonts/Saira-Regular.woff2') format('woff2'),
-       url('/fonts/Saira-Regular.ttf') format('truetype');
+    url('/fonts/Saira-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 /* Apply globally */
-html, body {
+html,
+body {
   height: 100%;
   /* Solid dark background with noise texture */
   background-color: #1A141A;
-  background-image: 
+  background-image:
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 400px 400px;
@@ -117,7 +122,9 @@ html, body {
 
 /* On small viewports, avoid background-attachment: fixed which can cause jank on mobile browsers */
 @media (max-width: 767px) {
-  html, body {
+
+  html,
+  body {
     background-attachment: scroll !important;
     background-position: center top !important;
   }
@@ -134,7 +141,8 @@ html, body {
   remains fixed while content scrolls, and covers the entire viewport.
   Use high-specificity + !important to override any compiled or component styles.
 */
-html, body {
+html,
+body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E") !important;
   background-color: #1A141A !important;
   background-repeat: repeat !important;
@@ -145,18 +153,24 @@ html, body {
 
 /* Override background-attachment for mobile devices to prevent janky scrolling */
 @media (max-width: 767px) {
-  html, body {
+
+  html,
+  body {
     background-attachment: scroll !important;
   }
 }
 
 /* Ensure Next root doesn't paint its own background on top */
-html > body > #__next, #__next {
+html>body>#__next,
+#__next {
   background: transparent !important;
 }
 
 /* Keep some page elements transparent by default */
-.section, .page, header, footer {
+.section,
+.page,
+header,
+footer {
   background: transparent !important;
 }
 
@@ -168,8 +182,37 @@ html > body > #__next, #__next {
 
 /* Prevent accidental horizontal overflow caused by 100vw/w-screen full-bleed elements */
 /* This keeps the content full-width while avoiding scrollbars when vertical scrollbar is present */
-html, body {
+html,
+body {
   overflow-x: hidden;
+}
+
+/* ===== iOS SCROLLBAR FIX =====
+   On iOS Safari / Chrome for iOS, the native scroll indicator (thin overlay bar)
+   is rendered at the UIKit window level and should always be topmost.
+   However it can disappear when:
+     1. A fixed/absolute overlay uses `width: 100vw` and reaches the right edge
+        where the scroll track lives (right ~4–6px on LTR pages).
+     2. The body has `overflow: hidden` which stops the html element from being
+        the designated scroll container, causing iOS to render no indicator at all.
+     3. Inner elements with `-webkit-overflow-scrolling: touch` create native
+        scroll views that can stack above the page-level indicator.
+   Fixes applied below target mobile only to avoid regressions on desktop. */
+@media (max-width: 768px) {
+
+  /* Make html the authoritative vertical scroll container on iOS.
+     `overflow-y: scroll` forces the native UIKit scroll view to exist on the
+     root element, ensuring the system scroll indicator is always painted above
+     all page content (including fixed overlays). */
+  html {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    /* legacy prop; still needed for some iOS 12/13 */
+  }
+
+  /* NOTE: Do NOT set body overflow to 'visible' here — it would break
+     position:fixed elements (navbar, modals) on iOS.
+     Body scroll locking when the mobile menu opens is handled in JS (Header.js). */
 }
 
 /* Ensure fixed header doesn't overlap the browser scroll bar.
@@ -177,7 +220,8 @@ html, body {
    a stable scrollbar gutter where supported. This avoids visual overlap
    in browsers that treat 100vw as excluding the scrollbar width. */
 header {
-  width: auto !important; /* avoid forcing 100%/100vw */
+  width: auto !important;
+  /* avoid forcing 100%/100vw */
   left: 0 !important;
   right: 0 !important;
   box-sizing: border-box !important;
@@ -192,13 +236,24 @@ header {
 /* Ensure the dark background is visible on every page.
    Neutralize page-level backgrounds that would otherwise block it.
    Keep card and component-level backgrounds (like .service-card) so content remains readable. */
-section, .section, #about, #services, #team, #contact, .about, .services, .team {
+section,
+.section,
+#about,
+#services,
+#team,
+#contact,
+.about,
+.services,
+.team {
   background: transparent !important;
 }
 
 /* Exception: About, Contact, Services, and Team sections need dark background for sticky hero scroll-over effect */
 /* Section IDs inherit body background */
-#about, #contact, #services, #team {
+#about,
+#contact,
+#services,
+#team {
   position: relative;
   z-index: 10;
 }
@@ -213,16 +268,23 @@ section, .section, #about, #services, #team, #contact, .about, .services, .team 
 /* Custom global styles (kept small - use Tailwind for layout) */
 /* body text color and transparent background to allow html/#__next bg to show */
 body {
-  background-color: transparent; /* inherited from html/#__next */
+  background-color: transparent;
+  /* inherited from html/#__next */
   color: #f5f5f5;
   /* Use Satoshi medium by default for body text */
   font-weight: 500;
 }
 
 /* Headings use Playfair Display (request semibold where available) */
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Playfair Display', 'Georgia', serif;
-  font-weight: 600; /* will use semibold if PlayfairDisplay-SemiBold is provided */
+  font-weight: 600;
+  /* will use semibold if PlayfairDisplay-SemiBold is provided */
 }
 
 /* Minimal loading screen styles */
@@ -236,11 +298,27 @@ h1,h2,h3,h4,h5,h6 {
   justify-content: center;
   z-index: 10001;
 }
-.loading-content { text-align: center; color: #fff; }
+
+.loading-content {
+  text-align: center;
+  color: #fff;
+}
+
 /* New loading screen visuals */
-.loading-screen { background: #000; }
-.loading-content { text-align: center; color: #fff; }
-.loading-title { font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; display: inline-flex; gap: 0.08em; }
+.loading-screen {
+  background: #000;
+}
+
+.loading-content {
+  text-align: center;
+  color: #fff;
+}
+
+.loading-title {
+  font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  display: inline-flex;
+  gap: 0.08em;
+}
 
 /* Textured section background - applies noise texture to any element */
 .textured-bg {
@@ -250,7 +328,13 @@ h1,h2,h3,h4,h5,h6 {
   background-position: center center !important;
 }
 
-.loading-title .logo-letter { position: relative; display: inline-block; color: transparent; text-shadow: none; }
+.loading-title .logo-letter {
+  position: relative;
+  display: inline-block;
+  color: transparent;
+  text-shadow: none;
+}
+
 /* Fill effect using background-clip */
 .loading-title .logo-letter {
   /* exact brand yellow fill requested (static, no animation) */
@@ -267,19 +351,49 @@ h1,h2,h3,h4,h5,h6 {
   text-rendering: optimizeLegibility;
 }
 
-.loading-bar { width: 260px; height: 6px; background: rgba(255,255,255,0.06); border-radius: 6px; margin-top: 18px; overflow: hidden; }
-.loading-progress { height: 100%; width: 100%; background: linear-gradient(90deg,#FFD700,#FFD700); border-radius: 6px; transform-origin: left; transform: scaleX(0); animation: progress 1.8s linear forwards; }
+.loading-bar {
+  width: 260px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  margin-top: 18px;
+  overflow: hidden;
+}
+
+.loading-progress {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #FFD700, #FFD700);
+  border-radius: 6px;
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: progress 1.8s linear forwards;
+}
+
 @keyframes progress {
-  0% { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
+  0% {
+    transform: scaleX(0);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
 }
 
 /* NOTE: Saira Regular font is now loaded from /public/fonts with proper @font-face rules.
   This provides a modern, clean typeface for branding and UI elements. */
 
 /* Simple hero background wrapper to host Three.js canvas */
-.hero-bg-canvas { position: absolute; inset: 0; z-index: 0; }
-.hero-content-wrapper { position: relative; z-index: 10; }
+.hero-bg-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 10;
+}
 
 /* Sticky Hero Section - stays fixed while content scrolls over */
 #hero {
@@ -302,13 +416,26 @@ main {
 }
 
 /* Ensure some defaults when Tailwind classes reference them */
-.bg-cream-50 { background-color: #111; }
-.text-slate-900 { color: #f5f5f5; }
+.bg-cream-50 {
+  background-color: #111;
+}
+
+.text-slate-900 {
+  color: #f5f5f5;
+}
 
 /* Brand utilities */
-.text-brand { color: #FFD700 }
-.bg-brand { background-color: #FFD700 }
-.bg-brand-600 { background-color: #FFCF33 }
+.text-brand {
+  color: #FFD700
+}
+
+.bg-brand {
+  background-color: #FFD700
+}
+
+.bg-brand-600 {
+  background-color: #FFCF33
+}
 
 /* Separator divs between sections inherit body background */
 
@@ -319,27 +446,63 @@ main {
   width: 12px;
   height: 12px;
 }
-::-webkit-scrollbar-track { background: #050505; }
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #1f1f1f;
   border-radius: 9999px;
   border: 3px solid transparent;
   background-clip: padding-box;
 }
-::-webkit-scrollbar-thumb:hover { background: #2b2b2b; }
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2b2b2b;
+}
 
 /* Firefox scrollbar styling */
-html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #1f1f1f #050505;
+}
 
 /* Expose a CSS variable that components can use if they want to offset for the scrollbar. */
-:root { --scrollbar-width: 0px; }
+:root {
+  --scrollbar-width: 0px;
+}
 
 /* Button utility for dark theme */
-.btn { display: inline-flex; align-items:center; justify-content:center; padding:0.5rem 1rem; border-radius:0.5rem; cursor:pointer; }
-.btn:hover { opacity:0.95 }
-.btn[disabled] { opacity:0.5; cursor:not-allowed }
-.btn--primary { background: #FFD700; color: #000; font-weight:600 }
-.btn--ghost { background: transparent; color: #FFD700; border: 1px solid rgba(255,255,255,0.06) }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.95
+}
+
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed
+}
+
+.btn--primary {
+  background: #FFD700;
+  color: #000;
+  font-weight: 600
+}
+
+.btn--ghost {
+  background: transparent;
+  color: #FFD700;
+  border: 1px solid rgba(255, 255, 255, 0.06)
+}
 
 /* ===== FLOATING NAVBAR STYLES ===== */
 .floating-navbar {
@@ -347,35 +510,37 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   top: 20px;
   left: 0;
   right: 0;
-  z-index: 1000;
+  /* Higher than footer's z-index:50 (footer uses CSS animations which
+     create new stacking contexts, so we need to be comfortably above) */
+  z-index: 10000;
   width: fit-content;
   min-width: min(200px, calc(100vw - 40px));
   max-width: min(500px, calc(100vw - 40px));
   margin: 0 auto;
+  /* Transparent by default (for Hero section) */
   background: transparent;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   border-radius: 32px;
-  border: none;
+  /* Removed border and inner ring shadow */
   box-shadow: none;
-  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-              backdrop-filter 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              border 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   font-family: 'Saira Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  /* Ensure it doesn't overflow viewport */
   box-sizing: border-box;
 }
 
-/* Translucent state when scrolled past hero */
+/* Stronger dark glass when scrolled past hero */
+/* Stronger dark glass when scrolled past hero (or on other pages) */
 .floating-navbar.scrolled {
-  background: rgba(0, 0, 0, 0.7);
-  -webkit-backdrop-filter: blur(15px);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
-              0 4px 6px -2px rgba(0, 0, 0, 0.05), 
-              0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(10, 10, 10, 0.9);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  /* Removed scrolled border and inner ring shadow */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(230, 184, 0, 0.06);
 }
 
 .navbar-container {
@@ -391,6 +556,7 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   font-family: 'Saira Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 35px;
   font-weight: 600;
+  /* White by default, gold on hover/active */
   color: #ffffff;
   text-decoration: none;
   letter-spacing: 0.05em;
@@ -421,14 +587,35 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   display: none;
 }
 
-.navbar-brand .brand-link:hover::before,
-.navbar-brand .brand-link:focus::before {
+/* Only apply hover colour on devices with a real pointer (mouse).
+   On touch-only devices :hover is sticky after tap — @media (hover:hover)
+   ensures it never fires on mobile, removing the stuck-gold bug. */
+@media (hover: hover) {
+  .navbar-brand .brand-link:hover::before {
+    transform: scaleX(1);
+  }
+
+  .navbar-brand .brand-link:hover {
+    color: #e6b800;
+  }
+
+  .mobile-menu-close:hover {
+    color: #e6b800;
+    background: rgba(230, 184, 0, 0.1);
+  }
+}
+
+/* Keyboard-navigation highlight (Tab key only) */
+.navbar-brand .brand-link:focus-visible::before {
   transform: scaleX(1);
 }
 
-.navbar-brand .brand-link:hover,
+.navbar-brand .brand-link:focus-visible {
+  color: #e6b800;
+}
+
+/* Suppress all focus rings on touch / click */
 .navbar-brand .brand-link:focus {
-  color: #F5C842;
   outline: none;
 }
 
@@ -462,20 +649,35 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   left: 6px;
   right: 6px;
   height: 2px;
-  background: #F5C842;
+  background: #e6b800;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.navbar-item:hover::after,
-.navbar-item:focus::after {
+/* Hover/active underline — mouse only (prevents sticky-hover on touch) */
+@media (hover: hover) {
+  .navbar-item:hover::after {
+    transform: scaleX(1);
+  }
+
+  .navbar-item:hover {
+    color: #e6b800;
+    outline: none;
+  }
+}
+
+/* Keyboard focus underline */
+.navbar-item:focus-visible::after {
   transform: scaleX(1);
 }
 
-.navbar-item:hover,
+.navbar-item:focus-visible {
+  color: #e6b800;
+  outline: none;
+}
+
 .navbar-item:focus {
-  color: #F5C842;
   outline: none;
 }
 
@@ -484,37 +686,31 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 }
 
 .navbar-item.active {
-  color: #F5C842;
+  color: #e6b800;
 }
 
 .navbar-item.active::after {
   transform: scaleX(1);
 }
 
+/* Mobile menu link highlight */
+.mobile-menu-item.active {
+  color: #e6b800;
+  background: rgba(230, 184, 0, 0.08);
+  border-left: 3px solid #e6b800;
+  padding-left: calc(1.5rem - 3px);
+}
+
 /* ===== HAMBURGER MENU STYLES ===== */
 
-/* Hide hamburger menu on desktop */
-.mobile-menu-checkbox,
+/* Hide hamburger button on desktop */
 .hamburger-lines {
   display: none;
 }
 
 @media (max-width: 768px) {
-  /* Mobile Menu Checkbox (invisible but functional) */
-  .mobile-menu-checkbox {
-    position: absolute;
-    display: block;
-    height: 28px;
-    width: 28px;
-    top: 50%;
-    right: 16px;
-    transform: translateY(-50%);
-    z-index: 1005;
-    opacity: 0;
-    cursor: pointer;
-  }
 
-  /* Hamburger Lines Container */
+  /* Hamburger button — now a <button> element, not input+label */
   .hamburger-lines {
     display: flex;
     height: 20px;
@@ -527,6 +723,9 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
     cursor: pointer;
     flex-direction: column;
     justify-content: space-between;
+    background: transparent;
+    border: none;
+    padding: 0;
   }
 
   /* Individual Hamburger Lines */
@@ -550,31 +749,46 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   .hamburger-lines .line3 {
     transform-origin: 0% 100%;
   }
+
+  /* Animate hamburger → X when .is-open class is added by React */
+  .hamburger-lines.is-open .line1 {
+    transform: rotate(45deg);
+  }
+
+  .hamburger-lines.is-open .line2 {
+    transform: scaleY(0);
+  }
+
+  .hamburger-lines.is-open .line3 {
+    transform: rotate(-45deg);
+  }
+
+  .hamburger-lines:focus {
+    outline: none;
+  }
 }
 
-/* Mobile Menu Overlay (slide-out sidebar from right) */
+/* Mobile Menu Overlay — rendered via React Portal directly into <body>
+   (bypasses the header's CSS transform stacking context so position:fixed
+   correctly anchors to the viewport, not the transformed navbar element) */
 .mobile-menu-overlay {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 240px;
-  height: 100vh;
-  background: rgba(26, 20, 26, 0.92);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  z-index: 999;
+  inset: 0;
+  background: #1a141a !important;
+  background-color: #1a141a !important;
+  z-index: 9999;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+  padding-top: 80px;
   transform: translateX(100%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 0;
-  padding: 0;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 80px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Mobile Menu Items Container */
@@ -611,44 +825,30 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 
 .mobile-menu-item:hover,
 .mobile-menu-item:focus {
-  color: #FFD700;
-  background: rgba(255, 215, 0, 0.08);
+  color: #e6b800;
+  background: rgba(230, 184, 0, 0.08);
   padding-left: 2rem;
-  text-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  text-shadow: 0 4px 12px rgba(230, 184, 0, 0.3);
 }
 
 .mobile-menu-item.active {
-  color: #FFD700;
-  background: rgba(255, 215, 0, 0.1);
-  border-left: 3px solid #FFD700;
+  color: #e6b800;
+  background: rgba(230, 184, 0, 0.1);
+  border-left: 3px solid #e6b800;
   padding-left: calc(1.5rem - 3px);
 }
 
-/* Hamburger Animation when Menu is Open */
-.mobile-menu-checkbox:checked ~ .hamburger-lines .line1 {
-  transform: rotate(45deg);
-}
-
-.mobile-menu-checkbox:checked ~ .hamburger-lines .line2 {
-  transform: scaleY(0);
-}
-
-.mobile-menu-checkbox:checked ~ .hamburger-lines .line3 {
-  transform: rotate(-45deg);
-}
-
-/* Show Mobile Menu when Checkbox is Checked */
-.mobile-menu-checkbox:checked ~ .mobile-menu-overlay {
+/* Open state — triggered by .is-open class added by React state */
+.mobile-menu-overlay.is-open {
   transform: translateX(0);
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-/* Remove the automatic yellow color change for brand link when menu opens */
-/* .mobile-menu-checkbox:checked ~ .navbar-brand .brand-link {
-  color: #FFD700 !important;
-} */
+/* Close (×) button inside the mobile menu overlay */
+
+
 
 /* Desktop Menu (hide on mobile) */
 .desktop-menu {
@@ -680,14 +880,14 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
     max-width: none;
     z-index: 1010;
   }
-  
+
   .navbar-container {
     padding: 12px 16px;
     justify-content: center;
     position: relative;
     min-height: 48px;
   }
-  
+
   /* Center the ADONS brand text on mobile only */
   .navbar-brand {
     position: absolute;
@@ -695,26 +895,35 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
     top: 50%;
     transform: translate(-50%, -50%);
   }
-  
+
   .navbar-brand .brand-link {
     margin-right: 0;
     text-align: center;
     transition: color 0.3s ease;
   }
-  
+
   /* Hide desktop menu on mobile */
   .desktop-menu {
     display: none;
   }
-  
-  /* Ensure mobile menu overlay covers everything except navbar */
+
+  /* On mobile the sidebar becomes a full-screen overlay.
+     Use inset edges instead of 100vw/100vh to avoid covering the iOS
+     native scroll indicator track on the right edge of the viewport. */
   .mobile-menu-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
     z-index: 999;
+    /* Re-assert background explicitly — the `header { background: transparent !important }`
+       global rule can cascade unexpectedly; this ensures the overlay is always opaque. */
+    background: #1a141a !important;
+    background-color: #1a141a !important;
+    border-left: none;
   }
 }
 
@@ -723,24 +932,20 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
     top: 8px;
     width: calc(100% - 16px);
   }
-  
+
   .navbar-container {
     padding: 6px 12px;
   }
-  
+
   .navbar-brand .brand-link {
     font-size: 1.8rem;
   }
-  
+
   .mobile-menu-item {
     font-size: 1.5rem;
   }
-  
+
   .hamburger-lines {
-    right: 12px;
-  }
-  
-  .mobile-menu-checkbox {
     right: 12px;
   }
 }
@@ -766,6 +971,7 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
     opacity: 0;
     transform: translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -778,10 +984,10 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 /* Ensure all modals are centered and close on outside click */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  /* inset: 0 is equivalent to top/right/bottom/left: 0.
+     Do NOT use width: 100vw / height: 100vh — on iOS Safari those values
+     can cover the native scroll indicator track on the right edge. */
+  inset: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -803,7 +1009,7 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   .modal-overlay {
     padding: 1rem;
   }
-  
+
   .modal-content {
     max-width: 100%;
     max-height: 100%;
@@ -819,20 +1025,25 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   cursor: pointer;
   position: relative;
   display: inline-flex;
-  align-items: baseline; /* align text baselines for ADONS / STUDIO */
-  gap: 0.6rem; /* add more space between ADONS and STUDIO */
+  align-items: baseline;
+  /* align text baselines for ADONS / STUDIO */
+  gap: 0.6rem;
+  /* add more space between ADONS and STUDIO */
 }
+
 .logo-button:focus {
   /* remove the large visual ring for mouse-click focus */
   outline: none;
   box-shadow: none;
 }
+
 .logo-button:focus-visible {
   /* Provide a subtle, accessible indicator only for keyboard focus users */
-  outline: 2px solid rgba(255,215,0,0.22);
+  outline: 2px solid rgba(255, 215, 0, 0.22);
   outline-offset: 3px;
   border-radius: 6px;
 }
+
 /* Logo typography: make both parts visually identical */
 .logo-main,
 .logo-sub {
@@ -840,20 +1051,26 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   transition: color 160ms ease;
   /* Use Saira Regular for the brand logotype */
   font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 1.8rem; /* a little smaller */
-  font-weight: 400; /* Saira Regular weight */
+  font-size: 1.8rem;
+  /* a little smaller */
+  font-weight: 400;
+  /* Saira Regular weight */
   line-height: 1;
-  letter-spacing: 0.01em; /* unified tracking */
+  letter-spacing: 0.01em;
+  /* unified tracking */
 }
+
 /* ADONS turns yellow on hover/focus; STUDIO stays white */
 .logo-button:hover .logo-main,
 .logo-button:focus .logo-main {
   color: #ffd700;
 }
+
 .logo-button:hover .logo-sub,
 .logo-button:focus .logo-sub {
   color: #fff;
 }
+
 .logo-button::after {
   content: '';
   position: absolute;
@@ -865,10 +1082,12 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   transition: width 220ms ease;
   border-radius: 2px;
 }
+
 .logo-button:hover::after,
 .logo-button:focus::after {
   width: 100%;
 }
+
 .logo-button:active {
   transform: none;
 }
@@ -882,8 +1101,10 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   transition: color 160ms ease, transform 160ms ease;
   /* Use Saira Regular for navbar items */
   font-family: 'Saira Regular', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-weight: 400; /* Regular weight */
+  font-weight: 400;
+  /* Regular weight */
 }
+
 .nav-link::after {
   content: '';
   position: absolute;
@@ -895,21 +1116,27 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
   transition: width 220ms ease;
   border-radius: 2px;
 }
+
 .nav-link:hover,
 .nav-link:focus {
   color: #ffd700;
   outline: none;
 }
+
 .nav-link:hover::after,
 .nav-link:focus::after {
   width: 100%;
 }
-.nav-link:active { transform: none }
+
+.nav-link:active {
+  transform: none
+}
 
 /* Persist active state when the section or page is active */
 .nav-link.active {
   color: #ffd700;
 }
+
 .nav-link.active::after {
   width: 100%;
 }
@@ -933,19 +1160,24 @@ html { scrollbar-width: thin; scrollbar-color: #1f1f1f #050505; }
 }
 
 /* Ensure the hero section clips any overflowing sub-pixel artifacts */
-section#hero, .hero {
+section#hero,
+.hero {
   overflow: hidden;
 }
+
 .video-overlay {
   position: relative;
   z-index: 10;
 }
-.video-thumb-list { margin-top: 4px; }
+
+.video-thumb-list {
+  margin-top: 4px;
+}
 
 /* Force team card images to fully cover their image area and avoid side gaps */
 .team-card-image img,
-.team-card-image picture > img,
-.team-card-image picture > source + img {
+.team-card-image picture>img,
+.team-card-image picture>source+img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
@@ -955,11 +1187,16 @@ section#hero, .hero {
 /* More aggressive fixes for any remaining gaps inside team cards */
 .team-card-image {
   background: transparent !important;
-  line-height: 0 !important; /* remove inline whitespace gaps */
+  line-height: 0 !important;
+  /* remove inline whitespace gaps */
   padding: 0 !important;
   margin: 0 !important;
 }
-.team-card-image { position: relative !important; }
+
+.team-card-image {
+  position: relative !important;
+}
+
 .team-card-image picture,
 .team-card-image picture img,
 .team-card-image img {
@@ -975,20 +1212,50 @@ section#hero, .hero {
 }
 
 /* DEBUG helpers removed */
-.video-dot-list { margin-top: 8px; }
-.carousel-indicators { margin-top: 0px !important; transform: translateY(-12px); }
-.video-dot { width: 10px; height: 10px; border-radius: 9999px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; }
-.video-dot.active { width: 14px; height: 14px; background: #ffd700; border-color: #ffd700; }
-.video-dot:focus { outline: none; }
-.video-dot:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 3px; }
-.thumb-placeholder { display: none }
+.video-dot-list {
+  margin-top: 8px;
+}
+
+.carousel-indicators {
+  margin-top: 0px !important;
+  transform: translateY(-12px);
+}
+
+.video-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.video-dot.active {
+  width: 14px;
+  height: 14px;
+  background: #ffd700;
+  border-color: #ffd700;
+}
+
+.video-dot:focus {
+  outline: none;
+}
+
+.video-dot:focus-visible {
+  outline: 2px solid rgba(255, 215, 0, 0.18);
+  outline-offset: 3px;
+}
+
+.thumb-placeholder {
+  display: none
+}
 
 /* When a video is playing, dim the page behind the controls slightly */
-.hero-full-video.playing ~ .video-overlay::before {
+.hero-full-video.playing~.video-overlay::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   z-index: 5;
 }
 
@@ -1003,7 +1270,8 @@ section#hero, .hero {
   padding: 10px;
   background: transparent;
   border: none;
-  color: #ffffff; /* default white icon */
+  color: #ffffff;
+  /* default white icon */
   cursor: pointer;
   z-index: 30;
   transition: color 160ms ease, transform 120ms ease;
@@ -1015,34 +1283,74 @@ section#hero, .hero {
   display: flex;
   flex-direction: column;
 }
+
 .site-content {
-  flex: 1 0 auto; /* grow to fill available space */
+  flex: 1 0 auto;
+  /* grow to fill available space */
 }
+
 .site-root footer {
-  flex-shrink: 0; /* ensure footer keeps its height at the end */
+  flex-shrink: 0;
+  /* ensure footer keeps its height at the end */
 }
-.mute-toggle:hover { transform: scale(1.06); color: #ffd700; }
-.mute-toggle:focus { outline: none; }
-.mute-toggle:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 3px; border-radius: 6px; color: #ffd700; }
-.mute-toggle svg { width: 24px; height: 24px; }
+
+.mute-toggle:hover {
+  transform: scale(1.06);
+  color: #ffd700;
+}
+
+.mute-toggle:focus {
+  outline: none;
+}
+
+.mute-toggle:focus-visible {
+  outline: 2px solid rgba(255, 215, 0, 0.18);
+  outline-offset: 3px;
+  border-radius: 6px;
+  color: #ffd700;
+}
+
+.mute-toggle svg {
+  width: 24px;
+  height: 24px;
+}
 
 /* Larger left/right overlay arrow buttons in hero */
-.carousel-control-prev, .carousel-control-next {
+.carousel-control-prev,
+.carousel-control-next {
   width: 56px;
   height: 56px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: transparent; /* remove circular backdrop */
+  background: transparent;
+  /* remove circular backdrop */
   border-radius: 0;
-  color: #ffffff; /* default white icons */
+  color: #ffffff;
+  /* default white icons */
   border: none;
   box-shadow: none;
   transition: transform 140ms ease, opacity 140ms ease, color 160ms ease;
 }
-.carousel-control-prev:hover, .carousel-control-next:hover { transform: translateY(-50%) translateY(-2px) scale(1.04); color: #ffd700; }
-.carousel-control-prev:focus-visible, .carousel-control-next:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 4px; color: #ffd700; }
-.carousel-control-prev svg, .carousel-control-next svg { width: 28px; height: 28px; }
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  transform: translateY(-50%) translateY(-2px) scale(1.04);
+  color: #ffd700;
+}
+
+.carousel-control-prev:focus-visible,
+.carousel-control-next:focus-visible {
+  outline: 2px solid rgba(255, 215, 0, 0.18);
+  outline-offset: 4px;
+  color: #ffd700;
+}
+
+.carousel-control-prev svg,
+.carousel-control-next svg {
+  width: 28px;
+  height: 28px;
+}
 
 /* Lined indicators for hero carousel */
 .indicator-line {
@@ -1055,32 +1363,55 @@ section#hero, .hero {
   background: transparent;
   border-radius: 6px;
   border: none;
-  color: rgba(255,255,255,0.7); /* svg uses currentColor */
+  color: rgba(255, 255, 255, 0.7);
+  /* svg uses currentColor */
   cursor: pointer;
   transition: color 180ms ease, transform 140ms ease, background-color 160ms ease;
 }
-.indicator-line:hover { transform: translateY(-2px); }
-.indicator-line.active { color: #ffd700; background: rgba(255,215,0,0.06); }
-.indicator-line:focus { outline: none; }
-.indicator-line:focus-visible { outline: 2px solid rgba(255,215,0,0.18); outline-offset: 4px; }
+
+.indicator-line:hover {
+  transform: translateY(-2px);
+}
+
+.indicator-line.active {
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.06);
+}
+
+.indicator-line:focus {
+  outline: none;
+}
+
+.indicator-line:focus-visible {
+  outline: 2px solid rgba(255, 215, 0, 0.18);
+  outline-offset: 4px;
+}
 
 
 /* Prevent text cursor over title/description in hero caption; keep pointer for interactive elements */
-.carousel-caption, .carousel-caption * {
+.carousel-caption,
+.carousel-caption * {
   cursor: default;
 }
-.carousel-caption a, .carousel-caption button, .carousel-caption .btn, .carousel-caption input {
+
+.carousel-caption a,
+.carousel-caption button,
+.carousel-caption .btn,
+.carousel-caption input {
   cursor: pointer;
 }
 
 /* Prevent text selection while swiping/dragging the hero caption */
-.carousel-caption, .carousel-caption * {
+.carousel-caption,
+.carousel-caption * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
-.carousel-caption input, .carousel-caption textarea {
+
+.carousel-caption input,
+.carousel-caption textarea {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
@@ -1088,39 +1419,78 @@ section#hero, .hero {
 }
 
 /* Typewriter cursor and description fade-in for hero caption */
-.typewriter { display: inline-block; white-space: nowrap; }
+.typewriter {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .typewriter::after {
   /* caret removed per request (hide pseudo-element) */
   display: none;
 }
-@keyframes blink { 0%, 50% { opacity: 1 } 51%, 100% { opacity: 0 } }
 
-.hero-desc-fade { opacity: 0; transform: translateY(4px); transition: opacity 300ms ease, transform 300ms ease; }
-.hero-desc-fade.show { opacity: 0.85; transform: translateY(0) }
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1
+  }
+
+  51%,
+  100% {
+    opacity: 0
+  }
+}
+
+.hero-desc-fade {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.hero-desc-fade.show {
+  opacity: 0.85;
+  transform: translateY(0)
+}
 
 /* Default hero title sizing (rem-based, consistent with other rules).
    Desktop: 35px -> 2.1875rem. Responsive downscaling for tablets/phones.
    These rules apply by default; `.carousel-caption.force-large` still
    exists for the very-large opt-in treatment. */
 .carousel-caption h5.typewriter {
-  font-size: 2.1875rem; /* 35px */
+  font-size: 2.1875rem;
+  /* 35px */
   line-height: 1.02;
   letter-spacing: -0.01em;
 }
+
 .carousel-caption p.hero-desc-fade {
-  font-size: 1rem; /* sensible default subtitle size */
+  font-size: 1rem;
+  /* sensible default subtitle size */
   opacity: 0.95;
   margin-top: 0.45rem;
 }
 
 @media (max-width: 1024px) {
-  .carousel-caption h5.typewriter { font-size: 1.875rem; } /* ~30px */
-  .carousel-caption p.hero-desc-fade { font-size: 0.95rem; }
+  .carousel-caption h5.typewriter {
+    font-size: 1.875rem;
+  }
+
+  /* ~30px */
+  .carousel-caption p.hero-desc-fade {
+    font-size: 0.95rem;
+  }
 }
 
 @media (max-width: 640px) {
-  .carousel-caption h5.typewriter { font-size: 1.5rem; } /* ~24px */
-  .carousel-caption p.hero-desc-fade { font-size: 0.95rem; }
+  .carousel-caption h5.typewriter {
+    font-size: 1.5rem;
+  }
+
+  /* ~24px */
+  .carousel-caption p.hero-desc-fade {
+    font-size: 0.95rem;
+  }
 }
 
 /* Make the hero title and description larger for stronger emphasis.
@@ -1129,12 +1499,15 @@ section#hero, .hero {
    That allows Tailwind utility classes on the H5 (like `text-xs`) to take
    precedence in normal use. */
 .carousel-caption.force-large h5.typewriter {
-  font-size: 2.8rem; /* larger desktop hero title */
+  font-size: 2.8rem;
+  /* larger desktop hero title */
   line-height: 1.02;
   letter-spacing: -0.01em;
 }
+
 .carousel-caption.force-large p.hero-desc-fade {
-  font-size: 1.25rem; /* larger desktop subtitle */
+  font-size: 1.25rem;
+  /* larger desktop subtitle */
   opacity: 0.95;
   margin-top: 0.6rem;
 }
@@ -1146,41 +1519,80 @@ section#hero, .hero {
 }
 
 @media (max-width: 1024px) {
-  .carousel-caption.force-large h5.typewriter { font-size: 2.3rem }
-  .carousel-caption.force-large p.hero-desc-fade { font-size: 1.15rem }
+  .carousel-caption.force-large h5.typewriter {
+    font-size: 2.3rem
+  }
+
+  .carousel-caption.force-large p.hero-desc-fade {
+    font-size: 1.15rem
+  }
 }
 
 @media (max-width: 640px) {
-  .carousel-caption.force-large h5.typewriter { font-size: 1.8rem }
-  .carousel-caption.force-large p.hero-desc-fade { font-size: 1.05rem }
-  .carousel-caption { transform: translateY(-0.6rem); }
+  .carousel-caption.force-large h5.typewriter {
+    font-size: 1.8rem
+  }
+
+  .carousel-caption.force-large p.hero-desc-fade {
+    font-size: 1.05rem
+  }
+
+  .carousel-caption {
+    transform: translateY(-0.6rem);
+  }
 }
 
 
 /* Allow vertical page scrolling but keep horizontal swipe gestures for the hero area */
-#hero { -ms-touch-action: pan-y; touch-action: pan-y; }
+#hero {
+  -ms-touch-action: pan-y;
+  touch-action: pan-y;
+}
 
 /* Strongly prevent text selection while interacting with the hero/video area */
-#hero, #hero * {
+#hero,
+#hero * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
+
 /* Re-enable selection for form controls and explicit interactive elements */
-#hero a, #hero button, #hero input, #hero textarea, #hero select {
+#hero a,
+#hero button,
+#hero input,
+#hero textarea,
+#hero select {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
 }
+
 @media (max-width: 640px) {
-  .indicator-line { width: 20px; height: 20px }
+  .indicator-line {
+    width: 20px;
+    height: 20px
+  }
+
   /* scale logo down on small screens */
-  .logo-main { font-size: 1.4rem }
-  .logo-sub { font-size: 0.85rem }
-  .video-dot-list { margin-top: 8px; }
-  .carousel-indicators { margin-top: 0px !important; transform: translateY(-8px); }
+  .logo-main {
+    font-size: 1.4rem
+  }
+
+  .logo-sub {
+    font-size: 0.85rem
+  }
+
+  .video-dot-list {
+    margin-top: 8px;
+  }
+
+  .carousel-indicators {
+    margin-top: 0px !important;
+    transform: translateY(-8px);
+  }
 }
 
 /* ============================================================
@@ -1194,23 +1606,26 @@ section#hero, .hero {
   position: relative;
   z-index: 0;
   width: 100%;
-  flex-shrink: 0; /* Prevent collapse in flex containers */
+  flex-shrink: 0;
+  /* Prevent collapse in flex containers */
 }
 
 /* Content sections: clear separation from hero */
 main,
 #contact-content,
-main > section {
+main>section {
   position: relative;
   z-index: 0;
-  background-color: inherit; /* Inherit parent background */
+  background-color: inherit;
+  /* Inherit parent background */
   width: 100%;
 }
 
 /* Ensure nested sections have proper stacking */
-section#hero + main,
-section#hero + section {
-  margin-top: 0; /* No gap between hero and content */
+section#hero+main,
+section#hero+section {
+  margin-top: 0;
+  /* No gap between hero and content */
 }
 
 /* For components using Layout wrapper */
@@ -1219,7 +1634,7 @@ section#hero + section {
   flex-direction: column;
 }
 
-.layout-wrapper > * {
+.layout-wrapper>* {
   position: relative;
   z-index: 0;
 }

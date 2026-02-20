@@ -21,7 +21,7 @@ function TeamImage({ name, alt, style, priority = false }) {
   );
 }
 
-export default function Team(){
+export default function Team() {
   // Team members: populate this array with real team data (name, role, bio, image)
   // First image provided by user: public/Images/SWAPU.jpg
   const members = [
@@ -94,11 +94,11 @@ export default function Team(){
         {/* Full Image Container */}
         <div className="team-card-image" style={{ width: '100%', height: '100%', position: 'relative', background: '#222', display: 'flex', alignItems: 'stretch', justifyContent: 'center', overflow: 'hidden' }}>
           {m.image ? (
-              <TeamImage name={m.image} alt={m.name || 'Team member'} style={{ objectPosition: m.name === 'SAMPANNA MISHRA' ? 'center top' : 'center' }} priority={idx < 2} />
+            <TeamImage name={m.image} alt={m.name || 'Team member'} style={{ objectPosition: m.name === 'SAMPANNA MISHRA' ? 'center top' : 'center' }} priority={idx < 2} />
           ) : (
             <div className="team-avatar w-36 h-36 rounded-full flex-shrink-0" style={{ background: '#FFD700', margin: 'auto' }} aria-hidden />
           )}
-          
+
           {/* Overlay - appears on hover */}
           <div style={{
             position: 'absolute',
@@ -150,23 +150,38 @@ export default function Team(){
             transform: translateX(0);
           }
           100% {
-            transform: translateX(50%);
+            transform: translateX(-50%);
           }
         }
 
         @keyframes textScrollReverse {
           0% {
-            transform: translateX(0);
+            transform: translateX(-50%);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(0);
           }
         }
 
+        .team-marquee-track {
+          display: flex;
+          width: max-content;
+          animation: textScroll 60s linear infinite;
+          will-change: transform;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .team-marquee-track-reverse {
+          display: flex;
+          width: max-content;
+          animation: textScrollReverse 60s linear infinite;
+          will-change: transform;
+          pointer-events: none;
+          z-index: 0;
+        }
+
         .team-border-text {
-          position: absolute;
-          left: 0;
-          width: 200%;
           font-size: 2.5rem;
           font-weight: 900;
           letter-spacing: 8px;
@@ -174,10 +189,9 @@ export default function Team(){
           color: rgba(255, 255, 255, 0.8);
           text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
           white-space: nowrap;
-          animation: textScroll 40s linear infinite;
-          pointer-events: none;
-          z-index: 0;
-          will-change: transform;
+          padding-right: 3rem;
+          display: inline-block;
+          flex-shrink: 0;
         }
 
         .team-border-top {
@@ -243,7 +257,6 @@ export default function Team(){
           .team-border-text {
             font-size: 1.2rem;
             letter-spacing: 4px;
-            animation: textScroll 40s linear infinite;
           }
 
           .team-border-top,
@@ -287,8 +300,9 @@ export default function Team(){
       <div className="team-section-container">
         {/* Top Border */}
         <div ref={borderTopRef} className="team-border-top">
-          <div className="team-border-text">
-            MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • 
+          <div className="team-marquee-track">
+            <span className="team-border-text">MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull;</span>
+            <span className="team-border-text" aria-hidden="true">MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull;</span>
           </div>
         </div>
 
@@ -311,8 +325,9 @@ export default function Team(){
 
         {/* Bottom Border */}
         <div ref={borderBottomRef} className="team-border-bottom">
-          <div className="team-border-text" style={{ animation: 'textScrollReverse 40s linear infinite' }}>
-            MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM • MEET OUR TEAM •
+          <div className="team-marquee-track-reverse">
+            <span className="team-border-text">MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull;</span>
+            <span className="team-border-text" aria-hidden="true">MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull; MEET OUR TEAM &bull;</span>
           </div>
         </div>
       </div>

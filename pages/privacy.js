@@ -10,7 +10,7 @@ export default function Privacy() {
         <meta name="description" content="Privacy information for Adons Studio: what data we collect and how we use analytics." />
       </Head>
       <main style={{ maxWidth: 900, margin: '3rem auto', padding: '0 1rem', color: '#eee' }}>
-        <h1 style={{ color: '#FFD700', marginBottom: '0.5rem' }}>Privacy & Analytics</h1>
+        <h1 style={{ color: '#e6b800', marginBottom: '0.5rem' }}>Privacy & Analytics</h1>
         <PrivacyContent />
         <p style={{ marginTop: '2rem' }}>
           <Link href="/">← Back to home</Link>
