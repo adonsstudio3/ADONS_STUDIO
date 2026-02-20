@@ -99,8 +99,8 @@ export default function Team() {
             <div className="team-avatar w-36 h-36 rounded-full flex-shrink-0" style={{ background: '#FFD700', margin: 'auto' }} aria-hidden />
           )}
 
-          {/* Overlay - appears on hover */}
-          <div style={{
+          {/* Overlay - appears on hover (constantly on mobile) */}
+          <div className={`team-card-overlay ${isHovered ? 'hovered' : ''}`} style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
@@ -112,11 +112,10 @@ export default function Team() {
             flexDirection: 'column',
             justifyContent: 'flex-end',
             textAlign: 'center',
-            transform: isHovered ? 'translateY(0)' : 'translateY(100%)',
             transition: 'transform 0.3s ease-out',
             zIndex: 10
           }}>
-            <div style={{ color: '#FFD700', fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem', letterSpacing: '0.02em' }}>
+            <div style={{ color: '#FFD700', fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem', letterSpacing: '0.02em', lineHeight: '1.2' }}>
               {m.name}
             </div>
             <div style={{ color: '#f5f5f5', fontSize: '0.875rem', fontWeight: '400', lineHeight: 1.3 }}>
@@ -252,8 +251,18 @@ export default function Team() {
           animation-play-state: paused;
         }
 
+        .team-card-overlay {
+          transform: translateY(100%);
+        }
+        .team-card-overlay.hovered {
+          transform: translateY(0);
+        }
+
         /* Mobile-specific team card styles */
         @media (max-width: 768px) {
+          .team-card-overlay {
+            transform: translateY(0);
+          }
           .team-border-text {
             font-size: 1.2rem;
             letter-spacing: 4px;
